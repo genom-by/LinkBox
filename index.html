@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>LinkBox - save all your links in one place</title>
+<link href="img/favicon.ico" rel="shortcut icon" />
+<link type="text/css" rel="stylesheet" href="css/common.css"/>
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+<!--[if IE]>
+<link type="text/css" rel="stylesheet" href="css/ie.css"/>
+<![endif]-->
+</head>
+<body>
+<div id="container"><!--sets width and centers all site. for back-picture too. Height - all viewport-->
+	<div id="main"><!--height == min of viewport-->
+		<div id="all"><!--prevents to outbound floating elments, prevents to climbing content under footer-->
+		<div id="all-rows">
+		<div class="one-row">
+			<span class="row-check">
+				<input id="row1" type="checkbox" name="row1">	
+			</span>
+			<span class="row-ahref">
+				<a href="http://ya.ru">http://ya.ru</a>
+			</span>
+			<span class="row-buttons">
+				<a href="javascript:editConfigItem('{$k}');"><img src="../images/icons/apply.gif" alt="apply" border=0></a>
+            	<a href="javascript:toggleEditControls('{$k}', false);"><img src="../images/icons/cancel2.gif" alt="cancel" border=0></a>
+<a href="javascript:editConfigItem('{$k}');"><img src="../images/icons/edt.gif" alt="edit" border=0></a>
+			</span>
+		</div><!--div ahref-row-->
+		<div class="one-row">
+			<span class="row-check">
+				<input id="row1" type="checkbox" name="row1">	
+			</span>
+			<span class="row-ahref">
+				<a href="http://ya.ru">http://ya.ru</a>
+			</span>
+			<span class="row-buttons">
+				<a href="javascript:editConfigItem('{$k}');"><img src="../images/icons/apply.gif" alt="apply" border=0></a>
+            	<a href="javascript:toggleEditControls('{$k}', false);"><img src="../images/icons/cancel2.gif" alt="cancel" border=0></a>
+<a href="javascript:editConfigItem('{$k}');"><img src="../images/icons/edt.gif" alt="edit" border=0></a>
+			</span>
+		</div><!--div ahref-row-->
+		<div class="one-row">
+			<span class="row-check">
+				<input id="row1" type="checkbox" name="row1">	
+			</span>
+			<span class="row-ahref">
+				<a href="http://ya.ru">http://ya.ru</a>
+			</span>
+			<span class="row-buttons">
+				<a href="javascript:editConfigItem('{$k}');"><img src="../images/icons/apply.gif" alt="apply" border=0></a>
+            	<a href="javascript:toggleEditControls('{$k}', false);"><img src="../images/icons/cancel2.gif" alt="cancel" border=0></a>
+<a href="javascript:editConfigItem('{$k}');"><img src="../images/icons/edt.gif" alt="edit" border=0></a>
+			</span>
+		</div><!--div ahref-row-->
+		</div><!--div all rows-->
+		</div>
+	</div>
+<!-- header -->
+	<div id="header">
+		<div class="logo_image"><a alt="logo" href="/"></a></div>
+		<div class="loguser login-dropdown-wrapper" id="loguser">
+		<ul>
+			<!--<li id="menu_login"><a href="#" id="menu_login_a">login</a></li><li id="menu_register"><a href="#">register</a></li>-->
+			<li id="menu_login">login</li><li id="menu_register"><a href="#">register</a></li>
+		</ul>
+		</div>
+		<div class="loguser" id="loggeduser">
+		<ul>
+			<li id="menu_loggedas">logged in as: <a href="#">logged</a></li><li id="menu_logout"><a href="#">logout</a></li>
+		</ul>
+		</div>
+		<!-- login popup form-->
+		<div id="login_form_dropdown" class="offscreen popup">
+			<form method="post" action="/login/">
+			<div class="form_padding">
+			<span id="btn_close_form"></span>
+			<div class="sick-input small">
+				<label for="login_email_value">Your e-mail</label>
+				<input id="login_email_value" type="email" tabindex="1" name="login_email">
+			</div>
+			<div class="sick-input small">
+				<label for="login_pass_value">Password</label>
+				<input id="login_pass_value" type="password" tabindex="2" name="login_pass">
+			</div>
+			<p>
+				<input id="remember_me" class="no-border" type="checkbox" tabindex="3" name="remember_me" style="vertical-align: middle; margin-left: 0;">
+<label for="remember_me" style="vertical-align: middle; cursor: pointer; ">Remember me</label>
+<input id="login_submit" class="btn_submit" type="submit" value="Login" tabindex="4">
+			</p>
+			</div><!--form-padding--!>
+			</form>
+		</div>
+	</div>
+<!-- header end -->
+<!-- right panel -->
+	<div id="dashboard">
+
+	</div>
+<!-- right panel end -->
+<!-- footer -->
+	<div id="footer"><!--climb to main div (overcover)-->
+		<b class="border lt"></b><!--for rounded border (star-method) -->
+		<b class="border rt"></b>
+	</div>
+<!-- footer end-->	
+</div>
+</body>
+</html>
