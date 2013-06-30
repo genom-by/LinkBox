@@ -15,6 +15,24 @@
 <div id="container"><!--sets width and centers all site. for back-picture too. Height - all viewport-->
 	<div id="main"><!--height == min of viewport-->
 		<div id="all"><!--prevents to outbound floating elments, prevents to climbing content under footer-->
+		<div id="order-panel"><!-- order panel-->
+			<div id="order_by"><span id="lbl_orderby">Order by: </span>
+				<ul class="ul-in-row">
+					<li><a href="#">name</a></li><li><a href="#">date</a></li><li><a href="#">last visited</a></li>
+				</ul>			
+			</div>
+			<div id="div_form_add">
+			<form id="form_addnew" method="post" action="/addnew/">
+			<div class="sick-input small">
+				<label for="add_new_ahref">Input new link</label>
+				<input id="add_new_ahref" name="new_ahref">
+			</div>
+<input id="addnew_submit" class="btn_submit" type="submit" value="Add link">			
+		</form>
+		</div>			
+		</div><!-- /order panel-->
+		
+		<div class="clear-float"></div>
 		<div id="all-rows">
 		<div class="one-row">
 			<span class="row-check">
@@ -24,9 +42,9 @@
 				<a href="http://ya.ru">http://ya.ru</a>
 			</span>
 			<span class="row-buttons">
-				<a href="javascript:editConfigItem('{$k}');"><img src="../images/icons/apply.gif" alt="apply" border=0></a>
-            	<a href="javascript:toggleEditControls('{$k}', false);"><img src="../images/icons/cancel2.gif" alt="cancel" border=0></a>
-<a href="javascript:editConfigItem('{$k}');"><img src="../images/icons/edt.gif" alt="edit" border=0></a>
+				<a class="icon_delete" href="javascript:editConfigItem('{$k}');"></a>
+            	<a class="icon_edit" href="javascript:EditAhref(false);"></a>
+<a class="icon_share" href="javascript:editConfigItem('{$k}');"></a>
 			</span>
 		</div><!--div ahref-row-->
 		<div class="one-row">
@@ -37,10 +55,9 @@
 				<a href="http://ya.ru">http://ya.ru</a>
 			</span>
 			<span class="row-buttons">
-				<a href="javascript:editConfigItem('{$k}');"><img src="../images/icons/apply.gif" alt="apply" border=0></a>
-            	<a href="javascript:toggleEditControls('{$k}', false);"><img src="../images/icons/cancel2.gif" alt="cancel" border=0></a>
-<a href="javascript:editConfigItem('{$k}');"><img src="../images/icons/edt.gif" alt="edit" border=0></a>
-			</span>
+				<a class="icon_delete" href="javascript:editConfigItem('{$k}');"></a>
+            	<a class="icon_edit" href="javascript:toggleEditControls('{$k}', false);"></a>
+<a class="icon_share" href="javascript:editConfigItem('{$k}');"></a>			</span>
 		</div><!--div ahref-row-->
 		<div class="one-row">
 			<span class="row-check">
@@ -50,14 +67,44 @@
 				<a href="http://ya.ru">http://ya.ru</a>
 			</span>
 			<span class="row-buttons">
-				<a href="javascript:editConfigItem('{$k}');"><img src="../images/icons/apply.gif" alt="apply" border=0></a>
-            	<a href="javascript:toggleEditControls('{$k}', false);"><img src="../images/icons/cancel2.gif" alt="cancel" border=0></a>
-<a href="javascript:editConfigItem('{$k}');"><img src="../images/icons/edt.gif" alt="edit" border=0></a>
-			</span>
+				<a class="icon_delete" href="javascript:editConfigItem('{$k}');"></a>
+            	<a class="icon_edit" href="javascript:toggleEditControls('{$k}', false);"></a>
+<a class="icon_share" href="javascript:editConfigItem('{$k}');"></a>			</span>
 		</div><!--div ahref-row-->
 		</div><!--div all rows-->
 		</div>
 	</div>
+<!-- -->	
+		<!-- edit ahref popup form-->
+		<div id="edit_form_dropdown" class="offscreen popup">
+			<form method="post" action="/edit/">
+			<div class="form_padding">
+			<span class="btn_close_form" id="btn_close_edit_form"></span>
+			<div class="simple-input small">
+				<label for="edit_ahref_ahref">Link</label>
+				<input id="edit_ahref_ahref" type="text" tabindex="1" name="ahref_ahref">
+			</div>
+			<div class="simple-input small">			
+				<label for="edit_ahref_name">Name</label>
+				<input id="edit_ahref_name" type="text" tabindex="2" name="ahref_name">
+			</div>
+			<div class="simple-input small">
+				<label for="edit_ahref_tags">Tags (comma separated)</label>
+				<input id="edit_ahref_tags" type="text" tabindex="3" name="ahref_tags">
+			</div>
+			<div id="similar_tags">
+				<ul class="ul-in-row">
+					<li><a href="#">tag1</a></li><li><a href="#">tag2</a></li><li><a href="#">tag3</a></li>
+				</ul>			
+			</div>
+			<p>
+
+<input id="edit_submit" class="btn_submit" type="submit" value="Save" tabindex="4">
+			</p>
+			</div><!-- /form-padding-->
+			</form>
+		</div><!-- /edit ahref popup form-->
+<!-- -->		
 <!-- header -->
 	<div id="header">
 		<div class="logo_image"><a alt="logo" href="/"></a></div>
@@ -76,7 +123,7 @@
 		<div id="login_form_dropdown" class="offscreen popup">
 			<form method="post" action="/login/">
 			<div class="form_padding">
-			<span id="btn_close_form"></span>
+			<span class="btn_close_form" id="btn_close_login_form"></span>
 			<div class="sick-input small">
 				<label for="login_email_value">Your e-mail</label>
 				<input id="login_email_value" type="email" tabindex="1" name="login_email">
@@ -90,14 +137,20 @@
 <label for="remember_me" style="vertical-align: middle; cursor: pointer; ">Remember me</label>
 <input id="login_submit" class="btn_submit" type="submit" value="Login" tabindex="4">
 			</p>
-			</div><!--form-padding--!>
+			</div><!-- /form-padding-->
 			</form>
-		</div>
+		</div><!-- /login popup form-->
 	</div>
 <!-- header end -->
 <!-- right panel -->
 	<div id="dashboard">
-
+		<a href="#" class="dash_button">All</a>
+		<a href="#" class="dash_button">Top 10</a>
+		<a href="#" class="dash_button">Last week</a>
+		<a href="#" class="dash_button">tag345</a>
+		<a href="#" class="dash_button">tag3643</a>
+		<a href="#" class="dash_button">tag3wwwwwwwwwwwwwa643</a>
+		<a href="#" class="dash_button">tag3643</a>
 	</div>
 <!-- right panel end -->
 <!-- footer -->
