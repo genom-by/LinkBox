@@ -23,9 +23,9 @@
 			</div>
 			<div id="div_form_add">
 			<form id="form_addnew" method="post" action="/addnew/">
-			<div class="sick-input small">
-				<label for="add_new_ahref">Input new link</label>
-				<input id="add_new_ahref" name="new_ahref">
+			<div class="sick-input small2">
+				<label for="add_new_ahref" class="small2">Input new link</label>
+				<input id="add_new_ahref" name="new_ahref" autocomplete="off">
 			</div>
 <input id="addnew_submit" class="btn_submit" type="submit" value="Add link">			
 		</form>
@@ -144,6 +144,7 @@
 <!-- header end -->
 <!-- right panel -->
 	<div id="dashboard">
+	<div class="dashbuttons_wrapper">
 		<a href="#" class="dash_button">All</a>
 		<a href="#" class="dash_button">Top 10</a>
 		<a href="#" class="dash_button">Last week</a>
@@ -151,6 +152,18 @@
 		<a href="#" class="dash_button">tag3643</a>
 		<a href="#" class="dash_button">tag3wwwwwwwwwwwwwa643</a>
 		<a href="#" class="dash_button">tag3643</a>
+	</div>
+	<div class="dash_tagsearch_wrapper">
+		<div class="tagsearch_content">
+		<form id="form_tagsearch" method="post" action="/tagsearch/">
+			<div class="sick-input small2">
+				<label for="tagsearch_tag" class="small2">Input tag for search</label>
+				<input id="tagsearch_tag" name="tagsearch_tag" autocomplete="off">
+			</div>
+<input id="tagsearch_submit" class="btn_submit" type="submit" value="Search by tag">			
+		</form>
+		</div>
+	</div>
 	</div>
 <!-- right panel end -->
 <!-- footer -->
