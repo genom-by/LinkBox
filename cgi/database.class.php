@@ -1,23 +1,15 @@
 <?php
-<<<<<<< HEAD
 namespace LinkBox;
 use PDO;
 use PDOException;
-=======
->>>>>>> 6b0274c5dfa49ba30bca5e71fad81824d6d837a6
 
 include_once 'settings.inc.php';
 
 class DataBase{
 	protected static $instance;
-<<<<<<< HEAD
 	public $connection;
 	public $errormsg = '';
 	public $status = 'disconnected';
-=======
-	protected $connection;
-	public $errormsg = '';
->>>>>>> 6b0274c5dfa49ba30bca5e71fad81824d6d837a6
 	private function __construct()
 	{
 		if (is_null($this->connection)){
@@ -25,21 +17,15 @@ class DataBase{
 				if(defined(ISSQLITE))
 				{
 					if( ! file_exists(DBPATHSQLITE) ){
-<<<<<<< HEAD
 						//$this->connection = new PDO(DSNSQLITE.DBPATHSQLITE);
 						//$this->createSQLITEtable($this->connection);
 						throw new \Exception('Database not found');
-=======
-						$this->connection = new PDO(DSNSQLITE.DBPATHSQLITE);
-						$this->createSQLITEtable($this->connection);
->>>>>>> 6b0274c5dfa49ba30bca5e71fad81824d6d837a6
 					}else{
 						$this->connection = new PDO(DSNSQLITE.DBPATHSQLITE);				
 					}
 				}else{
 					$this->connection = new PDO(DSNMYSQL, DBUSER, DBPWD);
 				}
-<<<<<<< HEAD
 				$this->connection->exec('SET NAMES utf8');
 				$this->status = 'connected';
 				if(defined('DEBUG_MODE')){
@@ -50,29 +36,6 @@ class DataBase{
 				$this->errormsg = 'Not connected to DB. Error: '.$pe->getMessage();
 			}
 		}		
-=======
-				$this->connection->exec('SET NAMES utf8'); 
-			}catch(PDOException $pe){
-				$this->errormsg = 'Not connected to DB. Error: '.$pe->getMessage();
-			}
-		}
-	}
-	private function createSQLITEtable($conn)
-	{
-	    $res = $this->connection->exec("CREATE TABLE links (
-					msg_id INTEGER PRIMARY KEY,
-					time TIMESTAMP,
-					IP char(16),
-					link varchar(255),
-					name varchar(255),
-					isfolder boolean
-					)"
-					);
-		if($res === false){
-			echo $this->errormsg = implode(' ', $this->connection->errorInfo() );
-			return false;		
-		}
->>>>>>> 6b0274c5dfa49ba30bca5e71fad81824d6d837a6
 	}
 	
 	public static function getDB()
@@ -83,7 +46,6 @@ class DataBase{
 		return self::$instance;
 	}
 	
-<<<<<<< HEAD
 /*---------------------------------------------------------------------------------
 * perform Update operation
 * @table string what table to update
@@ -190,28 +152,6 @@ echo 'sql:'.$sql;
 		}
 	}
 	
-=======
-	public function getLinksCount()
-	{
-		if(!$this->connection) 	{
-			return false;
-		}
-		
-		$sql = "SELECT COUNT(*) FROM links";
-		//$cnt = ($this->connection)::query($sql, PDO::FETCH_COLUMN, 0);
-		$stmt = $this->connection->query($sql, PDO::FETCH_COLUMN, 0);
-		if(!$stmt ){
-			$this->errormsg = implode(' ', $this->connection->errorInfo() );
-			return false;
-		}		
-		$cnt = $stmt->fetchColumn(0);
-		if($cnt === false){
-			$this->errormsg = implode(' ', $this->connection->errorInfo() );
-			return false;
-		}
-		return $cnt;
-	}
->>>>>>> 6b0274c5dfa49ba30bca5e71fad81824d6d837a6
 	/*
 	//
 	*/
@@ -262,63 +202,6 @@ echo 'sql:'.$sql;
 		}		
 	}
 	
-<<<<<<< HEAD
 	
-=======
-	public function saveLink($msg, $isfolder = false)
-	{
-	if(! $isfolder){
-		if( ! defined(ISSQLITE))
-		{
-			$sql = "INSERT INTO links(time, IP, link, name, isfolder)
-			VALUES( now(), :IP, :link, :name, 0)";
-		//VALUES(FROM_UNIXTIME(:time), :IP, :agent, :user, :email, :message, :homepage)";
-		}else{
-			$sql = "INSERT INTO links(time, IP, link, name, isfolder)
-			VALUES( strftime('%s', 'now'), :IP, :link, :name, 0)";		
-		}
-	}else{
-		if( ! defined(ISSQLITE))
-		{
-			$sql = "INSERT INTO links(time, IP, link, name, isfolder)
-			VALUES( now(), :IP, :link, :name, 1)";
-		//VALUES(FROM_UNIXTIME(:time), :IP, :agent, :user, :email, :message, :homepage)";
-		}else{
-			$sql = "INSERT INTO links(time, IP, link, name, isfolder)
-			VALUES( strftime('%s', 'now'), :IP, :link, :name, 1)";		
-		}	
-	}	
-		if(!$this->connection) 
-		{
-			//echo $this->errormsg;
-			$this->errormsg = 'not connected';
-			return false;
-		}
-		
-		$statement = $this->connection->prepare($sql);
-		if(!$statement){
-			$this->errormsg = 'not statement';
-			return false;
-		}
-		$time = time();
-		//$statement->bindValue(':time', null, PDO::PARAM_NULL);
-		//$statement->bindValue(':time', $time, PDO::PARAM_INT);
-		$statement->bindValue(':IP', $msg->fields['IP'], PDO::PARAM_STR);
-		$statement->bindValue(':name', $msg->fields['name'], PDO::PARAM_STR);
-	if(! $isfolder){		
-		$statement->bindValue(':link', $msg->fields['link'], PDO::PARAM_STR);		
-	}else{
-		$statement->bindValue(':link', 'fld/'.$msg->fields['name'], PDO::PARAM_STR);				
-	}
-		//$statement->bindValue(':filepath', $msg->fields['filepath'], PDO::PARAM_STR);
-
-		if ($statement->execute() )
-			return true;
-		else{
-			$this->errormsg = implode(' ', $statement->errorInfo() );
-			return false;
-		}
-	}
->>>>>>> 6b0274c5dfa49ba30bca5e71fad81824d6d837a6
 }
 ?>
