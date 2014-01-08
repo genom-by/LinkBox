@@ -6,12 +6,12 @@ include_once 'settings.inc.php';
 include_once 'database.class.php';
 include_once 'entities.class.php';
 
-if (isset($_POST['reg_submit']))
+if (isset($_POST['new_ahref_btn']))
 {
 	
-	$regdate = time(); // UNIXTIME
-	$name = Utils::cleanInput($_POST['reg_name']);
-	$email = Utils::cleanInput($_POST['reg_email']);
+	$adddate = time(); // UNIXTIME
+	$link = Utils::cleanInput($_POST['new_ahref']);
+	/*$email = Utils::cleanInput($_POST['reg_email']);
 	$pass = Utils::cleanInput($_POST['reg_pass']);
 	$user = new User($regdate, $name, $email, $pass);
 	$logsucc = false;
@@ -27,7 +27,7 @@ if (isset($_POST['reg_submit']))
 		echo Logger::$logfile;
 	}
 	echo '</pre>';
-	die();
+	die();*/
 /*	if(false === strpos($url, 'http'))
 		$url = 'http://'.$url;
 */

@@ -16,7 +16,7 @@
 	<div id="main"><!--height == min of viewport-->
 		<div id="all"><!--prevents to outbound floating elments, prevents to climbing content under footer-->
 		<div id="messages" class="msgbox">error!
-		</div>
+		</div><!---->
 		</div>
 	</div>
 <!-- -->	
@@ -26,15 +26,19 @@
 			<div class="form_padding">
 			<div class="simple-input small">
 				<label for="reg_name">Name</label>
-				<input id="reg_name" type="text" tabindex="1" name="ahref_ahref">
+				<input id="reg_name" type="text" tabindex="1" name="reg_name">
 			</div>
 			<div class="simple-input small">			
 				<label for="reg_email">E-mail</label>
-				<input id="reg_email" type="email" tabindex="2" name="ahref_name">
+				<input id="reg_email" type="email" tabindex="2" name="reg_email">
+			</div>
+				<div class="simple-input small">
+				<label for="reg_pass">Password</label>
+				<input id="reg_pass" type="password" tabindex="3" name="reg_pass">
 			</div>
 			<p>
 
-<input id="reg_submit" class="btn_submit" type="submit" value="Register" tabindex="4">
+<input id="reg_submit" class="btn_submit" type="submit" value="Register" tabindex="4" name="reg_submit">
 			</p>
 			</div><!-- /form-padding-->
 			</form>

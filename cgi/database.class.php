@@ -1,11 +1,15 @@
 <?php
+namespace LinkBox;
+use PDO;
+use PDOException;
 
 include_once 'settings.inc.php';
 
 class DataBase{
 	protected static $instance;
-	protected $connection;
+	public $connection;
 	public $errormsg = '';
+	public $status = 'disconnected';
 	private function __construct()
 	{
 		if (is_null($this->connection)){
@@ -13,35 +17,25 @@ class DataBase{
 				if(defined(ISSQLITE))
 				{
 					if( ! file_exists(DBPATHSQLITE) ){
-						$this->connection = new PDO(DSNSQLITE.DBPATHSQLITE);
-						$this->createSQLITEtable($this->connection);
+						//$this->connection = new PDO(DSNSQLITE.DBPATHSQLITE);
+						//$this->createSQLITEtable($this->connection);
+						throw new \Exception('Database not found');
 					}else{
 						$this->connection = new PDO(DSNSQLITE.DBPATHSQLITE);				
 					}
 				}else{
 					$this->connection = new PDO(DSNMYSQL, DBUSER, DBPWD);
 				}
-				$this->connection->exec('SET NAMES utf8'); 
+				$this->connection->exec('SET NAMES utf8');
+				$this->status = 'connected';
+				if(defined('DEBUG_MODE')){
+					//$this->connection->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+					$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+				}
 			}catch(PDOException $pe){
 				$this->errormsg = 'Not connected to DB. Error: '.$pe->getMessage();
 			}
-		}
-	}
-	private function createSQLITEtable($conn)
-	{
-	    $res = $this->connection->exec("CREATE TABLE links (
-					msg_id INTEGER PRIMARY KEY,
-					time TIMESTAMP,
-					IP char(16),
-					link varchar(255),
-					name varchar(255),
-					isfolder boolean
-					)"
-					);
-		if($res === false){
-			echo $this->errormsg = implode(' ', $this->connection->errorInfo() );
-			return false;		
-		}
+		}		
 	}
 	
 	public static function getDB()
@@ -52,26 +46,112 @@ class DataBase{
 		return self::$instance;
 	}
 	
-	public function getLinksCount()
+/*---------------------------------------------------------------------------------
+* perform Update operation
+* @table string what table to update
+* @arrayFV array key=>value pairs where key is fieldname in database
+* @condFVO array : fieldname=>(value=>operation)
+*/
+	public function Update($table, $arrayFV, $condFVO)
 	{
-		if(!$this->connection) 	{
+		$SQLpart = "UPDATE {$table} SET ";
+		$CONDpart = " WHERE ";
+		
+		foreach($arrayFV as $field => $value){
+			$SQLpart .= "$field=:{$field}, ";
+		}
+		$SQLpart = rtrim($SQLpart,', ');
+		
+		foreach($condFVO as $field => $valueOp){
+			list($value, $operation) = each($valueOp);
+			$CONDpart .= "$field $operation :{$field} AND ";
+		}
+		//$CONDpart = rtrim($CONDpart,' AND ');
+		$CONDpart = substr($CONDpart, 0, -5);
+		
+		$sql = $SQLpart.$CONDpart;
+echo 'sql:'.$sql;		
+		$statement = $this->connection->prepare($sql);
+		if(!$statement){
+			$this->errormsg = 'statement didn\'t prepare';
 			return false;
 		}
 		
-		$sql = "SELECT COUNT(*) FROM links";
-		//$cnt = ($this->connection)::query($sql, PDO::FETCH_COLUMN, 0);
-		$stmt = $this->connection->query($sql, PDO::FETCH_COLUMN, 0);
-		if(!$stmt ){
-			$this->errormsg = implode(' ', $this->connection->errorInfo() );
-			return false;
-		}		
-		$cnt = $stmt->fetchColumn(0);
-		if($cnt === false){
-			$this->errormsg = implode(' ', $this->connection->errorInfo() );
+		reset($arrayFV);
+		foreach($arrayFV as $field => $value){
+			$res = $statement->bindValue(":$field", $value);//, $this->sqlFieldsPDOTypes[$field]);
+			if(!$res){
+				$this->errormsg = $statement->errorInfo();
+				return false;
+			}
+		}
+		reset($condFVO);
+		foreach($condFVO as $field => $valueOp){
+			list($value, $operation) = each($valueOp);
+			$res = $statement->bindValue(":$field", $value);//, $this->sqlFieldsPDOTypes[$field]);
+			if(!$res){
+				$this->errormsg = $statement->errorInfo();
+				return false;
+			}
+		}
+		
+		if ($statement->execute() ){
+			$affCount = $statement->rowCount();
+			
+			return $affCount;
+			}
+		else{
+			$this->errormsg = 'Save failed: '.implode(' ', $statement->errorInfo() );
 			return false;
 		}
-		return $cnt;
 	}
+/*---------------------------------------------------------------------------------
+* perform Insert operation
+* @table string to what save
+* @arrayFV array key=>value pairs where key is fieldname in database
+*/
+	public function Insert($table, $arrayFV)
+	{
+		$SQLpart = "INSERT INTO {$table}(";
+		$PDOpart = " VALUES(";
+		
+		//Logger::log(serialize($fieldsWithoutPK));
+		foreach($arrayFV as $field => $value){
+			$SQLpart .= $field;
+			$SQLpart .= ', ';
+			$PDOpart .= ':'.$field;
+			$PDOpart .= ', ';			
+		}
+		$SQLpart = rtrim($SQLpart,', ');
+		$SQLpart .= ') ';
+		$PDOpart = rtrim($PDOpart,', ');
+		$PDOpart .= ') ';
+		
+		$sql = $SQLpart.$PDOpart;
+		
+		$statement = $this->connection->prepare($sql);
+		if(!$statement){
+			$this->errormsg = 'statement didn\'t prepare';
+			return false;
+		}
+		reset($arrayFV);
+		foreach($arrayFV as $field => $value){
+			$res = $statement->bindValue(":$field", $value);//, $this->sqlFieldsPDOTypes[$field]);
+			if(!$res){
+				$this->errormsg = $statement->errorInfo();
+				return false;
+			}
+		}
+		
+		if ($statement->execute() ){
+			return $this->connection->lastInsertId();
+			}
+		else{
+			$this->errormsg = 'Save failed: '.implode(' ', $statement->errorInfo() );
+			return false;
+		}
+	}
+	
 	/*
 	//
 	*/
@@ -122,59 +202,6 @@ class DataBase{
 		}		
 	}
 	
-	public function saveLink($msg, $isfolder = false)
-	{
-	if(! $isfolder){
-		if( ! defined(ISSQLITE))
-		{
-			$sql = "INSERT INTO links(time, IP, link, name, isfolder)
-			VALUES( now(), :IP, :link, :name, 0)";
-		//VALUES(FROM_UNIXTIME(:time), :IP, :agent, :user, :email, :message, :homepage)";
-		}else{
-			$sql = "INSERT INTO links(time, IP, link, name, isfolder)
-			VALUES( strftime('%s', 'now'), :IP, :link, :name, 0)";		
-		}
-	}else{
-		if( ! defined(ISSQLITE))
-		{
-			$sql = "INSERT INTO links(time, IP, link, name, isfolder)
-			VALUES( now(), :IP, :link, :name, 1)";
-		//VALUES(FROM_UNIXTIME(:time), :IP, :agent, :user, :email, :message, :homepage)";
-		}else{
-			$sql = "INSERT INTO links(time, IP, link, name, isfolder)
-			VALUES( strftime('%s', 'now'), :IP, :link, :name, 1)";		
-		}	
-	}	
-		if(!$this->connection) 
-		{
-			//echo $this->errormsg;
-			$this->errormsg = 'not connected';
-			return false;
-		}
-		
-		$statement = $this->connection->prepare($sql);
-		if(!$statement){
-			$this->errormsg = 'not statement';
-			return false;
-		}
-		$time = time();
-		//$statement->bindValue(':time', null, PDO::PARAM_NULL);
-		//$statement->bindValue(':time', $time, PDO::PARAM_INT);
-		$statement->bindValue(':IP', $msg->fields['IP'], PDO::PARAM_STR);
-		$statement->bindValue(':name', $msg->fields['name'], PDO::PARAM_STR);
-	if(! $isfolder){		
-		$statement->bindValue(':link', $msg->fields['link'], PDO::PARAM_STR);		
-	}else{
-		$statement->bindValue(':link', 'fld/'.$msg->fields['name'], PDO::PARAM_STR);				
-	}
-		//$statement->bindValue(':filepath', $msg->fields['filepath'], PDO::PARAM_STR);
-
-		if ($statement->execute() )
-			return true;
-		else{
-			$this->errormsg = implode(' ', $statement->errorInfo() );
-			return false;
-		}
-	}
+	
 }
 ?>
