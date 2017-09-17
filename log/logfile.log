@@ -1,0 +1,175 @@
+Sep,13 15:44:54 : created and connected
+Sep,13 15:44:54 : SELECT id_tag, tagName, id_user from tags tagName = 'tagA'
+Sep,13 15:44:54 : DB[getArrayBySQL] exception executing query:: WHERE id_user = 1 AND tagName = 'tagA'  ORDER BY tagName
+Sep,13 15:44:54 : DB[getArrayBySQL] Error getting records: SQLSTATE[HY000]: General error: 1 near "WHERE": syntax error
+Sep,13 15:44:54 : DBObject[getEntriesBySQL]: No data from DB: DB[getArrayBySQL] Error getting records: SQLSTATE[HY000]: General error: 1 near "WHERE": syntax error
+Sep,13 15:44:54 : tagAr[0]['id_tag']:
+Sep,13 15:44:54 : error performing tags transaction: SQLSTATE[23000]: Integrity constraint violation: 19 column tagName is not unique
+Sep,13 15:44:54 : link2 error: error performing tags transaction: SQLSTATE[23000]: Integrity constraint violation: 19 column tagName is not unique
+Sep,13 15:48:37 : created and connected
+Sep,13 15:48:37 : tagAr[0]['id_tag']:6
+Sep,13 15:50:48 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:1:"6";s:5:"table";s:3:"tag";}
+Sep,13 15:50:48 : created and connected
+Sep,13 15:50:48 : json : {"result":"ok"}
+Sep,13 15:50:57 : created and connected
+Sep,13 15:55:39 : Start linkbox app
+Sep,13 16:07:09 : created and connected
+Sep,13 16:22:14 : Start linkbox app
+Sep,13 16:23:13 : Start linkbox app
+Sep,13 16:23:13 : created and connected
+Sep,13 16:43:44 : Start linkbox app
+Sep,13 16:43:44 : created and connected
+Sep,13 16:44:18 : Start linkbox app
+Sep,13 16:44:18 : created and connected
+Sep,15 12:19:05 : Start linkbox app
+Sep,15 12:19:05 : created and connected
+Sep,15 12:19:18 : count sql: SELECT COUNT (id_user) FROM user WHERE name='genom'
+Sep,15 12:19:18 : created and connected
+Sep,15 12:19:18 : user$1$0X3.HP/.$7LCn4cNmqHXlg6FZOO.Jh/
+Sep,15 12:19:18 : Start linkbox app
+Sep,15 12:19:18 : created and connected
+Sep,15 12:19:22 : created and connected
+Sep,15 12:28:18 : created and connected
+Sep,15 12:30:32 : created and connected
+Sep,15 12:31:11 : created and connected
+Sep,15 13:19:49 : created and connected
+Sep,15 13:19:55 : created and connected
+Sep,15 13:22:07 : created and connected
+Sep,15 13:22:13 : created and connected
+Sep,15 13:23:17 : created and connected
+Sep,15 13:23:22 : created and connected
+Sep,15 13:24:00 : created and connected
+Sep,15 13:24:23 : created and connected
+Sep,15 13:24:44 : created and connected
+Sep,15 13:25:14 : created and connected
+Sep,15 13:25:19 : created and connected
+Sep,15 13:25:40 : created and connected
+Sep,15 13:26:30 : created and connected
+Sep,15 13:27:46 : urlfavicon1 error: 
+Sep,15 13:27:46 : created and connected
+Sep,15 13:29:07 : empty proto/path
+Sep,15 13:29:07 : urlfavicon1 error: 
+Sep,15 13:29:07 : created and connected
+Sep,15 13:29:43 : empty proto/path
+Sep,15 13:29:43 : urlfavicon1 error: empty proto/path
+Sep,15 13:29:43 : created and connected
+Sep,15 13:59:59 : empty proto/path
+Sep,15 13:59:59 : urlfavicon1 error: empty proto/path
+Sep,15 13:59:59 : created and connected
+Sep,15 14:19:27 : created and connected
+Sep,15 14:23:20 : created and connected
+Sep,15 14:25:15 : Start linkbox app
+Sep,15 14:25:15 : created and connected
+Sep,15 14:27:21 : created and connected
+Sep,15 14:46:08 : error getting page title
+Sep,15 14:46:09 : created and connected
+Sep,15 14:50:29 : error getting page title
+Sep,15 14:50:29 : created and connected
+Sep,15 14:51:03 : error getting page title
+Sep,15 14:51:03 : created and connected
+Sep,15 14:56:56 : created and connected
+Sep,15 15:00:23 : created and connected
+Sep,15 15:03:03 : created and connected
+Sep,15 15:15:24 : created and connected
+Sep,15 15:15:42 : created and connected
+Sep,15 15:16:18 : created and connected
+Sep,15 15:25:45 : created and connected
+Sep,15 15:28:34 : created and connected
+Sep,15 15:33:35 : created and connected
+Sep,15 15:35:54 : created and connected
+Sep,15 15:39:28 : created and connected
+Sep,15 15:45:10 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"19";s:5:"table";s:4:"link";}
+Sep,15 15:45:10 : POST Routines returned error
+Sep,15 15:45:10 : POST array: a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"19";s:5:"table";s:4:"link";}
+Sep,15 15:45:14 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:1:"1";s:5:"table";s:4:"link";}
+Sep,15 15:45:14 : POST Routines returned error
+Sep,15 15:45:14 : POST array: a:3:{s:6:"action";s:6:"delete";s:2:"id";s:1:"1";s:5:"table";s:4:"link";}
+Sep,15 15:46:12 : created and connected
+Sep,15 15:51:05 : created and connected
+Sep,15 15:54:26 : created and connected
+Sep,15 15:56:38 : Start linkbox app
+Sep,15 15:56:38 : created and connected
+Sep,15 15:56:46 : count sql: SELECT COUNT (id_user) FROM user WHERE name='genom'
+Sep,15 15:56:46 : created and connected
+Sep,15 15:56:46 : user$1$0X3.HP/.$7LCn4cNmqHXlg6FZOO.Jh/
+Sep,15 15:56:46 : Start linkbox app
+Sep,15 15:56:46 : created and connected
+Sep,15 15:56:49 : created and connected
+Sep,15 15:58:58 : Start linkbox app
+Sep,15 15:58:58 : created and connected
+Sep,15 16:01:01 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"18";s:5:"table";s:4:"link";}
+Sep,15 16:01:01 : POST Routines returned error
+Sep,15 16:01:01 : POST array: a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"18";s:5:"table";s:4:"link";}
+Sep,15 16:02:29 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"18";s:5:"table";s:4:"link";}
+Sep,15 16:02:29 : created and connected
+Sep,15 16:02:29 : json : {"result":"ok"}
+Sep,15 16:02:33 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"19";s:5:"table";s:4:"link";}
+Sep,15 16:02:33 : created and connected
+Sep,15 16:02:33 : json : {"result":"ok"}
+Sep,15 16:02:34 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:1:"1";s:5:"table";s:4:"link";}
+Sep,15 16:02:34 : created and connected
+Sep,15 16:02:34 : json : {"result":"ok"}
+Sep,15 16:02:36 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:1:"2";s:5:"table";s:4:"link";}
+Sep,15 16:02:36 : created and connected
+Sep,15 16:02:36 : json : {"result":"ok"}
+Sep,15 16:02:37 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:1:"3";s:5:"table";s:4:"link";}
+Sep,15 16:02:37 : created and connected
+Sep,15 16:02:37 : json : {"result":"ok"}
+Sep,15 16:02:39 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"14";s:5:"table";s:4:"link";}
+Sep,15 16:02:39 : created and connected
+Sep,15 16:02:39 : json : {"result":"ok"}
+Sep,15 16:02:41 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"12";s:5:"table";s:4:"link";}
+Sep,15 16:02:41 : created and connected
+Sep,15 16:02:41 : json : {"result":"ok"}
+Sep,15 16:02:53 : Start linkbox app
+Sep,15 16:02:53 : created and connected
+Sep,15 16:03:03 : Start linkbox app
+Sep,15 16:03:03 : created and connected
+Sep,15 16:03:51 : Start linkbox app
+Sep,15 16:03:51 : created and connected
+Sep,15 16:19:56 : Start linkbox app
+Sep,15 16:19:56 : created and connected
+Sep,15 16:24:29 : created and connected
+Sep,15 16:29:49 : created and connected
+Sep,15 16:30:14 : Start linkbox app
+Sep,15 16:30:14 : created and connected
+Sep,15 16:30:29 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"23";s:5:"table";s:4:"link";}
+Sep,15 16:30:29 : created and connected
+Sep,15 16:30:29 : DB[executeQuery]: Error while executing query: SQLSTATE[HY000]: General error: 1 no such table: main.users
+Sep,15 16:30:29 : DB[executeQuery] desired query:DELETE FROM link WHERE id_link=23
+Sep,15 16:30:29 : [DBO]deleteEntry:error while deleting DB: DB[executeQuery]: Error while executing query: SQLSTATE[HY000]: General error: 1 no such table: main.users
+Sep,15 16:30:29 : POST Routines returned error
+Sep,15 16:30:29 : POST array: a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"23";s:5:"table";s:4:"link";}
+Sep,15 16:36:42 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"22";s:5:"table";s:4:"link";}
+Sep,15 16:36:42 : created and connected
+Sep,15 16:36:42 : DB[executeQuery]: Error while executing query: SQLSTATE[HY000]: General error: 1 no such table: main.users
+Sep,15 16:36:42 : DB[executeQuery] desired query:DELETE FROM link WHERE id_link=22
+Sep,15 16:36:42 : [DBO]deleteEntry:error while deleting DB: DB[executeQuery]: Error while executing query: SQLSTATE[HY000]: General error: 1 no such table: main.users
+Sep,15 16:36:42 : POST Routines returned error
+Sep,15 16:36:42 : POST array: a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"22";s:5:"table";s:4:"link";}
+Sep,15 16:37:16 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"22";s:5:"table";s:4:"link";}
+Sep,15 16:37:16 : created and connected
+Sep,15 16:37:16 : json : {"result":"ok"}
+Sep,15 16:52:57 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"23";s:5:"table";s:4:"link";}
+Sep,15 16:52:57 : created and connected
+Sep,15 16:52:57 : json : {"result":"ok"}
+Sep,15 16:56:23 : created and connected
+Sep,15 16:56:55 : created and connected
+Sep,15 16:57:00 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"25";s:5:"table";s:4:"link";}
+Sep,15 16:57:00 : created and connected
+Sep,15 16:57:00 : json : {"result":"ok"}
+Sep,15 16:58:15 : Start linkbox app
+Sep,15 16:58:15 : created and connected
+Sep,15 16:58:37 : created and connected
+Sep,15 16:58:38 : error performing tags transaction: SQLSTATE[23000]: Integrity constraint violation: 19 columns id_tag, id_link are not unique
+Sep,15 16:58:38 : link error: error performing tags transaction: SQLSTATE[23000]: Integrity constraint violation: 19 columns id_tag, id_link are not unique
+Sep,15 16:59:07 : created and connected
+Sep,15 16:59:16 : Start linkbox app
+Sep,15 16:59:16 : created and connected
+Sep,15 16:59:37 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"27";s:5:"table";s:4:"link";}
+Sep,15 16:59:37 : created and connected
+Sep,15 16:59:37 : json : {"result":"ok"}
+Sep,15 16:59:40 : Start linkbox app
+Sep,15 16:59:40 : created and connected
+Sep,15 17:02:53 : created and connected
+Sep,15 17:03:44 : created and connected
