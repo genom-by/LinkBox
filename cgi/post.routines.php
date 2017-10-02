@@ -30,24 +30,7 @@ function dispatchDelete($table, $id){
 		case 'link':
 		$res = DBObject::deleteEntry('link', $id, 'id_link');
 		break;
-		case 'destination':
-		$res = DBObject::deleteEntry('destination', $id, 'id_dest');
-		break;
-		case 'station':
-		$res = DBObject::deleteEntry('station', $id);
-		break;
-		case 'seq_stations':
-		$res = DBObject::deleteEntry('seq_stations', $id, 'id_ss');
-		break;
-		case 'pitstop':
-		$res = Way::DeletePitstop($_POST['id']);		
-		break;
-		case 'seq_stations_delete':
-		$res = sequencesStations::DeleteSeqStations($_POST['id']);		
-		break;
-		case 'itin_pitstops_delete':
-		$res = Way::DeleteItinStations($_POST['id']);		
-		break;
+
 	default:
 		$res = false;
 		$err = 'No table provided';
@@ -65,51 +48,14 @@ function dispatchPageUpdate($table, $id){
 	$err = ''; //\LinkBox\Logger::log("table: {$table} id: {$id}") ;
 
 	switch($table){
-		case 'chart_redraw_seq':
-			$sequence_id = $_POST['id'];
-			$seqstats = sequencesStations::getSeqStatNamesBySequenceID($sequence_id);
-			$seq_pits = Way::getPitstopsBySequence($sequence_id);
-			if(( false === $seqstats) OR (false === $seq_pits) ){returnPOSTError('could not obtain sequences or pitstops');die();}
-			else{
-				$seqstats = HTML::arrayLineChartCategories($seqstats);
-				$seq_pits = HTML::arrayLineChart($seq_pits, $sequence_id, '|');
-				echo json_encode(array('result'=>'ok', 'payload'=>$seqstats, 'seqpits'=>$seq_pits) );
-				die();
-				}
-		break;
-		case 'pits_PitEdit_table':
-			$seqstats = HTML::getPitStopsEditRows($_POST['id']);
-			if(false === $seqstats){returnPOSTError('could not obtain pitstops');die();}
-			else{
-				echo json_encode(array('result'=>'ok', 'payload'=>$seqstats) );
-				die();
-				}
-		break;
-		case 'pits_PitView_table':
-			$seqstats = HTML::getPitStopsViewRows($_POST['id']);
-			if(false === $seqstats){returnPOSTError('could not obtain pitstops');die();}
-			else{
-				echo json_encode(array('result'=>'ok', 'payload'=>$seqstats) );
-				die();
-				}
-		break;
-		case 'seq_SeqEdit_table':
+		case 'link_folder':
 			//$seqstats = sequencesStations::getSeqStatNamesBySequenceID($_POST['id']);
-			$seqstats = HTML::getSeqEditRows($_POST['id']);
-			if(false === $seqstats){returnPOSTError('could not obtain sequences');die();}
+			//$links = HTML::getTableItems($_POST['id']);
+			$links = HTML::getTableItems('linkMainPage');
+			if(false === $links){returnPOSTError('could not obtain links');die();}
 			else{
 				//$seqstats = HTML::getPitStopsEditRows($seqstats);
-				echo json_encode(array('result'=>'ok', 'payload'=>$seqstats) );
-				die();
-				}
-		break;
-		case 'seq_SeqView_table':
-			//$seqstats = sequencesStations::getSeqStatNamesBySequenceID($_POST['id']);
-			$seqstats = HTML::getSeqViewRows($_POST['id']);
-			if(false === $seqstats){returnPOSTError('could not obtain sequences');die();}
-			else{
-				//$seqstats = HTML::getPitStopsEditRows($seqstats);
-				echo json_encode(array('result'=>'ok', 'payload'=>$seqstats) );
+				echo json_encode(array('result'=>'ok', 'payload'=>$links) );
 				die();
 				}
 		break;
@@ -218,13 +164,13 @@ function dispatchInquire($table, $id, $question){
 				die();
 				}
 		break;
-		case 'seq_SeqView_table':
+		case 'pageTitle':
 			//$seqstats = sequencesStations::getSeqStatNamesBySequenceID($_POST['id']);
-			$seqstats = HTML::getSeqViewRows($_POST['id']);
-			if(false === $seqstats){returnPOSTError('could not obtain sequences');die();}
+			$title = LinkHandler::getSiteTitle($table);
+			if(false === $title){returnPOSTError('no page title');die();}
 			else{
 				//$seqstats = HTML::getPitStopsEditRows($seqstats);
-				echo json_encode(array('result'=>'ok', 'payload'=>$seqstats) );
+				echo json_encode(array('result'=>'ok', 'payload'=>$title) );
 				die();
 				}
 		break;

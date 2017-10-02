@@ -30,6 +30,7 @@ include_once 'cgi/HTMLroutines.class.php';
 	<link rel="stylesheet" type="text/css" href="css/typeahead.css">
 	<link rel="stylesheet" type="text/css" href="css/offcanvas.css">
 	<link rel="stylesheet" type="text/css" href="css/linktable.css">
+	<link rel="stylesheet" type="text/css" href="css/linkbox.css">
 	
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>

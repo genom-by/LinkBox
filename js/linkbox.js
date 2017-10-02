@@ -264,6 +264,29 @@ function fillTagsSelected(){
 	
 	//return false;
 }
+//
+//
+function menuFolderSelected(folderType, folderID){
+	console.log('folderType:'+folderType + 'folderID:'+folderID);
+	id_ = folderID;
+	table_ = 'link_folder';
+	divID='#lbx_LinksTable';
+	$.post(
+		"cgi/post.routines.php",
+		{action: 'pageUpdate', id:id_, table:table_},
+		function(data){
+			console.log("post returned: "+data.result);
+		if (data.result == 'ok' ){
+			//console.log(data.payload);
+			$(divID).html(data.payload);
+		}else{
+			console.log('error message: ',data.message);
+			$(divID).html(data.message);			
+		}
+		}
+		,"json"
+	);
+}
 
 	var submitting = false;
 	

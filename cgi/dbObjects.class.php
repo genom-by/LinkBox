@@ -349,17 +349,26 @@ LiLogger::log('count sql: '.$sql);
 class Folder extends DBObject{
 
 	protected static $orm = array('table'=>'folder', 'table_id'=>'id_folder', 'where_uid'=>'id_user', 'is_uid'=>true);
-	protected static $sqlGetAll = 'SELECT id_folder, folderName, id_user from folder';
-	protected static $sqlGetAllOrdered = 'SELECT id_folder, folderName, id_user from folder ORDER BY folderName';
+	protected static $sqlGetAll = 'SELECT id_folder, id_parentfolder, folderName, id_user from folder';
+	protected static $sqlGetAllOrdered = 'SELECT id_folder, id_parentfolder, folderName, id_user from folder ORDER BY folderName';
 		
-	public function __construct($name_){
+	public function __construct($name_, $parent_ = null){
 		$this->name = Utils::cleanInput($name_);
+		$this->parentfolder = Utils::cleanInput($parent_);
+		$this->parentfolder = intval($this->parentfolder);
 		$this->uid = Auth::whoLoggedID();
-		$this->sqlPDOSave = "INSERT INTO folder(folderName, id_user) VALUES(':1:', :2:)";
+		if(is_int($this->parentfolder)){
+			$this->sqlPDOSave = "INSERT INTO folder(folderName, id_user, id_parentfolder) VALUES(':1:', :2:, :3:)";
+		}else{
+			$this->sqlPDOSave = "INSERT INTO folder(folderName, id_user) VALUES(':1:', :2:)";
+		}
 	}
 	public function save(){
 		$pdosql = str_replace(':1:', $this->name, $this->sqlPDOSave);
 		$pdosql = str_replace(':2:', $this->uid, $pdosql);
+		if(is_int($this->parentfolder)){
+			$pdosql = str_replace(':3:', $this->parentfolder, $pdosql);
+		}		
 		return $this->saveObject($pdosql);
 	}
 	public static function load($id){
@@ -368,6 +377,9 @@ class Folder extends DBObject{
 		$me = new Folder($load['folderName']);
 		$me->id = $load['id_folder'];
 		$me->uid = $load['id_user'];
+		if(is_int($load['id_parentfolder'])){
+			$this->parentfolder = $load['id_parentfolder'];
+		}
 		return $me;}
 	}
 	
@@ -379,25 +391,153 @@ class Folder extends DBObject{
 			$foldArr[$fld['id_folder']] = $fld['folderName'];
 		}
 		return $foldArr;
-	}	
-	public static function getFoldersAndCounts(){
+	}
+	
+	public static function getParentFoldersNames(){
+		$folders = self::getAllWhere("WHERE id_parentFolder IS NULL");//'SELECT id_folder, folderName, id_user from folder'
+		if($folders === false){return false;}
+		$foldArr = array();
+		foreach($folders as $fld){
+			$foldArr[$fld['id_folder']] = $fld['folderName'];
+		}
+		return $foldArr;
+	}
+	public static function getSubFoldersNames($parentID){
+		$folders = self::getAllWhere("WHERE id_parentFolder = {$parentID}");//'SELECT id_folder, folderName, id_user from folder'
+		if($folders === false){return false;}
+		$foldArr = array();
+		foreach($folders as $fld){
+			$foldArr[$fld['id_folder']] = $fld['folderName'];
+		}
+		return $foldArr;
+	}
+/*	============== instead standard getall - for parent folders only ==========================================
+*/
+	public static function getAllParents(){
+		
+		return self::getAllWhere("WHERE id_parentFolder IS NULL");		
+	}
+/*	================ only for parent folders ==========================
+*/	
+	public static function getSubFoldersAndCounts($parentID = null){
 		
 		try{
 		$db = LinkBox\DataBase::connect();
-	
-		$sql = "SELECT  folderName, COUNT(id_link)  as folderCount FROM folder LEFT JOIN link ON folder.id_folder = link.id_folder WHERE folder.id_user=:uid GROUP BY folderName ";
+		if(is_null($parentID)){
+		$sql = "SELECT folder.id_folder, folderName, COUNT(id_link) as folderCount FROM folder LEFT JOIN link ON folder.id_folder = link.id_folder WHERE folder.id_user=:uid AND folder.id_parentFolder IS NOT NULL GROUP BY folderName ";
+		}else{
+		$sql = "SELECT folder.id_folder, folderName, COUNT(id_link) as folderCount FROM folder LEFT JOIN link ON folder.id_folder = link.id_folder WHERE folder.id_user=:uid AND folder.id_parentFolder IS NOT NULL AND id_parentFolder = {$parentID} GROUP BY folderName";
 		
+		}
 		$stmt = $db->connection->prepare($sql);
 		$stmt->bindValue(':uid', Auth::whoLoggedID());
 		$stmt->execute();
 
 		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		}catch(PDOException $e){
-			$this->errormsg = 'error fetching folders count: '.$e->getMessage();//LinkBox\DataBase::$errormsg;
-			LiLogger::log( $this->errormsg );
+			self::$errormsg = 'error fetching folders count: '.$e->getMessage();//LinkBox\DataBase::$errormsg;
+			LiLogger::log( self::$errormsg );
 			return false;			
 		}
 		return $rows;
+		/*
+		SELECT id_folder, folderName, COUNT(co_par) as co_sub
+FROM (
+SELECT id_parentFolder, COUNT(id_folder) as co_par
+FROM folder
+WHERE  id_parentFolder IS NOT NULL
+GROUP BY id_parentFolder
+)
+ WHERE id_parentFolder IS NULL
+GROUP BY id_folder 
+		*/
+	}
+/*	================ forms array of folders ==========================
+*/	
+	public static function getFoldersArray(){
+		
+		$rows = array();
+		$onerow = array();
+		$parents = self::getAllParents();
+		if(false === $parents OR count($parents) < 1){
+			self::$errormsg = 'error fetching parent folders: '.self::$errormsg;//LinkBox\DataBase::$errormsg;
+			LiLogger::log( self::$errormsg );
+			return false;		
+		}
+
+		foreach($parents as $parent){
+			$sub = self::getSubFoldersAndCounts($parent['id_folder']);
+		
+			if(false === $sub){
+				self::$errormsg = 'error fetching sub folders: '.self::$errormsg;//LinkBox\DataBase::$errormsg;
+				LiLogger::log( self::$errormsg );
+				return false;		
+			}		
+
+			if(count($sub) < 1){
+				$empty = array('parentID'=>$parent['id_folder'], 'parentName'=>$parent['folderName'], 'subfolders'=> array(), 'folderCount'=>0);	
+				$rows[] = $empty;
+				
+			}else{
+				$onerow['parentID'] = $parent['id_folder'];
+				$onerow['parentName'] = $parent['folderName'];
+				$onerow['subfolders'] = $sub;
+				$onerow['folderCount'] = self::countSubfolderedLinks($sub);
+				$rows[] = $onerow;
+			}
+		}
+//echo'<pre>';var_dump(($rows));die();			
+		return $rows;
+	}
+
+	public static function countSubfolderedLinks($sub){
+		$sum = 0;
+		foreach($sub as $s){
+			$sum += $s['folderCount'];
+		}
+		return $sum;
+	}	
+
+}
+/* ================================================= Sub Folder ===========================================================
+*/
+class Subfolder extends DBObject{
+
+	protected static $orm = array('table'=>'folder', 'table_id'=>'id_folder', 'where_uid'=>'id_user', 'is_uid'=>true);
+	protected static $sqlGetAll = 'SELECT id_folder,  id_parentfolder, folderName, id_user from folder';
+	protected static $sqlGetAllOrdered = 'SELECT id_folder,  id_parentfolder, folderName, id_user from folder ORDER BY folderName';
+		
+	public function __construct($name_, $parent_){
+		$this->name = Utils::cleanInput($name_);
+		$this->parentfolder = Utils::cleanInput($parent_);
+		$this->uid = Auth::whoLoggedID();
+		$this->sqlPDOSave = "INSERT INTO folder(folderName, id_parentfolder, id_user) VALUES(':1:', :2:, :3:)";
+	}
+	public function save(){
+		$pdosql = str_replace(':1:', $this->name, $this->sqlPDOSave);
+		$pdosql = str_replace(':2:', $this->parentfolder, $pdosql);
+		$pdosql = str_replace(':3:', $this->uid, $pdosql);
+		return $this->saveObject($pdosql);
+	}
+	public static function load($id){
+		$load = self::getFromDB($id);
+		if(empty($load)){return false;}else{
+		$me = new Folder($load['folderName']);
+		$me->id = $load['id_folder'];
+		$me->parentfolder = $load['id_parentfolder'];
+		$me->uid = $load['id_user'];
+		return $me;}
+	}
+	
+	public static function getFoldersNames($parent_id){
+		$parent_id = Utils::cleanInput($parent_id);
+		$folders = self::getAllWhere("WHERE id_parentFolder = {$parent_id}");//'SELECT id_folder, folderName, id_user from folder'
+		if($folders === false){return false;}
+		$foldArr = array();
+		foreach($folders as $fld){
+			$foldArr[$fld['id_folder']] = $fld['folderName'];
+		}
+		return $foldArr;
 	}	
 
 }

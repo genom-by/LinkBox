@@ -149,3 +149,7 @@ border:2px solid red;
 .loginmenu li:not(:first-child){
 border-left:1px dotted #525354;
 }
+img.simpleFav{
+	width:24px;
+	height:24px;
+}

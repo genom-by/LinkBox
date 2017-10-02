@@ -49,6 +49,20 @@ class HTML{
 			}
 			else $htmlList = "<option disabled value='-1'>No folders</option>";
 		}
+		case 'parentfolder':{
+			$list = Folder::getAllParents() ; //'SELECT id_folder, folderName, id_user from folder';
+			if(false !== $list){
+				$htmlItem = '';
+				foreach($list as $item){
+				if($item['id_folder'] == $selected_id){$is_selected=' selected ';}else{$is_selected='';}
+					$htmlItem = "<option value='{$item['id_folder']}'{$is_selected}>{$item['folderName']}</option>";
+					$htmlList = $htmlList.$htmlItem.PHP_EOL;
+				}
+			//return $htmlList;
+			if($selected_id == -1) $htmlList = $htmlListFirstEntry.PHP_EOL.$htmlList;			
+			}
+			else $htmlList = "<option disabled value='-1'>No folders</option>";
+		}
 		break;
 		case 'tag':{
 			$list = Tag::getAll() ;
@@ -182,13 +196,53 @@ class HTML{
 					//$destinSelect = "<select>{$destin}</select>";
 					$fvsrc = LinkHandler::getFaviconHref($url);
 					$favicon = "<img src='{$fvsrc}' class='simpleFav'></img>";
-$htmlItem = "<tr id='link_id_{$id_link}'><td>{$favicon}</td><td><a class='simpleUrl' href='{$url}' target='_blank'>{$url}</a></td><td>{$title}</td>"."<td>{$folderName}</td><td>{$created}</td><td>{$lastVisited}</td><td>{$btnDel}</td></tr>";
+$htmlItem = "<tr id='link_id_{$id_link}'><td>{$favicon}</td><td><a class='simpleUrl' href='{$url}' target='_blank' title='{$url}'>{$title}</a></td><td>{$title}</td>"."<td>{$folderName}</td><td>{$created}</td><td>{$lastVisited}</td><td>{$btnDel}</td></tr>";
 
 					$htmlTable = $htmlTable.$htmlItem.PHP_EOL;
 				}
 				$selF1 = self::getSelectItems('folder');
 		$filterSelect = "<select id='filter_link_folder' onChange='filter_link_folder_onChange(`filter_link_folder`,this.value);'>{$selF1}</select>";
 		$htmlheader = "<thead><tr><th>-</th><th>URL</th><th>Name</th><th>Folder {$filterSelect}</th><th>Created</th><th>Visited</th><th>del</th></tr></thead>";				
+			//return $htmlList;
+			$htmlTable = $htmlheader.$htmlTable;
+			}else{$htmlTable = "no data";}			
+		}
+		break;
+		case 'linkMainPage':{
+			$list = Link::getAll() ; //'SELECT id_link, id_folder, url, id_user, created, lastVisited, isShared, title from link'
+			
+			$folders = Folder::getFoldersNames() ; //'SELECT id_folder, folderName, id_user from folder'
+			if(false !== $list){
+				$htmlItem = '';
+				foreach($list as $item){
+			
+			$btnDel = self::createDELTablebutton('link', $item['id_link']);		
+					$id_link = $item['id_link'];
+					//$id_folder = $item['id_folder'];
+						//$sel_folder = self::getSelectItems('folder',$item['id_folder']);
+						//$html_folder = "<select>{$sel_folder}</select>";
+						//$folderName = $folders[$id_folder];	//test
+					$url = LinkHandler::wrapUrl($item['url']);
+					$title = $item['title'];
+					$id_user = $item['id_user'];
+					$created = date("j/M/y", $item['created'] );
+					$lastVisited = date("M j, Y", $item['lastVisited'] );
+					$isShared = $item['isShared'];
+					
+					$btnBlock = "<span class='row-buttons'>".
+		"<a class='icon_delete' href='javascript:manageLink(`{$k}`, `delete`);' alt='x' title='Delete'></a>".
+		"<a class='icon_edit' href='javascript:manageLink(`{$k}`, `edit`);' alt='e' title='Edit'></a>".
+		"<a class='icon_sharelbx' href='javascript:manageLink(`{$k}`, `share`);' alt='s' title='Share'></a>".
+		"</span>";
+					$fvsrc = LinkHandler::getFaviconHref($url);
+					$favicon = "<img src='{$fvsrc}' class='simpleFav'></img>";
+$htmlItem = "<tr id='link_id_{$id_link}' class='lbox-linkrow'><td>{$favicon}</td><td><a class='simpleUrl' href='{$url}' target='_blank' title='{$url}'>{$title}</a></td>"."<td class='datetime' title='last visited: {$lastVisited}'>{$created}</td><td class='btns'>{$btnBlock}</td></tr>";
+
+					$htmlTable = $htmlTable.$htmlItem.PHP_EOL;
+				}
+				//$selF1 = self::getSelectItems('folder');
+		//$filterSelect = "<select id='filter_link_folder' onChange='filter_link_folder_onChange(`filter_link_folder`,this.value);'>{$selF1}</select>";
+		$htmlheader = "<thead><tr><th>-</th><th>URL name</th><th>Created</th><th>del</th></tr></thead>";				
 			//return $htmlList;
 			$htmlTable = $htmlheader.$htmlTable;
 			}else{$htmlTable = "no data";}			

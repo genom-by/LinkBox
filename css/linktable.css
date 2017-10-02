@@ -206,3 +206,10 @@ right:2px;
 #sidebar .btn.btn-info.active > .badge{
 	background-color:#D8BFD8;
 }
+
+.btns{
+	width:60px;
+}
+.datetime{
+	font-size:12px;
+}

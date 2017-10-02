@@ -1,175 +1,402 @@
-Sep,13 15:44:54 : created and connected
-Sep,13 15:44:54 : SELECT id_tag, tagName, id_user from tags tagName = 'tagA'
-Sep,13 15:44:54 : DB[getArrayBySQL] exception executing query:: WHERE id_user = 1 AND tagName = 'tagA'  ORDER BY tagName
-Sep,13 15:44:54 : DB[getArrayBySQL] Error getting records: SQLSTATE[HY000]: General error: 1 near "WHERE": syntax error
-Sep,13 15:44:54 : DBObject[getEntriesBySQL]: No data from DB: DB[getArrayBySQL] Error getting records: SQLSTATE[HY000]: General error: 1 near "WHERE": syntax error
-Sep,13 15:44:54 : tagAr[0]['id_tag']:
-Sep,13 15:44:54 : error performing tags transaction: SQLSTATE[23000]: Integrity constraint violation: 19 column tagName is not unique
-Sep,13 15:44:54 : link2 error: error performing tags transaction: SQLSTATE[23000]: Integrity constraint violation: 19 column tagName is not unique
-Sep,13 15:48:37 : created and connected
-Sep,13 15:48:37 : tagAr[0]['id_tag']:6
-Sep,13 15:50:48 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:1:"6";s:5:"table";s:3:"tag";}
-Sep,13 15:50:48 : created and connected
-Sep,13 15:50:48 : json : {"result":"ok"}
-Sep,13 15:50:57 : created and connected
-Sep,13 15:55:39 : Start linkbox app
-Sep,13 16:07:09 : created and connected
-Sep,13 16:22:14 : Start linkbox app
-Sep,13 16:23:13 : Start linkbox app
-Sep,13 16:23:13 : created and connected
-Sep,13 16:43:44 : Start linkbox app
-Sep,13 16:43:44 : created and connected
-Sep,13 16:44:18 : Start linkbox app
-Sep,13 16:44:18 : created and connected
-Sep,15 12:19:05 : Start linkbox app
-Sep,15 12:19:05 : created and connected
-Sep,15 12:19:18 : count sql: SELECT COUNT (id_user) FROM user WHERE name='genom'
-Sep,15 12:19:18 : created and connected
-Sep,15 12:19:18 : user$1$0X3.HP/.$7LCn4cNmqHXlg6FZOO.Jh/
-Sep,15 12:19:18 : Start linkbox app
-Sep,15 12:19:18 : created and connected
-Sep,15 12:19:22 : created and connected
-Sep,15 12:28:18 : created and connected
-Sep,15 12:30:32 : created and connected
-Sep,15 12:31:11 : created and connected
-Sep,15 13:19:49 : created and connected
-Sep,15 13:19:55 : created and connected
-Sep,15 13:22:07 : created and connected
-Sep,15 13:22:13 : created and connected
-Sep,15 13:23:17 : created and connected
-Sep,15 13:23:22 : created and connected
-Sep,15 13:24:00 : created and connected
-Sep,15 13:24:23 : created and connected
-Sep,15 13:24:44 : created and connected
-Sep,15 13:25:14 : created and connected
-Sep,15 13:25:19 : created and connected
-Sep,15 13:25:40 : created and connected
-Sep,15 13:26:30 : created and connected
-Sep,15 13:27:46 : urlfavicon1 error: 
-Sep,15 13:27:46 : created and connected
-Sep,15 13:29:07 : empty proto/path
-Sep,15 13:29:07 : urlfavicon1 error: 
-Sep,15 13:29:07 : created and connected
-Sep,15 13:29:43 : empty proto/path
-Sep,15 13:29:43 : urlfavicon1 error: empty proto/path
-Sep,15 13:29:43 : created and connected
-Sep,15 13:59:59 : empty proto/path
-Sep,15 13:59:59 : urlfavicon1 error: empty proto/path
-Sep,15 13:59:59 : created and connected
-Sep,15 14:19:27 : created and connected
-Sep,15 14:23:20 : created and connected
-Sep,15 14:25:15 : Start linkbox app
-Sep,15 14:25:15 : created and connected
-Sep,15 14:27:21 : created and connected
-Sep,15 14:46:08 : error getting page title
-Sep,15 14:46:09 : created and connected
-Sep,15 14:50:29 : error getting page title
-Sep,15 14:50:29 : created and connected
-Sep,15 14:51:03 : error getting page title
-Sep,15 14:51:03 : created and connected
-Sep,15 14:56:56 : created and connected
-Sep,15 15:00:23 : created and connected
-Sep,15 15:03:03 : created and connected
-Sep,15 15:15:24 : created and connected
-Sep,15 15:15:42 : created and connected
-Sep,15 15:16:18 : created and connected
-Sep,15 15:25:45 : created and connected
-Sep,15 15:28:34 : created and connected
-Sep,15 15:33:35 : created and connected
-Sep,15 15:35:54 : created and connected
-Sep,15 15:39:28 : created and connected
-Sep,15 15:45:10 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"19";s:5:"table";s:4:"link";}
-Sep,15 15:45:10 : POST Routines returned error
-Sep,15 15:45:10 : POST array: a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"19";s:5:"table";s:4:"link";}
-Sep,15 15:45:14 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:1:"1";s:5:"table";s:4:"link";}
-Sep,15 15:45:14 : POST Routines returned error
-Sep,15 15:45:14 : POST array: a:3:{s:6:"action";s:6:"delete";s:2:"id";s:1:"1";s:5:"table";s:4:"link";}
-Sep,15 15:46:12 : created and connected
-Sep,15 15:51:05 : created and connected
-Sep,15 15:54:26 : created and connected
-Sep,15 15:56:38 : Start linkbox app
-Sep,15 15:56:38 : created and connected
-Sep,15 15:56:46 : count sql: SELECT COUNT (id_user) FROM user WHERE name='genom'
-Sep,15 15:56:46 : created and connected
-Sep,15 15:56:46 : user$1$0X3.HP/.$7LCn4cNmqHXlg6FZOO.Jh/
-Sep,15 15:56:46 : Start linkbox app
-Sep,15 15:56:46 : created and connected
-Sep,15 15:56:49 : created and connected
-Sep,15 15:58:58 : Start linkbox app
-Sep,15 15:58:58 : created and connected
-Sep,15 16:01:01 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"18";s:5:"table";s:4:"link";}
-Sep,15 16:01:01 : POST Routines returned error
-Sep,15 16:01:01 : POST array: a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"18";s:5:"table";s:4:"link";}
-Sep,15 16:02:29 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"18";s:5:"table";s:4:"link";}
-Sep,15 16:02:29 : created and connected
-Sep,15 16:02:29 : json : {"result":"ok"}
-Sep,15 16:02:33 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"19";s:5:"table";s:4:"link";}
-Sep,15 16:02:33 : created and connected
-Sep,15 16:02:33 : json : {"result":"ok"}
-Sep,15 16:02:34 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:1:"1";s:5:"table";s:4:"link";}
-Sep,15 16:02:34 : created and connected
-Sep,15 16:02:34 : json : {"result":"ok"}
-Sep,15 16:02:36 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:1:"2";s:5:"table";s:4:"link";}
-Sep,15 16:02:36 : created and connected
-Sep,15 16:02:36 : json : {"result":"ok"}
-Sep,15 16:02:37 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:1:"3";s:5:"table";s:4:"link";}
-Sep,15 16:02:37 : created and connected
-Sep,15 16:02:37 : json : {"result":"ok"}
-Sep,15 16:02:39 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"14";s:5:"table";s:4:"link";}
-Sep,15 16:02:39 : created and connected
-Sep,15 16:02:39 : json : {"result":"ok"}
-Sep,15 16:02:41 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"12";s:5:"table";s:4:"link";}
-Sep,15 16:02:41 : created and connected
-Sep,15 16:02:41 : json : {"result":"ok"}
-Sep,15 16:02:53 : Start linkbox app
-Sep,15 16:02:53 : created and connected
-Sep,15 16:03:03 : Start linkbox app
-Sep,15 16:03:03 : created and connected
-Sep,15 16:03:51 : Start linkbox app
-Sep,15 16:03:51 : created and connected
-Sep,15 16:19:56 : Start linkbox app
-Sep,15 16:19:56 : created and connected
-Sep,15 16:24:29 : created and connected
-Sep,15 16:29:49 : created and connected
-Sep,15 16:30:14 : Start linkbox app
-Sep,15 16:30:14 : created and connected
-Sep,15 16:30:29 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"23";s:5:"table";s:4:"link";}
-Sep,15 16:30:29 : created and connected
-Sep,15 16:30:29 : DB[executeQuery]: Error while executing query: SQLSTATE[HY000]: General error: 1 no such table: main.users
-Sep,15 16:30:29 : DB[executeQuery] desired query:DELETE FROM link WHERE id_link=23
-Sep,15 16:30:29 : [DBO]deleteEntry:error while deleting DB: DB[executeQuery]: Error while executing query: SQLSTATE[HY000]: General error: 1 no such table: main.users
-Sep,15 16:30:29 : POST Routines returned error
-Sep,15 16:30:29 : POST array: a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"23";s:5:"table";s:4:"link";}
-Sep,15 16:36:42 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"22";s:5:"table";s:4:"link";}
-Sep,15 16:36:42 : created and connected
-Sep,15 16:36:42 : DB[executeQuery]: Error while executing query: SQLSTATE[HY000]: General error: 1 no such table: main.users
-Sep,15 16:36:42 : DB[executeQuery] desired query:DELETE FROM link WHERE id_link=22
-Sep,15 16:36:42 : [DBO]deleteEntry:error while deleting DB: DB[executeQuery]: Error while executing query: SQLSTATE[HY000]: General error: 1 no such table: main.users
-Sep,15 16:36:42 : POST Routines returned error
-Sep,15 16:36:42 : POST array: a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"22";s:5:"table";s:4:"link";}
-Sep,15 16:37:16 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"22";s:5:"table";s:4:"link";}
-Sep,15 16:37:16 : created and connected
-Sep,15 16:37:16 : json : {"result":"ok"}
-Sep,15 16:52:57 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"23";s:5:"table";s:4:"link";}
-Sep,15 16:52:57 : created and connected
-Sep,15 16:52:57 : json : {"result":"ok"}
-Sep,15 16:56:23 : created and connected
-Sep,15 16:56:55 : created and connected
-Sep,15 16:57:00 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"25";s:5:"table";s:4:"link";}
-Sep,15 16:57:00 : created and connected
-Sep,15 16:57:00 : json : {"result":"ok"}
-Sep,15 16:58:15 : Start linkbox app
-Sep,15 16:58:15 : created and connected
-Sep,15 16:58:37 : created and connected
-Sep,15 16:58:38 : error performing tags transaction: SQLSTATE[23000]: Integrity constraint violation: 19 columns id_tag, id_link are not unique
-Sep,15 16:58:38 : link error: error performing tags transaction: SQLSTATE[23000]: Integrity constraint violation: 19 columns id_tag, id_link are not unique
-Sep,15 16:59:07 : created and connected
-Sep,15 16:59:16 : Start linkbox app
-Sep,15 16:59:16 : created and connected
-Sep,15 16:59:37 : POST : a:3:{s:6:"action";s:6:"delete";s:2:"id";s:2:"27";s:5:"table";s:4:"link";}
-Sep,15 16:59:37 : created and connected
-Sep,15 16:59:37 : json : {"result":"ok"}
-Sep,15 16:59:40 : Start linkbox app
-Sep,15 16:59:40 : created and connected
-Sep,15 17:02:53 : created and connected
-Sep,15 17:03:44 : created and connected
+Sep,20 12:55:52 : Start linkbox app
+Sep,20 12:55:52 : created and connected
+Sep,20 12:55:52 : error fetching sub folders: 
+Sep,20 12:56:42 : Start linkbox app
+Sep,20 12:56:42 : created and connected
+Sep,20 12:57:06 : Start linkbox app
+Sep,20 12:57:06 : created and connected
+Sep,20 12:57:47 : Start linkbox app
+Sep,20 12:57:47 : created and connected
+Sep,20 12:57:47 : error fetching sub folders 2: 
+Sep,20 13:00:15 : Start linkbox app
+Sep,20 13:00:15 : created and connected
+Sep,20 13:00:15 : error fetching sub folders 2: 
+Sep,20 13:00:33 : Start linkbox app
+Sep,20 13:00:33 : created and connected
+Sep,20 13:05:09 : Start linkbox app
+Sep,20 13:05:09 : created and connected
+Sep,20 13:05:32 : Start linkbox app
+Sep,20 13:05:32 : created and connected
+Sep,20 13:05:51 : Start linkbox app
+Sep,20 13:05:51 : created and connected
+Sep,20 13:06:56 : Start linkbox app
+Sep,20 13:06:56 : created and connected
+Sep,20 13:06:56 : error fetching folders count: SQLSTATE[HY000]: General error: 1 ambiguous column name: id_folder
+Sep,20 13:06:56 : error fetching sub folders: error fetching folders count: SQLSTATE[HY000]: General error: 1 ambiguous column name: id_folder
+Sep,20 13:07:45 : Start linkbox app
+Sep,20 13:07:45 : created and connected
+Sep,20 13:09:04 : Start linkbox app
+Sep,20 13:09:04 : created and connected
+Sep,20 13:09:39 : Start linkbox app
+Sep,20 13:09:39 : created and connected
+Sep,20 13:10:39 : Start linkbox app
+Sep,20 13:10:39 : created and connected
+Sep,20 13:10:44 : Start linkbox app
+Sep,20 13:10:44 : created and connected
+Sep,20 13:11:04 : Start linkbox app
+Sep,20 13:11:04 : created and connected
+Sep,20 13:55:07 : Start linkbox app
+Sep,20 13:55:07 : created and connected
+Sep,20 13:56:28 : Start linkbox app
+Sep,20 13:56:28 : created and connected
+Sep,20 14:06:42 : Start linkbox app
+Sep,20 14:06:42 : created and connected
+Sep,20 14:07:06 : Start linkbox app
+Sep,20 14:07:06 : created and connected
+Sep,20 14:08:25 : Start linkbox app
+Sep,20 14:08:25 : created and connected
+Sep,20 14:08:53 : Start linkbox app
+Sep,20 14:08:53 : created and connected
+Sep,20 14:11:31 : Start linkbox app
+Sep,20 14:11:31 : created and connected
+Sep,20 14:11:49 : Start linkbox app
+Sep,20 14:11:49 : created and connected
+Sep,20 14:12:31 : Start linkbox app
+Sep,20 14:12:31 : created and connected
+Sep,20 14:13:08 : Start linkbox app
+Sep,20 14:13:08 : created and connected
+Sep,20 14:16:43 : created and connected
+Sep,20 14:18:50 : created and connected
+Sep,20 14:19:39 : created and connected
+Sep,20 14:19:48 : created and connected
+Sep,20 14:19:55 : created and connected
+Sep,20 14:20:34 : created and connected
+Sep,20 14:22:17 : Start linkbox app
+Sep,20 14:22:17 : created and connected
+Sep,20 14:25:28 : Start linkbox app
+Sep,20 14:25:28 : created and connected
+Sep,20 14:25:58 : Start linkbox app
+Sep,20 14:25:58 : created and connected
+Sep,20 14:28:10 : Start linkbox app
+Sep,20 14:28:10 : created and connected
+Sep,20 14:28:39 : Start linkbox app
+Sep,20 14:28:39 : created and connected
+Sep,20 14:30:00 : Start linkbox app
+Sep,20 14:30:00 : created and connected
+Sep,20 14:31:34 : Start linkbox app
+Sep,20 14:31:34 : created and connected
+Sep,20 14:34:49 : Start linkbox app
+Sep,20 14:34:49 : created and connected
+Sep,20 14:37:31 : Start linkbox app
+Sep,20 14:37:49 : Start linkbox app
+Sep,20 14:37:49 : created and connected
+Sep,20 14:38:50 : Start linkbox app
+Sep,20 14:38:50 : created and connected
+Sep,20 14:42:58 : Start linkbox app
+Sep,20 14:42:58 : created and connected
+Sep,20 14:43:20 : Start linkbox app
+Sep,20 14:43:20 : created and connected
+Sep,20 14:44:05 : Start linkbox app
+Sep,20 14:44:05 : created and connected
+Sep,20 14:48:57 : Start linkbox app
+Sep,20 14:48:57 : created and connected
+Sep,20 14:50:17 : Start linkbox app
+Sep,20 14:50:17 : created and connected
+Sep,20 14:50:44 : Start linkbox app
+Sep,20 14:50:44 : created and connected
+Sep,20 14:51:00 : Start linkbox app
+Sep,20 14:51:00 : created and connected
+Sep,20 14:52:02 : Start linkbox app
+Sep,20 14:52:02 : created and connected
+Sep,20 14:52:54 : Start linkbox app
+Sep,20 14:52:54 : created and connected
+Sep,20 14:53:06 : Start linkbox app
+Sep,20 14:53:06 : created and connected
+Sep,20 14:53:06 : Start linkbox app
+Sep,20 14:53:07 : created and connected
+Sep,20 14:53:42 : Start linkbox app
+Sep,20 14:53:42 : created and connected
+Sep,20 14:53:53 : Start linkbox app
+Sep,20 14:53:53 : created and connected
+Sep,20 14:54:14 : Start linkbox app
+Sep,20 14:54:14 : created and connected
+Sep,20 14:56:06 : Start linkbox app
+Sep,20 14:56:06 : created and connected
+Sep,20 14:59:16 : Start linkbox app
+Sep,20 14:59:16 : created and connected
+Sep,20 14:59:48 : Start linkbox app
+Sep,20 14:59:48 : created and connected
+Sep,20 15:00:23 : Start linkbox app
+Sep,20 15:00:23 : created and connected
+Sep,20 15:00:26 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:6:"folder";}
+Sep,20 15:00:26 : POST Routines returned error
+Sep,20 15:00:26 : POST array: a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:6:"folder";}
+Sep,20 15:00:28 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"3";s:5:"table";s:6:"folder";}
+Sep,20 15:00:28 : POST Routines returned error
+Sep,20 15:00:28 : POST array: a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"3";s:5:"table";s:6:"folder";}
+Sep,20 15:00:30 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"2";s:5:"table";s:6:"folder";}
+Sep,20 15:00:30 : POST Routines returned error
+Sep,20 15:00:30 : POST array: a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"2";s:5:"table";s:6:"folder";}
+Sep,20 15:03:14 : Start linkbox app
+Sep,20 15:03:14 : created and connected
+Sep,20 15:03:17 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"2";s:5:"table";s:11:"link_folder";}
+Sep,20 15:03:17 : created and connected
+Sep,20 15:03:20 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"3";s:5:"table";s:11:"link_folder";}
+Sep,20 15:03:20 : created and connected
+Sep,20 15:03:21 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,20 15:03:21 : created and connected
+Sep,20 15:03:37 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"3";s:5:"table";s:11:"link_folder";}
+Sep,20 15:03:37 : created and connected
+Sep,20 15:03:42 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"2";s:5:"table";s:11:"link_folder";}
+Sep,20 15:03:42 : created and connected
+Sep,20 15:03:44 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"3";s:5:"table";s:11:"link_folder";}
+Sep,20 15:03:44 : created and connected
+Sep,20 15:04:50 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"2";s:5:"table";s:11:"link_folder";}
+Sep,20 15:04:50 : created and connected
+Sep,20 15:04:51 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"3";s:5:"table";s:11:"link_folder";}
+Sep,20 15:04:51 : created and connected
+Sep,20 15:04:52 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,20 15:04:52 : created and connected
+Sep,20 15:04:53 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"13";s:5:"table";s:11:"link_folder";}
+Sep,20 15:04:53 : created and connected
+Sep,20 15:05:13 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"11";s:5:"table";s:11:"link_folder";}
+Sep,20 15:05:13 : created and connected
+Sep,20 15:05:14 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"13";s:5:"table";s:11:"link_folder";}
+Sep,20 15:05:14 : created and connected
+Sep,20 15:05:31 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,20 15:05:31 : created and connected
+Sep,20 15:05:58 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,20 15:05:58 : created and connected
+Sep,20 15:06:02 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"3";s:5:"table";s:11:"link_folder";}
+Sep,20 15:06:02 : created and connected
+Sep,20 15:06:02 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"2";s:5:"table";s:11:"link_folder";}
+Sep,20 15:06:02 : created and connected
+Sep,20 15:06:03 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"2";s:5:"table";s:11:"link_folder";}
+Sep,20 15:06:03 : created and connected
+Sep,20 15:06:04 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"3";s:5:"table";s:11:"link_folder";}
+Sep,20 15:06:04 : created and connected
+Sep,20 15:06:05 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"3";s:5:"table";s:11:"link_folder";}
+Sep,20 15:06:05 : created and connected
+Sep,20 15:06:06 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,20 15:06:06 : created and connected
+Sep,20 15:06:08 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"10";s:5:"table";s:11:"link_folder";}
+Sep,20 15:06:08 : created and connected
+Sep,20 15:06:08 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"11";s:5:"table";s:11:"link_folder";}
+Sep,20 15:06:08 : created and connected
+Sep,20 15:06:09 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"13";s:5:"table";s:11:"link_folder";}
+Sep,20 15:06:09 : created and connected
+Sep,20 15:06:09 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"11";s:5:"table";s:11:"link_folder";}
+Sep,20 15:06:09 : created and connected
+Sep,20 15:06:09 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"10";s:5:"table";s:11:"link_folder";}
+Sep,20 15:06:09 : created and connected
+Sep,20 15:06:10 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"12";s:5:"table";s:11:"link_folder";}
+Sep,20 15:06:10 : created and connected
+Sep,20 15:06:10 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"12";s:5:"table";s:11:"link_folder";}
+Sep,20 15:06:10 : created and connected
+Sep,20 15:06:11 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"10";s:5:"table";s:11:"link_folder";}
+Sep,20 15:06:11 : created and connected
+Sep,20 15:06:11 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"12";s:5:"table";s:11:"link_folder";}
+Sep,20 15:06:11 : created and connected
+Sep,20 15:06:12 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,20 15:06:12 : created and connected
+Sep,20 15:08:19 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,20 15:08:19 : created and connected
+Sep,20 15:08:20 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"3";s:5:"table";s:11:"link_folder";}
+Sep,20 15:08:20 : created and connected
+Sep,20 15:08:24 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"3";s:5:"table";s:11:"link_folder";}
+Sep,20 15:08:24 : created and connected
+Sep,20 15:08:24 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"2";s:5:"table";s:11:"link_folder";}
+Sep,20 15:08:24 : created and connected
+Sep,20 15:08:25 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"9";s:5:"table";s:11:"link_folder";}
+Sep,20 15:08:25 : created and connected
+Sep,20 15:08:27 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,20 15:08:27 : created and connected
+Sep,20 15:08:28 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"13";s:5:"table";s:11:"link_folder";}
+Sep,20 15:08:28 : created and connected
+Sep,20 15:08:29 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"13";s:5:"table";s:11:"link_folder";}
+Sep,20 15:08:29 : created and connected
+Sep,20 15:08:29 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,20 15:08:29 : created and connected
+Sep,20 15:22:30 : Start linkbox app
+Sep,20 15:22:30 : created and connected
+Sep,20 15:22:37 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,20 15:22:37 : created and connected
+Sep,20 15:23:44 : Start linkbox app
+Sep,20 15:23:44 : created and connected
+Sep,20 15:23:47 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,20 15:23:47 : created and connected
+Sep,20 15:25:33 : Start linkbox app
+Sep,20 15:25:33 : created and connected
+Sep,20 15:25:36 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,20 15:25:36 : created and connected
+Sep,20 15:25:51 : Start linkbox app
+Sep,20 15:25:51 : created and connected
+Sep,20 15:25:54 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,20 15:25:54 : created and connected
+Sep,20 15:27:00 : Start linkbox app
+Sep,20 15:27:00 : created and connected
+Sep,20 15:27:03 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,20 15:27:03 : created and connected
+Sep,27 11:59:34 : Start linkbox app
+Sep,27 11:59:34 : created and connected
+Sep,27 11:59:34 : error fetching parent folders: 
+Sep,27 11:59:55 : count sql: SELECT COUNT (id_user) FROM user WHERE name='genom'
+Sep,27 11:59:55 : created and connected
+Sep,27 11:59:55 : user$1$0X3.HP/.$7LCn4cNmqHXlg6FZOO.Jh/
+Sep,27 11:59:55 : Start linkbox app
+Sep,27 11:59:55 : created and connected
+Sep,27 11:59:59 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"3";s:5:"table";s:11:"link_folder";}
+Sep,27 11:59:59 : created and connected
+Sep,27 12:00:00 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,27 12:00:00 : created and connected
+Sep,27 12:00:02 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"2";s:5:"table";s:11:"link_folder";}
+Sep,27 12:00:02 : created and connected
+Sep,27 12:00:04 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,27 12:00:04 : created and connected
+Sep,27 12:00:06 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"13";s:5:"table";s:11:"link_folder";}
+Sep,27 12:00:06 : created and connected
+Sep,27 12:00:07 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"11";s:5:"table";s:11:"link_folder";}
+Sep,27 12:00:07 : created and connected
+Sep,27 12:00:07 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"10";s:5:"table";s:11:"link_folder";}
+Sep,27 12:00:07 : created and connected
+Sep,27 12:00:08 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"12";s:5:"table";s:11:"link_folder";}
+Sep,27 12:00:08 : created and connected
+Sep,27 12:00:09 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"10";s:5:"table";s:11:"link_folder";}
+Sep,27 12:00:09 : created and connected
+Sep,27 12:01:31 : created and connected
+Sep,27 12:53:36 : empty proto/path
+Sep,27 12:53:36 : urlfavicon1 error: empty proto/path
+Sep,27 12:53:37 : created and connected
+Sep,27 12:55:19 : created and connected
+Sep,27 13:05:19 : Start logging
+Sep,27 13:09:37 : Start logging
+Sep,27 13:09:47 : Start logging
+Sep,27 13:10:02 : Start logging
+Sep,27 13:10:05 : Start logging
+Sep,27 13:10:06 : Start logging
+Sep,27 13:10:07 : Start logging
+Sep,27 13:10:08 : Start logging
+Sep,27 13:10:09 : Start logging
+Sep,27 13:10:15 : Start logging
+Sep,27 13:10:48 : Start logging
+Sep,27 13:10:52 : Start logging
+Sep,27 13:11:07 : Start logging
+Sep,27 13:11:10 : Start logging
+Sep,27 13:11:13 : Start logging
+Sep,27 13:11:54 : Start logging
+Sep,27 13:11:58 : Start logging
+Sep,27 13:12:02 : Start logging
+Sep,27 13:12:04 : Start logging
+Sep,27 13:12:46 : Start logging
+Sep,27 13:13:08 : Start logging
+Sep,27 13:13:41 : Start logging
+Sep,27 13:13:49 : Start logging
+Sep,27 13:13:57 : Start logging
+Sep,27 13:14:08 : Start logging
+Sep,27 13:14:50 : Start logging
+Sep,27 13:15:16 : Start logging
+Sep,27 13:15:53 : Start logging
+Sep,27 13:17:59 : Start logging
+Sep,27 13:19:06 : Start logging
+Sep,27 14:03:30 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,27 14:03:30 : created and connected
+Sep,27 14:43:35 : Start logging
+Sep,27 14:44:47 : Start logging
+Sep,27 14:45:13 : Start logging
+Sep,27 14:45:48 : POST : a:4:{s:6:"action";s:7:"inquire";s:2:"id";s:1:"0";s:5:"table";s:2:"qw";s:8:"question";s:9:"pageTitle";}
+Sep,27 14:45:48 : POST Routines returned error
+Sep,27 14:45:48 : POST array: a:4:{s:6:"action";s:7:"inquire";s:2:"id";s:1:"0";s:5:"table";s:2:"qw";s:8:"question";s:9:"pageTitle";}
+Sep,27 14:46:16 : Start logging
+Sep,27 14:46:19 : POST : a:4:{s:6:"action";s:7:"inquire";s:2:"id";s:2:"-1";s:5:"table";s:4:"qwqw";s:8:"question";s:9:"pageTitle";}
+Sep,27 14:46:20 : POST Routines returned error
+Sep,27 14:46:20 : POST array: a:4:{s:6:"action";s:7:"inquire";s:2:"id";s:2:"-1";s:5:"table";s:4:"qwqw";s:8:"question";s:9:"pageTitle";}
+Sep,27 16:07:05 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"2";s:5:"table";s:11:"link_folder";}
+Sep,27 16:07:06 : created and connected
+Sep,27 16:07:11 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,27 16:07:11 : created and connected
+Sep,27 16:12:13 : Start linkbox app
+Sep,27 16:12:13 : created and connected
+Sep,27 16:12:34 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"2";s:5:"table";s:11:"link_folder";}
+Sep,27 16:12:34 : created and connected
+Sep,27 16:12:35 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,27 16:12:35 : created and connected
+Sep,27 16:12:37 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,27 16:12:37 : created and connected
+Sep,27 16:12:38 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"2";s:5:"table";s:11:"link_folder";}
+Sep,27 16:12:38 : created and connected
+Sep,27 16:12:39 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"2";s:5:"table";s:11:"link_folder";}
+Sep,27 16:12:39 : created and connected
+Sep,27 16:12:41 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,27 16:12:41 : created and connected
+Sep,27 16:12:43 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"3";s:5:"table";s:11:"link_folder";}
+Sep,27 16:12:43 : created and connected
+Sep,27 16:12:44 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"2";s:5:"table";s:11:"link_folder";}
+Sep,27 16:12:44 : created and connected
+Sep,27 16:12:45 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"2";s:5:"table";s:11:"link_folder";}
+Sep,27 16:12:45 : created and connected
+Sep,27 16:12:46 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,27 16:12:46 : created and connected
+Sep,27 16:15:37 : Start linkbox app
+Sep,27 16:15:37 : created and connected
+Sep,27 16:15:42 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,27 16:15:42 : created and connected
+Sep,27 16:15:43 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,27 16:15:43 : created and connected
+Sep,27 16:21:51 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"3";s:5:"table";s:11:"link_folder";}
+Sep,27 16:21:51 : created and connected
+Sep,27 16:21:52 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,27 16:21:52 : created and connected
+Sep,27 16:21:53 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"13";s:5:"table";s:11:"link_folder";}
+Sep,27 16:21:53 : created and connected
+Sep,27 16:22:44 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"10";s:5:"table";s:11:"link_folder";}
+Sep,27 16:22:44 : created and connected
+Sep,27 16:25:25 : Start linkbox app
+Sep,27 16:25:25 : created and connected
+Sep,27 16:26:10 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,27 16:26:10 : created and connected
+Sep,27 16:30:03 : Start linkbox app
+Sep,27 16:30:03 : created and connected
+Sep,27 16:30:06 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,27 16:30:06 : created and connected
+Sep,27 16:32:22 : Start linkbox app
+Sep,27 16:32:22 : created and connected
+Sep,27 16:32:25 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,27 16:32:25 : created and connected
+Sep,27 16:45:59 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"3";s:5:"table";s:11:"link_folder";}
+Sep,27 16:45:59 : created and connected
+Sep,27 16:46:02 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,27 16:46:02 : created and connected
+Sep,27 16:48:34 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"13";s:5:"table";s:11:"link_folder";}
+Sep,27 16:48:34 : created and connected
+Sep,27 16:52:58 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"13";s:5:"table";s:11:"link_folder";}
+Sep,27 16:52:58 : created and connected
+Sep,27 16:53:32 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,27 16:53:32 : created and connected
+Sep,27 16:56:48 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"3";s:5:"table";s:11:"link_folder";}
+Sep,27 16:56:48 : created and connected
+Sep,27 16:56:51 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,27 16:56:51 : created and connected
+Sep,27 16:56:52 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"11";s:5:"table";s:11:"link_folder";}
+Sep,27 16:56:52 : created and connected
+Sep,27 16:56:53 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"13";s:5:"table";s:11:"link_folder";}
+Sep,27 16:56:53 : created and connected
+Sep,27 16:56:56 : Start linkbox app
+Sep,27 16:56:56 : created and connected
+Sep,27 16:57:00 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,27 16:57:00 : created and connected
+Sep,27 16:57:09 : Start linkbox app
+Sep,27 16:57:09 : created and connected
+Sep,27 16:57:13 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,27 16:57:13 : created and connected
+Sep,27 16:57:37 : Start linkbox app
+Sep,27 16:57:37 : created and connected
+Sep,27 16:57:41 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,27 16:57:41 : created and connected
+Sep,27 16:57:50 : Start linkbox app
+Sep,27 16:57:50 : created and connected
+Sep,27 16:57:53 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"3";s:5:"table";s:11:"link_folder";}
+Sep,27 16:57:53 : created and connected
+Sep,27 16:57:59 : Start linkbox app
+Sep,27 16:57:59 : created and connected
+Sep,27 16:58:02 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,27 16:58:02 : created and connected
+Sep,27 16:59:50 : Start linkbox app
+Sep,27 16:59:50 : created and connected
+Sep,27 16:59:53 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:1:"1";s:5:"table";s:11:"link_folder";}
+Sep,27 16:59:53 : created and connected
+Sep,27 17:02:11 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"11";s:5:"table";s:11:"link_folder";}
+Sep,27 17:02:11 : created and connected
+Sep,27 17:02:51 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"10";s:5:"table";s:11:"link_folder";}
+Sep,27 17:02:51 : created and connected
+Sep,27 17:03:48 : POST : a:3:{s:6:"action";s:10:"pageUpdate";s:2:"id";s:2:"12";s:5:"table";s:11:"link_folder";}
+Sep,27 17:03:48 : created and connected
