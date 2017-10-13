@@ -43,7 +43,7 @@ function dispatchDelete($table, $id){
 }
 /* HTML / js requests processing
 */
-function dispatchPageUpdate($table, $id){
+function dispatchPageUpdate($table, $id=null){
 
 	$err = ''; //\LinkBox\Logger::log("table: {$table} id: {$id}") ;
 
@@ -51,7 +51,7 @@ function dispatchPageUpdate($table, $id){
 		case 'link_folder':
 			//$seqstats = sequencesStations::getSeqStatNamesBySequenceID($_POST['id']);
 			//$links = HTML::getTableItems($_POST['id']);
-			$links = HTML::getTableItems('linkMainPage');
+			$links = HTML::getTableItems('linkMainPage', $id);
 			if(false === $links){returnPOSTError('could not obtain links');die();}
 			else{
 				//$seqstats = HTML::getPitStopsEditRows($seqstats);

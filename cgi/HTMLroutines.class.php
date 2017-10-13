@@ -49,6 +49,7 @@ class HTML{
 			}
 			else $htmlList = "<option disabled value='-1'>No folders</option>";
 		}
+		break;
 		case 'parentfolder':{
 			$list = Folder::getAllParents() ; //'SELECT id_folder, folderName, id_user from folder';
 			if(false !== $list){
@@ -166,7 +167,7 @@ class HTML{
 /* ==============================
 *								getTableItems
 * ============================== */	
-	public static function getTableItems($table){
+	public static function getTableItems($table, $id=null){
 		
 	$htmlTable = '';	
 	
@@ -209,8 +210,12 @@ $htmlItem = "<tr id='link_id_{$id_link}'><td>{$favicon}</td><td><a class='simple
 		}
 		break;
 		case 'linkMainPage':{
-			$list = Link::getAll() ; //'SELECT id_link, id_folder, url, id_user, created, lastVisited, isShared, title from link'
-			
+			if($id==null){
+				$list = Link::getAll() ; //'SELECT id_link, id_folder, url, id_user, created, lastVisited, isShared, title from link'
+			}else{
+				$list = Link::getAllWhere("WHERE id_folder={$id}") ;
+			}
+						
 			$folders = Folder::getFoldersNames() ; //'SELECT id_folder, folderName, id_user from folder'
 			if(false !== $list){
 				$htmlItem = '';

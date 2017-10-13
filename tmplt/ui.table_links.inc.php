@@ -19,6 +19,7 @@ include_once 'cgi/HTMLroutines.class.php';
 <button name="search" id="btn-tablesearch"><span class="glyphicon glyphicon-search"></span></button>
 </div>
 <table class="table table-striped table-condensed" id="lbx_LinksTable">
+<!--
 <tbody>
 	<tr class="lbox-linkrow">
 	<td class="faviconCol"><img src="http://belpost.by/favicon.ico" /></td>
@@ -73,4 +74,6 @@ include_once 'cgi/HTMLroutines.class.php';
 	<td><input type="hidden" name="link_id" value="{$k}"/></td>
 	</tr>
 </tbody>
+-->
+<?=HTML::getTableItems('linkMainPage');?>
 </table>

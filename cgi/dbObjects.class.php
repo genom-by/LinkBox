@@ -357,7 +357,7 @@ class Folder extends DBObject{
 		$this->parentfolder = Utils::cleanInput($parent_);
 		$this->parentfolder = intval($this->parentfolder);
 		$this->uid = Auth::whoLoggedID();
-		if(is_int($this->parentfolder)){
+		if(is_int($this->parentfolder) AND ($this->parentfolder > 0) ){
 			$this->sqlPDOSave = "INSERT INTO folder(folderName, id_user, id_parentfolder) VALUES(':1:', :2:, :3:)";
 		}else{
 			$this->sqlPDOSave = "INSERT INTO folder(folderName, id_user) VALUES(':1:', :2:)";
@@ -366,7 +366,7 @@ class Folder extends DBObject{
 	public function save(){
 		$pdosql = str_replace(':1:', $this->name, $this->sqlPDOSave);
 		$pdosql = str_replace(':2:', $this->uid, $pdosql);
-		if(is_int($this->parentfolder)){
+		if(is_int($this->parentfolder) AND ($this->parentfolder > 0) ){
 			$pdosql = str_replace(':3:', $this->parentfolder, $pdosql);
 		}		
 		return $this->saveObject($pdosql);
