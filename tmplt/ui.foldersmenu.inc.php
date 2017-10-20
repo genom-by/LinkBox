@@ -9,7 +9,7 @@ include_once 'cgi/HTMLroutines.class.php';
 
 //$folders = Folder::getParentFoldersNames();
 $folders = Folder::getFoldersArray();
-
+/*
 $standardFolders = array("<span class='glyphicon glyphicon-camera'></span> Pictures",
 						"<span class='glyphicon glyphicon-file'></span> Documents",
 						"<span class='glyphicon glyphicon-music'></span>",
@@ -27,6 +27,7 @@ if(false !== $folders AND count($folders) > 0){
 }else{
 $HTMLfoldersNode = "<label class='btn btn-info'> No folders yet</label>";
 }
+*/
 // ---
 $HTMLfoldersAccord = '';
 $entryContent = '';
@@ -38,9 +39,6 @@ $panelID = 1;
 		$fldNameParent = $folderSet['parentName'];
 		$fldCountParent = $folderSet['folderCount'];
 		$fldIDParent = $folderSet['parentID'];
-
-		$entryHead = "<a data-toggle='collapse' data-parent='#accordion' href='#{$HTMLentryID}' onClick='menuFolderSelected(`parent`,{$fldIDParent});'> {$fldNameParent}</a> <span class='badge'>{$fldCountParent}</span>";
-		//$entryCount = "<span class='glyphicon'></span> {$fldNameParent} <span class='badge'>{$folderCount}</span>";
 		
 		if( count($folderSet['subfolders']) > 0 ){
 			$entryContent = '';
@@ -53,7 +51,9 @@ $panelID = 1;
 		$entry = "<span class='glyphicon'></span> {$folderName}";
 		$entryCount = "<span class='badge'>{$folderCount}</span>";
 		//$HTMLfoldersNode = $HTMLfoldersNode."<a href='#' class='list-group-item'>{$entry}</a>";
-		$entryContent = $entryContent."<a href='#{$HTMLfldID}' class='list-group-item' onClick='menuFolderSelected(`subfolder`,{$folderID});'>{$folderName} {$entryCount}</a>";
+		$entryContentA = "<a href='#{$HTMLfldID}' class='list-group-item' onClick='menuFolderSelected(\"subfolder\",{$folderID});'>{$folderName} {$entryCount}</a>";
+		$entryContentB = "<div class='FLDmenuItem'>{$entryContentA}</div>";
+		$entryContent = $entryContent.$entryContentB;
 		//$entryContent = $entryContent."<a>{$folderName} <span class='badge'>{$folderCount}</span></a>";				
 			}
 			$panelBodyClass='panel-body-menu';
@@ -62,14 +62,25 @@ $panelID = 1;
 			$panelBodyClass='panel-body';
 		}
 		
-		$eHTMLheading = "<div class='panel-heading'><h4 class='panel-title'>{$entryHead}</h4></div>";
+		$entryHead = "<a data-toggle='collapse' data-parent='#accordion' href='#{$HTMLentryID}' onClick='menuFolderSelected(\"parent\",{$fldIDParent});' class='aHeaderMenu'> {$fldNameParent} <span class='badge'>{$fldCountParent}</span></a>";
+				
+		//$eHTMLheading = "<div class='panel-heading'><h4 class='panel-title'>{$entryHead}</h4></div>";
+		$eHTMLheading = "<div class='panel-heading fldHeading'><h4 class='panel-title'><div class='FLDmenuItem'>{$entryHead}</div></h4></div>";
+		//$eHTMLheading = "<div class='FLDmenuItem'>{$eHTMLheadingA}</div>";
 		$eHTMLContent = "<div id='{$HTMLentryID}' class='panel-collapse collapse'><div class='{$panelBodyClass}'>{$entryContent}</div></div>";
 		$HTMLfoldersAccord = $HTMLfoldersAccord."<div class='panel panel-default'>{$eHTMLheading}{$eHTMLContent}</div>";
+			
 		$panelID++;
 	}
 }else{
 $HTMLfoldersAccord = "<div class='panel panel-default'> No folders yet</div>";
 }
+	$totalCount = Folder::$totalLinksCount;
+		$eAllentryHead = "<a data-toggle='collapse' data-parent='#accordion' href='#' onClick='menuFolderSelected(\"parent\",\"all\");'>Show all <span class='badge'>{$totalCount}</span></a>";
+		$eShowAllmenuItem = "<div class='panel-heading'><h4 class='panel-title'><div class='FLDmenuItem'>{$eAllentryHead}</div></h4></div>";
+		$eHTMLallContent = "<div class='panel panel-default'>{$eShowAllmenuItem}</div>";
+		
+		$HTMLfoldersAccord = $eHTMLallContent.$HTMLfoldersAccord;
 //		<a href="#" class="list-group-item active">
 	//		<span class="glyphicon glyphicon-camera"></span> Pictures</a>
 ?>

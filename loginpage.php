@@ -94,7 +94,7 @@ function getSelectedText(elementId) {
 	<div class="form-group">
 		<div class="col-xs-offset-3 col-xs-9">
 			<label class="checkbox-inline" for="inputRemember">
-		<input type="checkbox" value="agree" id="inputRemember" name="inputRemember">Remember me
+		<input type="checkbox" value="remember" id="inputRemember" name="inputRemember">Remember me
 			</label>
 		</div>
 	</div>

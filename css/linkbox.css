@@ -153,3 +153,17 @@ img.simpleFav{
 	width:24px;
 	height:24px;
 }
+
+.FLDmenuActive{
+	font-size:15px;
+	font-weight:bold;
+	padding-left:8px;
+	border-left:8px solid #800000;
+}
+.fldHeading{
+	padding:0;
+}
+.fldHeading a{
+	padding:10px 15px;
+	display:block;
+}

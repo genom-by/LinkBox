@@ -202,7 +202,7 @@ $htmlItem = "<tr id='link_id_{$id_link}'><td>{$favicon}</td><td><a class='simple
 					$htmlTable = $htmlTable.$htmlItem.PHP_EOL;
 				}
 				$selF1 = self::getSelectItems('folder');
-		$filterSelect = "<select id='filter_link_folder' onChange='filter_link_folder_onChange(`filter_link_folder`,this.value);'>{$selF1}</select>";
+		$filterSelect = "<select id='filter_link_folder' onChange='filter_link_folder_onChange(filter_link_folder,this.value);'>{$selF1}</select>";
 		$htmlheader = "<thead><tr><th>-</th><th>URL</th><th>Name</th><th>Folder {$filterSelect}</th><th>Created</th><th>Visited</th><th>del</th></tr></thead>";				
 			//return $htmlList;
 			$htmlTable = $htmlheader.$htmlTable;
@@ -213,7 +213,15 @@ $htmlItem = "<tr id='link_id_{$id_link}'><td>{$favicon}</td><td><a class='simple
 			if($id==null){
 				$list = Link::getAll() ; //'SELECT id_link, id_folder, url, id_user, created, lastVisited, isShared, title from link'
 			}else{
-				$list = Link::getAllWhere("WHERE id_folder={$id}") ;
+				//$list = Link::getAllWhere("WHERE id_folder={$id}") ;	//TODO - to include subfolders in parent set too
+				$subfolders = Folder::getSubFoldersNames($id);
+				if(count($subfolders) > 0){
+					$subfoldersIDs = array_keys($subfolders);
+					$subids = implode(",", $subfoldersIDs);
+					$list = Link::getAllWhere("WHERE id_folder IN ( {$id}, {$subids} )") ;
+				}else{
+					$list = Link::getAllWhere("WHERE id_folder={$id}") ;
+				}
 			}
 						
 			$folders = Folder::getFoldersNames() ; //'SELECT id_folder, folderName, id_user from folder'
@@ -246,7 +254,7 @@ $htmlItem = "<tr id='link_id_{$id_link}' class='lbox-linkrow'><td>{$favicon}</td
 					$htmlTable = $htmlTable.$htmlItem.PHP_EOL;
 				}
 				//$selF1 = self::getSelectItems('folder');
-		//$filterSelect = "<select id='filter_link_folder' onChange='filter_link_folder_onChange(`filter_link_folder`,this.value);'>{$selF1}</select>";
+		//$filterSelect = "<select id='filter_link_folder' onChange='filter_link_folder_onChange(filter_link_folder,this.value);'>{$selF1}</select>";
 		$htmlheader = "<thead><tr><th>-</th><th>URL name</th><th>Created</th><th>del</th></tr></thead>";				
 			//return $htmlList;
 			$htmlTable = $htmlheader.$htmlTable;
@@ -341,11 +349,11 @@ $htmlItem = "<tr id='sequences_id_{$item['id_seq']}'><td>{$item['name']}</td><td
 				/*$row_selStation = "<select name='station' id='stationSel".$item['id_station']."'>".$html_selectorStations."</select>";//self::getSelectItems('station')
 				$row_Time = "<input type='text' autocomplete='off' name='stationTime' id='stationTime".$item['id_station']."' size='10'/>";
 				$row_selpitType = "<select name='pitType' id='pitType".$item['id_station']."'>".$html_selectorPitTypes."</select>";
-				$btn_delRow = "<button type='button' class='tbl_pitnew_row_del' onclick='btn_delPitstopNewRow(`{$totalstops}`)'>X</button>";
+				$btn_delRow = "<button type='button' class='tbl_pitnew_row_del' onclick='btn_delPitstopNewRow({$totalstops})'>X</button>";
 				*/$row_selStation = "<select name='station".$item['id_station']."' id='stationSel".$item['id_station']."'>".$html_selectorStations."</select>";//self::getSelectItems('station')
 				$row_Time = "<input type='text' autocomplete='off' name='stationTime".$item['id_station']."' id='stationTime".$item['id_station']."' size='10' tabindex='{$totalstops}'/>";
 				$row_selpitType = "<select name='pitType".$item['id_station']."' id='pitType".$item['id_station']."'>".$html_selectorPitTypes."</select>";
-				$btn_delRow = "<button type='button' class='tbl_pitnew_row_del' onclick='btn_delPitstopNewRow(`{$totalstops}`)'>X</button>";
+				$btn_delRow = "<button type='button' class='tbl_pitnew_row_del' onclick='btn_delPitstopNewRow({$totalstops})'>X</button>";
 			
 			}else if($type == 'edit'){
 				//refactored
@@ -392,7 +400,7 @@ $htmlItem = "<tr id='sequences_id_{$item['id_seq']}'><td>{$item['name']}</td><td
 				$row_selStation = "<select name='station{$row}' id='stationSel{$row}'>".$html_selectorStations."</select>";//self::getSelectItems('station')
 				$row_Time = "<input type='text' autocomplete='off' name='stationTime{$row}' id='stationTime{$row}' size='10' tabindex='{$row}'/>";
 				$row_selpitType = "<select name='pitType{$row}' id='pitType{$row}'>".$html_selectorPitTypes."</select>";
-				$btn_delRow = "<button type='button' class='tbl_pitnew_row_del' onclick='btn_delPitstopNewRow(`{$row}`)'>X</button>";
+				$btn_delRow = "<button type='button' class='tbl_pitnew_row_del' onclick='btn_delPitstopNewRow({$row})'>X</button>";
 			
 			}else if($type == 'edit'){
 				//refactored
@@ -438,7 +446,7 @@ $htmlItem = "<tr id='sequences_id_{$item['id_seq']}'><td>{$item['name']}</td><td
 	$row_selpitType = "<select name='pitTypeED".$item['id_station']."' id='pitTypeED".$item['id_station']."'>".self::getSelectItems('pitstopType', $item['id_pittype'])."</select>";			
 
 	$row = $item['id_pitstop'];
-	$btn_delRow = "<button type='button' class='tbl_pitnew_row_del' onclick='btn_delPitstopEDITRow(`{$row}`)'>X</button>";	
+	$btn_delRow = "<button type='button' class='tbl_pitnew_row_del' onclick='btn_delPitstopEDITRow({$row})'>X</button>";	
 	
 	$htmlItem = "<tr class='trpitedit' id='tbl_pitedit_row_{$row}' data-id='{$row}'><td>{$row_selStation}</td><td>{$row_Time}</td><td>{$row_selpitType}</td><td>{$btn_delRow}</td></tr>";
 	/*	
@@ -552,7 +560,7 @@ return "<table class='pitstops_edit'>".$htmlheader.$htmlTable.$htmlBtnAddRow.$ht
 	$hiddenOrd = "<input name='orderalED".$totalstops."' id='orderalED".$totalstops."' size='0' value=".$item['orderal']." hidden type='text'>";
 
 	$row = $item['id_ss'];
-	$btn_delRow = "<button type='button' class='tbl_seqSS_row_del' onclick='btn_delSequenceEDITRow(`{$row}`)'>X</button>";	
+	$btn_delRow = "<button type='button' class='tbl_seqSS_row_del' onclick='btn_delSequenceEDITRow({$row})'>X</button>";	
 	
 	$htmlItem = "<tr class='trseqedit' id='tbl_seqedit_row_{$row}' data-id='{$row}'><td class='tdorder'>{$row_orderal}</td><td class='hid_inp'>{$hiddenOrd}</td><td>{$row_selStation}</td><td>{$row_selpitType}</td><td>{$btn_delRow}</td></tr>";
 		
@@ -630,7 +638,7 @@ return "<table class='sequences_edit'>".$htmlheader.$htmlTable.$htmlBtnAddRow.$h
 			$row_selStation = "<select name='station{$row}' id='stationSel{$row}'>{$html_selectorStations}</select>";//self::getSelectItems('station')
 			$row_orderal = "<input type='text' hidden name='orderal{$row}' id='orderal{$row}' size='0' value='{$totalstops}'/>";
 			$row_selpitType = "<select name='pitType{$row}' id='pitType{$row}'>{$html_selectorPitTypes}</select>";
-			$btn_delRow = "<button type='button' class='tbl_pitnew_row_del' onclick='btn_delSequenceNewRow(`{$row}`)'>X</button>";
+			$btn_delRow = "<button type='button' class='tbl_pitnew_row_del' onclick='btn_delSequenceNewRow({$row})'>X</button>";
 							
 			$htmlItem = "<tr class='trseqnew' id='tbl_seqnew_row_{$row}' data-id='{$row}'><td class='order'>{$totalstops}</td><td class='hid_inp'>{$row_orderal}</td><td>{$row_selStation}</td><td>{$row_selpitType}</td><td>{$btn_delRow}</td></tr>";
 			$htmlTable = $htmlTable.$htmlItem.PHP_EOL;			
@@ -719,14 +727,14 @@ array(7) { ["id_pitstop"]=> string(2) "10" ["id_station"]=> string(1) "1" ["shor
 	*/
 	public static function createDELTablebutton($table='no_table_provided',$id=0){
 		if(empty($id)) return "<span>xDELx</span>";
-		return "<button type='button' class='btn_del' onclick='btnDelFromTable(`{$table}`,{$id});'>del</button>";
+		return "<button type='button' class='btn_del' onclick='btnDelFromTable(\"{$table}\",{$id});'>del</button>";
 	}
 	/* create html button wih common function btnEditlFromTable for deleting table row
 	*   input: table, id
 	*/
 	public static function createEdTablebutton($table='no_table_provided',$id=0){
 		if(empty($id)) return "<span>xEdx</span>";
-		return "<button type='button' class='btn_edit' onclick='btnEditTableItem(`{$table}`,{$id});'>edit</button>";
+		return "<button type='button' class='btn_edit' onclick='btnEditTableItem(\"{$table}\",{$id});'>edit</button>";
 	}
 	/* create html block of buttons for edit, save, cancel, delete  - row
 	*   input: table, id
@@ -737,8 +745,8 @@ array(7) { ["id_pitstop"]=> string(2) "10" ["id_station"]=> string(1) "1" ["shor
 		$edSpan = "<span class='btnEditBl'>".self::createEdTablebutton($table,$id)."</span>";
 		
 	$btnDel = self::createDELTablebutton($table,$id);
-	$btnSave = "<button type='button' class='btn_save' onclick='btnSaveTableItem(`{$table}`,{$id});'>save</button>";
-	$btnCancel = "<button type='button' class='btn_cancel' onclick='btnCancelTableItem(`{$table}`,{$id});'>cancel</button>";
+	$btnSave = "<button type='button' class='btn_save' onclick='btnSaveTableItem(\"{$table}\",{$id});'>save</button>";
+	$btnCancel = "<button type='button' class='btn_cancel' onclick='btnCancelTableItem(\"{$table}\",{$id});'>cancel</button>";
 		$dscSpan = "<span class='btnDSCBl hided'>{$btnDel}{$btnSave}{$btnCancel}</span>";
 		return $edSpan.$dscSpan;
 	}

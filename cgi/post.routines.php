@@ -51,7 +51,11 @@ function dispatchPageUpdate($table, $id=null){
 		case 'link_folder':
 			//$seqstats = sequencesStations::getSeqStatNamesBySequenceID($_POST['id']);
 			//$links = HTML::getTableItems($_POST['id']);
-			$links = HTML::getTableItems('linkMainPage', $id);
+			if($id=='all'){
+				$links = HTML::getTableItems('linkMainPage');
+			}else{
+				$links = HTML::getTableItems('linkMainPage', $id);
+			}
 			if(false === $links){returnPOSTError('could not obtain links');die();}
 			else{
 				//$seqstats = HTML::getPitStopsEditRows($seqstats);
@@ -194,9 +198,11 @@ if(!empty($_POST['id'])){
 	$err = "unpredicted error";
 	
 if(! is_numeric($_POST['id'])){
-	$res = false;
-	$err = "id should be numeric";
-	returnPOSTError($err);
+	if($_POST['id'] != 'all'){
+		$res = false;
+		$err = "id should be numeric";
+		returnPOSTError($err);
+	}
 }
 
 	switch($_POST['action']){

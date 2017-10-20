@@ -54,9 +54,8 @@ class Auth{
 	public static function notLogged(){
 		if( empty($_SESSION["user_id"]) ){
 			//REMEMBER ME
-			if( !empty($_COOKIE["member_login"]) ){
-				return ! self::loginRememberedUserToken($_COOKIE["member_login"], 
-					$_COOKIE["member_password"]);
+			if( !empty($_COOKIE["token"]) ){
+				return ! self::loginRememberedUserToken($_COOKIE["token"]);
 			}else{
 				return true;
 			}
@@ -77,13 +76,14 @@ class Auth{
 			if( empty($pwd) ){
 				return false;
 			}else{
+			
 				if(self::userKnowPassword($user, $pwd)){
 					session_start();
 					$_SESSION["user_id"] = $user->id;
 					$_SESSION["user_name"] = $user->name;
 					self::$uid = $user->id;
 					
-					if($remember == true){
+					if( isset($remember) ){
 						self::rememberMeToken($user, true);
 					}
 					
@@ -131,8 +131,8 @@ class Auth{
 			return false;			
 		}else{
 		//TODO implement tokenizing
-		
-		$user_id = Auth::getUserIDbyToken($_SESSION['token']);
+Logger::log('try to restore user from token'.$userToken);		
+		$user_id = Auth::getUserIDbyToken($userToken);
 		if($user_id === false){return false; }
 		$user = User::load($user_id);
 		
@@ -141,7 +141,7 @@ class Auth{
 			$_SESSION["user_id"] = $user->id;
 			$_SESSION["user_name"] = $user->name;
 			self::$uid = $user->id;	
-
+Logger::log('user restored from token'.$user->name);
 			return true;						
 		}
 		return false;	
@@ -191,21 +191,29 @@ class Auth{
 		}	
 		$aurm = new AuthORM();
 		$res = $aurm->save();
-		if($res){return true;}else{Logger::log('Auth[saveUserToken]: could not save auth '.$aurm->errormsg);return false;}
-		
+		if($res === false){Logger::log('Auth[rememberMeToken]: could not save token '.$aurm->errormsg);return false;}
+		//var_dump($aurm);die();
 		if( $re ) {
-			$aurm = new AuthORM();
-			$res = $aurm->save();
 			if($res === true){
 				setcookie ("token",$aurm->token,$aurm->expDate);
 				//setcookie ("member_login",$user->name,time()+ (30 * 24 * 60 * 60));
 				//setcookie ("member_password",$user->pwdHash,time()+ (30 * 24 * 60 * 60));
+				return true;
+			}else{
+				Logger::log('Auth[rememberMeToken]: could not remember user '.$aurm->errormsg);return false;
 			}
 		} else {
 			if(isset($_COOKIE["token"])) {
+				$token = $_COOKIE["token"];
+				$db = LinkBox\DataBase::connect(); //get raw connection
+				//$conn = $db::getPDO(); //get raw connection
+				if (! $db->executeDelete("DELETE FROM authTokens WHERE token='{$token}'") ){
+					Logger::log('Auth[rememberMeToken]: could not delete token from DB '.$aurm->errormsg);
+				}
 				setcookie ("token","", time() - 3600);
 			}
 		}
+		return true;
 	}
 		
 		//TODO implement tokenizing

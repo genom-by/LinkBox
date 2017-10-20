@@ -92,9 +92,6 @@ $(document).ready(function () {
 <? include 'tmplt/ui.table_links.inc.php';?>
 <!--/ -------------------------------------------------------------- LINKS TABLE end  ----------------------------------------------------------------->	
 	</div><!--/.col-xs-6.col-lg-4-->
-		http://stackoverflow.com/questions/20838883/inline-objects-becomes-block-while-using-some-hidden-xs-classes-in-twitter-boo
-		http://stackoverflow.com/questions/19659726/twitter-bootstrap-hide-element-on-small-devices
-		http://stackoverflow.com/questions/14207109/hiding-elements-in-responsive-layout
 	</div><!--/row-->
 	</div><!--/.col-xs-12.col-sm-9-->
 	<div class="col-sm-3 sidebar-offcanvas" id="sidebar">

@@ -192,7 +192,11 @@ function toggleAddButton(sending) {
 }
 // set form's emty controls to red border
 //
-function markEmptyControls(controls, add=true) {
+function markEmptyControls(controls, add) {
+
+		//default value for preES2005
+		add = typeof add !== 'undefined' ? add : true;
+		
 		controls.forEach( function(item, i, arr) {
 		//console.log(item);
 		//item.parentNode.className += " emptyControl";}
@@ -267,7 +271,8 @@ function fillTagsSelected(){
 //
 //
 function menuFolderSelected(folderType, folderID){
-	console.log('folderType:'+folderType + 'folderID:'+folderID);
+	console.log('folderType:'+folderType + ' folderID:'+folderID);
+	
 	id_ = folderID;
 	table_ = 'link_folder';
 	divID='#lbx_LinksTable';
@@ -292,7 +297,19 @@ function menuFolderSelected(folderType, folderID){
 	
 $(function () {
 	
-
+	$(".FLDmenuItem").click(function(e){
+		console.log(e.target);
+		//var a = $(this).find('a');
+		//a.css( "color", "red" );
+		//a.click();
+		//console.log('a is:'+a);
+		$(".FLDmenuItem").removeClass('FLDmenuActive');
+		$(this).addClass('FLDmenuActive');
+		//$(e.target).addClass('FLDmenuActive');
+		//$(e.target).css('background-color','#ff0000');
+		//$(this).parent().find('.childDiv').css('background-color','#ffffff');
+		//$(this).css('background-color','#ff0000');
+	});
 	
 	resetForm( );
 	

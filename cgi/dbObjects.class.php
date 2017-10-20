@@ -351,7 +351,9 @@ class Folder extends DBObject{
 	protected static $orm = array('table'=>'folder', 'table_id'=>'id_folder', 'where_uid'=>'id_user', 'is_uid'=>true);
 	protected static $sqlGetAll = 'SELECT id_folder, id_parentfolder, folderName, id_user from folder';
 	protected static $sqlGetAllOrdered = 'SELECT id_folder, id_parentfolder, folderName, id_user from folder ORDER BY folderName';
-		
+	
+	public static $totalLinksCount;
+	
 	public function __construct($name_, $parent_ = null){
 		$this->name = Utils::cleanInput($name_);
 		$this->parentfolder = Utils::cleanInput($parent_);
@@ -440,17 +442,31 @@ class Folder extends DBObject{
 			return false;			
 		}
 		return $rows;
-		/*
-		SELECT id_folder, folderName, COUNT(co_par) as co_sub
-FROM (
-SELECT id_parentFolder, COUNT(id_folder) as co_par
-FROM folder
-WHERE  id_parentFolder IS NOT NULL
-GROUP BY id_parentFolder
-)
- WHERE id_parentFolder IS NULL
-GROUP BY id_folder 
-		*/
+		
+	}
+
+/*	================  count for parent folders ==========================
+instead fn getAllParents()
+*/	
+	public static function getParentsFoldersAndCounts(){
+		
+		try{
+		$db = LinkBox\DataBase::connect();
+
+		$sql = "SELECT folder.id_folder, folderName, COUNT(id_link) as folderParentCount FROM folder LEFT JOIN link ON folder.id_folder = link.id_folder WHERE folder.id_user=:uid AND folder.id_parentFolder IS NULL GROUP BY folderName";
+		
+		$stmt = $db->connection->prepare($sql);
+		$stmt->bindValue(':uid', Auth::whoLoggedID());
+		$stmt->execute();
+
+		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		}catch(PDOException $e){
+			self::$errormsg = 'error fetching parent folders count: '.$e->getMessage();//LinkBox\DataBase::$errormsg;
+			LiLogger::log( self::$errormsg );
+			return false;			
+		}
+		return $rows;
+		
 	}
 /*	================ forms array of folders ==========================
 */	
@@ -458,7 +474,10 @@ GROUP BY id_folder
 		
 		$rows = array();
 		$onerow = array();
-		$parents = self::getAllParents();
+		$totalLinksCount = 0;
+		
+		//$parents = self::getAllParents();
+		$parents = self::getParentsFoldersAndCounts();
 		if(false === $parents OR count($parents) < 1){
 			self::$errormsg = 'error fetching parent folders: '.self::$errormsg;//LinkBox\DataBase::$errormsg;
 			LiLogger::log( self::$errormsg );
@@ -475,18 +494,22 @@ GROUP BY id_folder
 			}		
 
 			if(count($sub) < 1){
-				$empty = array('parentID'=>$parent['id_folder'], 'parentName'=>$parent['folderName'], 'subfolders'=> array(), 'folderCount'=>0);	
+				$empty = array('parentID'=>$parent['id_folder'], 'parentName'=>$parent['folderName'], 'subfolders'=> array(), 'folderCount'=>$parent['folderParentCount']);	
 				$rows[] = $empty;
 				
+				$totalLinksCount += $parent['folderParentCount'];
 			}else{
 				$onerow['parentID'] = $parent['id_folder'];
 				$onerow['parentName'] = $parent['folderName'];
 				$onerow['subfolders'] = $sub;
-				$onerow['folderCount'] = self::countSubfolderedLinks($sub);
+				$onerow['folderCount'] = self::countSubfolderedLinks($sub) + $parent['folderParentCount'];
 				$rows[] = $onerow;
+				
+				$totalLinksCount += $onerow['folderCount'];
 			}
 		}
-//echo'<pre>';var_dump(($rows));die();			
+//echo'<pre>';var_dump(($rows));die();
+		self::$totalLinksCount = $totalLinksCount;
 		return $rows;
 	}
 

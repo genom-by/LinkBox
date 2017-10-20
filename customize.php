@@ -13,32 +13,32 @@ if(!empty($_POST['action'])){
 	if( Auth::notLogged() ){
 		break;
 	}	
-switch ($_POST['action']){
-	case 'folder':
-		//var_dump($_POST);
-		if(!empty($_POST['folderName'])){
-			if(isset($_POST['isParent'])){
-				$folder = new Folder($_POST['folderName']);
-			}else{
-				$parentID = intval($_POST['folderParentName']);
-				if($parentID > 0){
-					$folder = new Folder($_POST['folderName'],$_POST['folderParentName'] );					
+	switch ($_POST['action']){
+		case 'folder':
+			//var_dump($_POST);
+			if(!empty($_POST['folderName'])){
+				if(isset($_POST['isParent'])){
+					$folder = new Folder($_POST['folderName']);
 				}else{
-					$message = 'Parent folder not selected!';			
+					$parentID = intval($_POST['folderParentName']);
+					if($parentID > 0){
+						$folder = new Folder($_POST['folderName'],$_POST['folderParentName'] );					
+					}else{
+						$message = 'Parent folder not selected!';			
+						\LinkBox\Logger::log("{$_POST['action']} error: ".$message);
+						$actionStatus = 'error';
+						break;
+					}
+
+				}
+				$retval = $folder->save();
+				if(!$retval){
+					$message = $folder->errormsg;			
 					\LinkBox\Logger::log("{$_POST['action']} error: ".$message);
 					$actionStatus = 'error';
-					break;
 				}
-
 			}
-			$retval = $folder->save();
-			if(!$retval){
-				$message = $folder->errormsg;			
-				\LinkBox\Logger::log("{$_POST['action']} error: ".$message);
-				$actionStatus = 'error';
-			}
-		}
-		break;
+			break;
 	case 'tag':
 		//echo 'tag';
 		if(!empty($_POST['tagName'])){
