@@ -50,6 +50,53 @@ class HTML{
 			else $htmlList = "<option disabled value='-1'>No folders</option>";
 		}
 		break;
+		case 'folderGroupped':{
+			$list = Folder::getFoldersArray() ; //groupped array
+			if(false !== $list AND count($list) > 0){
+				$htmlItem = '';
+				foreach($list as $folderSet){
+					$fldNameParent = $folderSet['parentName'];
+					$fldCountParent = $folderSet['folderCount'];
+					$fldIDParent = $folderSet['parentID'];
+					
+					if( count($folderSet['subfolders']) > 0 ){
+			$entryContent = '';
+						//group header//
+			$htmlList = $htmlList."<optgroup label='{$fldNameParent}'>";
+						//group folder itself
+			$htmlItem = "<option value='{$fldIDParent}'{$is_selected}>{$fldNameParent}</option>";
+			$htmlList = $htmlList.$htmlItem.PHP_EOL;
+			
+			foreach($folderSet['subfolders'] as $subfolder){
+			
+				$folderName = $subfolder['folderName'];
+				$folderCount = $subfolder['folderCount'];
+				$folderID = $subfolder['id_folder'];
+				$HTMLfldID = 'subfolder'.$folderID;
+	if($item['id_folder'] == $selected_id){$is_selected=' selected ';}else{$is_selected='';}
+	$htmlItem = "<option value='{$folderID}'{$is_selected}>{$folderName}</option>";
+	$htmlList = $htmlList.$htmlItem.PHP_EOL;
+				}
+				$htmlList = $htmlList."</optgroup>";
+		}else{
+						//group header//
+			$htmlList = $htmlList."<optgroup label='{$fldNameParent}'>";
+						//group folder itself
+			if($item['id_folder'] == $selected_id){$is_selected=' selected ';}else{$is_selected='';}
+			$htmlItem = "<option value='{$fldIDParent}'{$is_selected}>{$fldNameParent}</option>";
+			$htmlList = $htmlList.$htmlItem.PHP_EOL;
+		}
+
+				/*if($item['id_folder'] == $selected_id){$is_selected=' selected ';}else{$is_selected='';}
+				$htmlItem = "<option value='{$item['id_folder']}'{$is_selected}>{$item['folderName']}</option>";
+				$htmlList = $htmlList.$htmlItem.PHP_EOL;*/
+				}
+			//return $htmlList;
+			if($selected_id == -1) $htmlList = $htmlListFirstEntry.PHP_EOL.$htmlList;			
+			}
+			else $htmlList = "<option disabled value='-1'>No folders</option>";
+		}
+		break;
 		case 'parentfolder':{
 			$list = Folder::getAllParents() ; //'SELECT id_folder, folderName, id_user from folder';
 			if(false !== $list){
@@ -327,6 +374,13 @@ $htmlItem = "<tr id='sequences_id_{$item['id_seq']}'><td>{$item['name']}</td><td
 			$htmlTable = "no such table";	
 	}
 	return $htmlTable;
+	}
+	
+	/* create link node with favicon
+	*/
+	public static function favicon(){
+		$fv = "<link rel='shortcut icon' href='favicon.ico' type='image/x-icon' />";
+		return $fv;
 	}
 	
 	/* create html table rows for new pitstops
@@ -681,14 +735,7 @@ return "<table class='sequences_edit'>".$htmlheader.$htmlTable.$htmlBtnAddRow.$h
 		
 		return "<table>".$htmlTable."</table>";
 	}
-
-/*
-getAll()
-array(49) { [0]=> array(14) { ["id_pitstop"]=> string(2) "10" [0]=> string(2) "10" ["id_station"]=> string(1) "1" [1]=> string(1) "1" ["shortName"]=> string(4) "zel0" [2]=> string(4) "zel0" ["statName"]=> string(21) "Зелёный луг" [3]=> string(21) "Зелёный луг" ["id_itinerary"]=> string(1) "1" [4]=> string(1) "1" ["itinName"]=> string(16) "t46_Кол_07:04" [5]=> string(16) "t46_Кол_07:04" ["time"]=> string(3) "417" [6]=> string(3) "417" } [1]=> array(14) { ["id_pitstop"]=> string(2) "11" [0]=> string(2) "11" ["id_station"]=> string(1) "2" [1]=> string(1) "2" ["shortName"]=> string(4) "kol1" [2]=> string(4) "kol1" ["statName"]=> string(16) "Кольцова" [3]=> string(16) "Кольцова" ["id_itinerary"]=> string(1) "1" [4]=> string(1) "1" ["itinName"]=> string(16) "t46_Кол_07:04" [5]=> string(16) "t46_Кол_07:04" ["time"]=> string(3) "424" [6]=> string(3) "424" } [2]=> array(14) 
-
-getPitstopsByItinerary
-array(7) { ["id_pitstop"]=> string(2) "10" ["id_station"]=> string(1) "1" ["shortName"]=> string(4) "zel0" ["statName"]=> string(21) "Зелёный луг" ["id_itinerary"]=> string(1) "1" ["itinName"]=> string(16) "t46_Кол_07:04" ["time"]=> string(3) "417" } 
-*/	
+	
 	public static function getPitstops($itir = 'all'){
 		$htmlTable = '';	
 		$totalstops = 0;
@@ -750,36 +797,7 @@ array(7) { ["id_pitstop"]=> string(2) "10" ["id_station"]=> string(1) "1" ["shor
 		$dscSpan = "<span class='btnDSCBl hided'>{$btnDel}{$btnSave}{$btnCancel}</span>";
 		return $edSpan.$dscSpan;
 	}
-	/*
-	// get nested aray
-	// gives json array {var:val,...}
-	array(3) {
-  [1]=>
-  array(4) {
-    ["itin_name"]=>
-    string(17) "a47c_Зел_07:20"
-    [0]=>
-    array(1) {
-      [1]=>
-      string(1) "5"
-    }
-    [1]=>
-    array(1) {
-      [2]=>
-      string(1) "5"
-    }
-    [2]=>
-    array(1) {
-      [3]=> -- stat_id
-      string(1) "5"
-    }
-  }
-  to
-  var cars = [
-{name:"chevrolet chevelle malibu", mpg:18, cyl:8, dsp:307, hp:130, lbs:3504, acc:12, year:70, origin:1},
-{name : 'kol1',  value : kol1 },  	{name : 'nem2',  value : nem2 },  	{name : 'mas3',  value : mas3 }, 	{name : 'akd4',   value : akd4  }, 
-{name : 'spu5',  value : spu5 }, 	{name : 'kaz6',  value : kaz6 }, 	{name : 'tra7', value : tra7}
-	*/
+
 	public static function normalizeWays2JSON($ways){
 		if (empty($ways)) return false;
 	
@@ -808,57 +826,6 @@ array(7) { ["id_pitstop"]=> string(2) "10" ["id_station"]=> string(1) "1" ["shor
 		return $js_string;
 	}
 	
-	/* return such array:
-	[{         
-		name: 'Tokyo',
-		data: [7.0, 6.9, 9.5, 14.5, 18.4, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
-	}, {
-		name: 'London',
-		data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8, 3.3, 4.4]
-	}]
-	source: Way::getPitstopsByItinerary()
-	array(9) {
-  [1]=>
-  array(5) {
-    ["name"]=>
-    string(16) "t46_Кол_07:04"
-    [0]=>
-    array(1) {
-      ["zel0"]=>
-      string(3) "417"
-    }
-    [1]=>
-    array(1) {
-      ["kol1"]=>
-      string(3) "424"
-    }
-    [2]=>
-    array(1) {
-      ["nem2"]=>
-      string(3) "446"
-    }
-    [3]=>
-    array(1) {
-      ["mas3"]=>
-      string(3) "452"
-    }
-  }
-	*/
-
-	/* input
-array(49) {
-  [0]=>  array(7) {
-    ["id_pitstop"]=>    string(2) "10"
-    ["id_station"]=>    string(1) "1"
-    ["shortName"]=>    string(4) "zel0"
-    ["statName"]=>    string(21) "Зелёный луг"
-    ["id_itinerary"]=>    string(1) "1"
-    ["itinName"]=>    string(16) "t46_Кол_07:04"
-    ["time"]=>    string(3) "417"
-  }
-  [1]=>  array(7) {
-	*/
-//if no data - return string 'null' for not breaking js-formatting
 	public static function arrayLineChart($ways, $sequence_id=-1, $delimiter=','){
 		//if (empty($ways)) return "[no data1]";	//var_dump($ways);die();
 		if (empty($ways)) return "null";	//var_dump($ways);die();
@@ -982,7 +949,7 @@ array(49) {
 	public static function getTopMenuItems(){
 	 //class="active"
 	 	$lis = '';
-		$pages = array('customize'=>'Customize', 'profile'=>'Profile', 'howto'=>'How to use');
+		$pages = App::getTopMenuPagesArr();
 		foreach($pages as $pg=>$title){
 			$link = App::link($pg);
 			$class = '';

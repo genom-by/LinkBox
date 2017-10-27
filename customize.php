@@ -106,9 +106,11 @@ if(!empty($_POST['action'])){
 <head>
 <title>Customize personal account</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<?=HTML::favicon();?>
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="css/linkbox.css">
 <script>
 function getSelectedText(elementId) {
     var elt = document.getElementById(elementId);
@@ -582,7 +584,7 @@ img.simpleFav{
 <br/><p></p>
 <label for="linkFolder">Select Folder</label>
 <select name="linkFolder" id="linkFolder">
-<?php echo HTML::getSelectItems('folder');?>
+<?php echo HTML::getSelectItems('folderGroupped');?>
 </select>
 <label for="tagsSimple">Tags comma-separated</label>		
 <input name="tagsSimple" id="tagsSimple" type="text" autocomplete="off" />
@@ -613,7 +615,7 @@ img.simpleFav{
 		<input type="text" name="linkLink2" id="linkLink2" autocomplete="off"/>
 		<br/><p></p>
 		<select name="linkFolder2" id="linkFolder2">
-		<?php echo HTML::getSelectItems('folder');?>
+		<?php echo HTML::getSelectItems('folderGroupped');?>
 		</select>
 		<label for="tagsCSV">Tags comma-separated</label>		
 		<input name="tagsCSV" id="tagsCSV" type="text" autocomplete="off" />
@@ -628,7 +630,7 @@ img.simpleFav{
 	</div>
 </div><!-- itineraries end -->
 <!-- ---------------------------------------------- pitstops ----------------   |   ----------------------------- sequenses -------------------------------------------    -->
-	
+
 <!-- ---------------------------------------------- pitstops -- end ---------   |   ----------------------------- sequenses --- end -----------------------------------    -->
 <pre>
 <?php

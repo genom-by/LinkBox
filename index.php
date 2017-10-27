@@ -18,7 +18,7 @@ include_once 'cgi/HTMLroutines.class.php';
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="assets/favicon.ico">
+	<?=HTML::favicon();?>
 
 	<title>LinkBox main page</title>
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">

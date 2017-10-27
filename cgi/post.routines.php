@@ -191,7 +191,7 @@ function dispatchInquire($table, $id, $question){
 
 ob_start();
 //\LinkBox\Logger::log('POST Routines file running');
-\LinkBox\Logger::log('POST : '.serialize($_POST) );
+//\LinkBox\Logger::log('POST : '.serialize($_POST) );
 
 if(!empty($_POST['id'])){
 	$res = false;
@@ -237,7 +237,7 @@ if(! is_numeric($_POST['id'])){
 	$err = "no entry id";
 	returnPOSTError($err);
 }
-	\LinkBox\Logger::log('json : '.json_encode(array('result'=>$res?'ok':'failed') ) );
+//	\LinkBox\Logger::log('json : '.json_encode(array('result'=>$res?'ok':'failed') ) );
 ob_end_clean();
 	echo json_encode(array('result'=>$res?'ok':'failed:'.DBObject::$errormsg) );
 

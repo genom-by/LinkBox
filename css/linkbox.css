@@ -167,3 +167,63 @@ img.simpleFav{
 	padding:10px 15px;
 	display:block;
 }
+body{
+margin-top:36px;
+}
+.hided{
+	display:none;
+}
+.hided2{
+	visibility:hidden;
+}
+.table-condensed button {
+    padding: 2px 5px;
+    font-size: 10px;
+	font-weight:bold;
+    line-height: 1.1;
+    border-radius: 3px;
+	margin:-2px 0;
+}
+.obus_header{
+	margin-bottom:20px;
+}
+.statName_send{
+position:relative;
+float:right;
+width:20%;
+}
+.clearfix{
+content:"";
+display:block;
+clear:both;
+}
+td.inp{
+display:none;
+}
+.hid_inp{
+	display:none;
+}
+.simpleUrl{
+	text-decoration: underline;
+}
+img.simpleFav{
+	width:24px;
+	height:24px;
+}
+/* ... loading ...
+.loading{
+ margin: 10% auto;
+ border-bottom: 6px solid #fff;
+ border-left: 6px solid #fff;
+ border-right: 6px solid #c30;
+ border-top: 6px solid #c30;
+ border-radius: 100%;
+ height: 100px;
+ width: 100px;
+ -webkit-animation: spin .6s infinite linear;
+ -moz-animation: spin .6s infinite linear;
+ -ms-animation: spin .6s infinite linear;
+ -o-animation: spin .6s infinite linear;
+ animation: spin .6s infinite linear;
+}
+*/

@@ -77,7 +77,7 @@ $HTMLfoldersAccord = "<div class='panel panel-default'> No folders yet</div>";
 }
 	$totalCount = Folder::$totalLinksCount;
 		$eAllentryHead = "<a data-toggle='collapse' data-parent='#accordion' href='#' onClick='menuFolderSelected(\"parent\",\"all\");'>Show all <span class='badge'>{$totalCount}</span></a>";
-		$eShowAllmenuItem = "<div class='panel-heading'><h4 class='panel-title'><div class='FLDmenuItem'>{$eAllentryHead}</div></h4></div>";
+		$eShowAllmenuItem = "<div class='panel-heading fldHeading'><h4 class='panel-title'><div class='FLDmenuItem'>{$eAllentryHead}</div></h4></div>";
 		$eHTMLallContent = "<div class='panel panel-default'>{$eShowAllmenuItem}</div>";
 		
 		$HTMLfoldersAccord = $eHTMLallContent.$HTMLfoldersAccord;

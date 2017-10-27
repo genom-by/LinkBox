@@ -72,7 +72,7 @@ class DataBase{
 	{
 		if(is_null(self::$instance) ){
 			self::$instance = new DataBase();
-			Logger::Log('created and connected');
+			//Logger::Log('created and connected');
 		}
 		return self::$instance;
 	}
