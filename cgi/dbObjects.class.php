@@ -366,6 +366,11 @@ class Folder extends DBObject{
 		}
 	}
 	public function save(){
+		if( empty($this->name) ){
+			$this->errormsg = 'Empty folder name is not allowed.';
+			LiLogger::log( 'Folder::save failed: '.self::$errormsg );
+			return false;			
+		}
 		$pdosql = str_replace(':1:', $this->name, $this->sqlPDOSave);
 		$pdosql = str_replace(':2:', $this->uid, $pdosql);
 		if(is_int($this->parentfolder) AND ($this->parentfolder > 0) ){
@@ -578,6 +583,11 @@ class Tag extends DBObject{
 		$this->sqlPDOSave = "INSERT INTO tags(tagName, id_user) VALUES(':1:', :2:)";
 	}
 	public function save(){
+		if( empty($this->name) ){
+			$this->errormsg = 'Empty tag name is not allowed.';
+			LiLogger::log( 'Tag::save failed: '.self::$errormsg );
+			return false;			
+		}
 		$pdosql = str_replace(':1:', $this->name, $this->sqlPDOSave);
 		$pdosql = str_replace(':2:', $this->uid, $pdosql);
 		return $this->saveObject($pdosql);
@@ -633,6 +643,16 @@ class Link extends DBObject{
 		$this->sqlPDOSave = "INSERT INTO link( url, id_user, id_folder, created, lastVisited, isShared, title) VALUES(':url:', :uid:, :folderid:, :created:, :lastVis:, :shared:, ':title:')";
 	}
 	public function save(){
+		if( empty($this->name) ){
+			$this->errormsg = 'Empty link name is not allowed.';
+			LiLogger::log( 'Link::save failed: '.self::$errormsg );
+			return false;			
+		}
+		if( empty($this->url) ){
+			$this->errormsg = 'Empty link url is not allowed.';
+			LiLogger::log( 'Link::save failed: '.self::$errormsg );
+			return false;			
+		}
 	$datestamp = date_timestamp_get(date_create());
 		$pdosql = str_replace(':title:', $this->name, $this->sqlPDOSave);
 		$pdosql = str_replace(':url:', $this->url, $pdosql);

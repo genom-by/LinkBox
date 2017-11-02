@@ -341,6 +341,55 @@ $htmlItem = "<tr id='folder_id_{$item['id_folder']}'><td class='rowtxt' orm='fol
 			}else{$htmlTable = "no data";}			
 		}
 		break;
+		case 'folderGroupEdit':{
+			$htmlTable = '';
+			$list = Folder::getFoldersArray() ; //groupped array
+			if(false !== $list AND count($list) > 0){
+				$htmlItem = '';
+				foreach($list as $folderSet){
+					$fldNameParent = $folderSet['parentName'];
+					$fldCountParent = $folderSet['folderCount'];
+					$fldIDParent = $folderSet['parentID'];
+					
+					if( count($folderSet['subfolders']) > 0 ){	//there are subfolres
+						//group header//
+			$htmlItem = "<tr class='rowheader'><th>{$folderSet['parentName']}</th><th>Parent Folder</th><th class='btnBlock'></th></tr>";
+			$htmlTable = $htmlTable.$htmlItem.PHP_EOL;
+
+			$btnBlock = self::createBlockOfButtons('folder', $folderSet['parentID']);	
+			$htmlItem = "<tr id='folder_id_{$folderSet['parentID']}'><td class='rowtxt' orm='folderName'>{$folderSet['parentName']}</td><td></td><td class='btnBlock'>{$btnBlock}</td></tr>";
+			
+			$htmlTable = $htmlTable.$htmlItem.PHP_EOL;
+			
+			foreach($folderSet['subfolders'] as $subfolder){
+			
+				$folderName = $subfolder['folderName'];
+				$folderCount = $subfolder['folderCount'];
+				$folderID = $subfolder['id_folder'];
+				
+				$selParentFld = self::getSelectItems('parentfolder', $folderSet['parentID']);
+		$filterSelect = "<select id='sel_parent_fld_".$subfolder['id_folder']."' orm='id_parentFolder' disabled>{$selParentFld}</select>";
+				
+			$btnBlock = self::createBlockOfButtons('folder', $subfolder['id_folder']);	
+			$htmlItem = "<tr id='folder_id_{$subfolder['id_folder']}'><td class='rowtxt' orm='folderName'>{$subfolder['folderName']}</td><td class='rowsel'>{$filterSelect}</td><td class='btnBlock'>{$btnBlock}</td></tr>";
+	$htmlTable = $htmlTable.$htmlItem.PHP_EOL;
+				}
+				
+		}else{
+								//group header//
+			$htmlItem = "<tr class='rowheader'><th>{$folderSet['parentName']}</th><th>Parent Folder</th><th class='btnBlock'></th></tr>";
+			$htmlTable = $htmlTable.$htmlItem.PHP_EOL;
+
+			$btnBlock = self::createBlockOfButtons('folder', $folderSet['parentID']);	
+			$htmlItem = "<tr id='folder_id_{$folderSet['parentID']}'><td class='rowtxt' orm='folderName'>{$folderSet['parentName']}</td><td></td><td class='btnBlock'>{$btnBlock}</td></tr>";
+			
+			$htmlTable = $htmlTable.$htmlItem.PHP_EOL;
+			
+		}
+				}
+			}else{$htmlTable = "no data";}			
+		}
+		break;
 		case 'stations':{
 			$list = Station::getAll() ;
 			if(false !== $list){

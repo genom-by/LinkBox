@@ -85,7 +85,7 @@ function dispatchObjectUpdate($table, $id, $data){
 		
 		case 'folder':
 			$folder = Folder::load( $id); //\LinkBox\Logger::log(serialize($obus) );
-			$res = $folder->update(array('folderName'=>$dataArr['folderName2']));		
+			$res = $folder->update(array('folderName'=>$dataArr['folderName2'], 'id_parentFolder'=>$dataArr['id_parentFolder2']));		
 		break;
 		case 'tag':
 			$tag = Tag::load( $id); //\LinkBox\Logger::log(serialize($obus) );

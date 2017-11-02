@@ -15,14 +15,16 @@ if(!empty($_POST['action'])){
 	}	
 	switch ($_POST['action']){
 		case 'folder':
+		case 'subfolder':
 			//var_dump($_POST);
-			if(!empty($_POST['folderName'])){
-				if(isset($_POST['isParent'])){
-					$folder = new Folder($_POST['folderName']);
-				}else{
+			if(!empty($_POST['folderName']) OR !empty($_POST['subfolderName']) ){
+				if( $_POST['action'] == 'folder'){
+					if( !empty($_POST['folderName']) ){
+						$folder = new Folder($_POST['folderName']);}
+				}elseif($_POST['action'] == 'subfolder'){
 					$parentID = intval($_POST['folderParentName']);
 					if($parentID > 0){
-						$folder = new Folder($_POST['folderName'],$_POST['folderParentName'] );					
+						$folder = new Folder($_POST['subfolderName'],$_POST['folderParentName'] );					
 					}else{
 						$message = 'Parent folder not selected!';			
 						\LinkBox\Logger::log("{$_POST['action']} error: ".$message);
@@ -30,13 +32,16 @@ if(!empty($_POST['action'])){
 						break;
 					}
 
-				}
+				}else{break;}
 				$retval = $folder->save();
 				if(!$retval){
 					$message = $folder->errormsg;			
 					\LinkBox\Logger::log("{$_POST['action']} error: ".$message);
 					$actionStatus = 'error';
 				}
+			}else{
+				$message = 'Fill in Folder Name';
+				$actionStatus = 'error';
 			}
 			break;
 	case 'tag':
@@ -109,8 +114,10 @@ if(!empty($_POST['action'])){
 <?=HTML::favicon();?>
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/linkbox.ev.js"></script>
 <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="css/linkbox.css">
+<link rel="stylesheet" type="text/css" href="css/options.css">
 <script>
 function getSelectedText(elementId) {
     var elt = document.getElementById(elementId);
@@ -164,28 +171,132 @@ position:relative;
 		<div class="col-sm-3">
     <ul class="nav nav-pills nav-stacked">
         <li class="active"><a data-toggle="tab" href="#sectionA">
-			<span class="glyphicon glyphicon-home"></span> Section A</a></li>
+			<span class="glyphicon glyphicons-folder-open"></span> Folders</a></li>
         <li><a data-toggle="tab" href="#sectionB">
-			<span class="glyphicon glyphicon-user"></span> Section B</a></li>
+			<span class="glyphicon glyphicons-tags"></span> Tags</a></li>
         <li><a data-toggle="tab" href="#sectionC">
-			<span class="glyphicon glyphicon-envelope"></span> Section C</a></li>
+			<span class="glyphicon glyphicons-link"></span> Links</a></li>
     </ul>		
 		</div>
 		<div class="col-sm-9">
     <div class="tab-content">
         <div id="sectionA" class="tab-pane fade in active">
-            <p>Section A content…</p>
-            <p>Section A content…</p>
-            <p>Section A content…</p>
-            <p>Section A content…</p>
-            <p>Section A content…</p>
-            <p>Section A content…</p>
+            <div id='foldersPanel'>
+				<ul class="nav nav-tabs">
+				<li class="active"><a data-toggle="tab" href="#secPitNew">New Folder</a></li>
+				<li><a data-toggle="tab" href="#secPitView">View & Edit Folders</a></li>
+				</ul>
+					<div class="tab-content">
+				<!-- ---------------- New Folder ------------------------ -->
+				<div id="secPitNew" class="tab-pane fade in active">
+				<fieldset>
+
+					<!-- accordion parent | sub-->
+					<div id="accordion" class="panel-group">
+        <div class="panel panel-default">
+<div class="panel-heading"><h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Create parent folder</a></h4></div>
+            <div id="collapseOne" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <p>
+				<form name="formPF" method="post">					
+<input type="checkbox" name="isParent" id="isParent" hidden checked/>
+<label for="folderName">Folder Name</label>
+<input type="text" name="folderName" id="folderName" autocomplete="off"/>
+<input type="submit" value="Send"/>
+<input type="hidden" name="action" value="folder">
+				</form>
+					</p>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+<div class="panel-heading"><h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">Create subfolder</a></h4></div>
+            <div id="collapseTwo" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <p>
+				<form name="formSF" method="post">						
+<label for="folderParentName">Parent Folder</label>					
+<select name="folderParentName" id="folderParentName">
+<?php echo HTML::getSelectItems('parentfolder');?>
+</select>
+<br/>
+<label for="subfolderName">Subfolder Name</label>
+<input type="text" name="subfolderName" id="subfolderName" autocomplete="off"/>
+<input type="submit" value="Send"/>
+<input type="hidden" name="action" value="subfolder">	
+				</form>				
+					</p>
+                </div>
+            </div>
+        </div>
+    </div>
+					<!-- accordion parent | sub-->
+
+				</fieldset>	
+				</div>
+				<!-- ---------------- View Pitstop ------------------------ -->
+						<div id="secPitView" class="tab-pane fade">
+				<fieldset>
+				<form name="formPitView" method="post">
+<table class="table table-striped table-hover table-condensed small">
+<?php echo HTML::getTableItems('folderGroupEdit');?>
+</table>
+				</form>
+				</fieldset>	
+						</div>
+
+					</div>
+			</div>
         </div>
         <div id="sectionB" class="tab-pane fade">
-            <p>Section B content…</p>
+            <p>
+			<table class="table table-striped table-hover table-condensed small">
+<?php echo HTML::getTableItems('tag');?>
+</table>
+			</p>
         </div>
         <div id="sectionC" class="tab-pane fade">
-            <p>Section C content…</p>
+            <div id='linksPanel'>
+				<ul class="nav nav-tabs">
+				<li class="active"><a data-toggle="tab" href="#llinkNew">Add new Link</a></li>
+				<li><a data-toggle="tab" href="#llinkView">View & Edit Links</a></li>
+				</ul>
+					<div class="tab-content">
+				<!-- ---------------- New Folder ------------------------ -->
+				<div id="llinkNew" class="tab-pane fade in active">
+				<fieldset>
+				<p>
+				</p>
+				<form name="formLinks" method="post">
+				<label for="linkLink">Link Url</label>
+				<input type="text" name="linkLink" id="linkLink" autocomplete="off"/><br/>
+				<label for="linkName">Link Name</label>
+				<input type="text" name="linkName" id="linkName" autocomplete="off"/>
+				<br/><p></p>
+				<label for="linkFolder">Select Folder</label>
+				<select name="linkFolder" id="linkFolder">
+				<?php echo HTML::getSelectItems('folderGroupped');?>
+				</select>
+				<label for="tagsSimple">Tags comma-separated</label>		
+				<input name="tagsSimple" id="tagsSimple" type="text" autocomplete="off" /><br/>
+				<input type="hidden" name="action" value="link">
+				<input id="link_submit" type="submit" value="Send"/>
+
+				</form>	
+
+				</fieldset>	
+				</div>
+				<!-- ---------------- View Pitstop ------------------------ -->
+						<div id="llinkView" class="tab-pane fade">
+				<fieldset>
+				<form name="formLinkView" method="post">
+
+				</form>
+				</fieldset>	
+						</div>
+
+					</div>
+			</div>
         </div>
     </div> 		
 		</div>

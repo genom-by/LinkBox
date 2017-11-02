@@ -20,6 +20,7 @@ class Utils{
 		$str = trim($str);
 		$str = strip_tags($str);
 		$str = stripslashes($str);
+		$str = trim($str);		
 		return $str;
 	}
 	
