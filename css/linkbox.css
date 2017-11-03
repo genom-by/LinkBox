@@ -143,8 +143,9 @@ padding-right:5px;
 	margin: 2px;
 }
 .emptyControl{
-display:inline-block;
-border:2px solid red;
+/*display:inline-block;*/
+/*border:2px solid red;*/
+background-color:#EDD3D3;
 }
 .loginmenu li:not(:first-child){
 border-left:1px dotted #525354;
@@ -209,6 +210,20 @@ display:none;
 img.simpleFav{
 	width:24px;
 	height:24px;
+}
+.ulheader{
+	text-decoration:underline;
+	font-weight:bold;
+}
+.btn_folder_span, .span_btn_add{
+	width:30%;
+	margin-right:10px;
+}
+#link_to_save, #link_description{
+	width:83%;
+}
+.lbxForm_thirdLine{
+	margin-top:-8px;
 }
 /* ... loading ...
 .loading{

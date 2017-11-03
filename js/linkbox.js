@@ -198,12 +198,16 @@ function markEmptyControls(controls, add) {
 		add = typeof add !== 'undefined' ? add : true;
 		
 		controls.forEach( function(item, i, arr) {
-		//console.log(item);
+		console.log(item);
 		//item.parentNode.className += " emptyControl";}
 			if(add){
+				//$(item).addClass("bg-danger");
 				$(item.parentNode).addClass("emptyControl");
+				//$(item.parentNode).addClass("bg-danger");
 			}else{
 				$(item.parentNode).removeClass("emptyControl");
+				//$(item.parentNode).removeClass("bg-danger");
+				//$(item).removeClass("bg-danger");
 			}
 		});
 }
@@ -292,6 +296,30 @@ function menuFolderSelected(folderType, folderID){
 		,"json"
 	);
 }
+/* inquire page title for url
+*/
+function inquirePageTitle(pageurl){
+	//console.log('folderType:'+folderType + ' folderID:'+folderID);
+	
+	id_ = -2;
+	table_ = pageurl;
+	divID='#link_description';
+	$.post(
+		"cgi/post.routines.php",
+		{action: 'inquire', id:id_, table:table_, question:'pageTitle'},
+		function(data){
+			console.log("post returned: "+data.result);
+		if (data.result == 'ok' ){
+			console.log(data.payload);
+			$(divID).val(data.payload);
+		}else{
+			console.log('error message: ',data.message);
+			//$(divID).html(data.message);			
+		}
+		}
+		,"json"
+	);
+}
 
 	var submitting = false;
 	
@@ -355,6 +383,15 @@ $(function () {
 		
 	});
 	// END / adding link routine (submit event)
+	
+	$('#link_to_save').focusout(function () {
+    //Your Code
+	var url = this.value;
+	if(url.length > 3){
+		inquirePageTitle(url);
+		console.log('inquired for ' + url);
+	}
+	});
 
 			
 });
