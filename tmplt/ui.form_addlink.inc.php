@@ -7,17 +7,18 @@ include_once 'cgi/utils.inc.php';
 include_once 'cgi/dbObjects.class.php';
 include_once 'cgi/HTMLroutines.class.php';
 ?>
-<form class="well form-inline lbox-thinform" method="post" action="cgi/lbox-test.php" name="lbx_form_addlink" id="lbx_form_addlink">
+<form class="well form-inline lbox-thinform" method="post" action="cgi/post.routines.php" name="lbx_form_addlink" id="lbx_form_addlink" target='formresult'>
 <!--select folder list FuelUX-->
 <div class='lbxForm_firstLine'>
 	<span class='btn_folder_span'><div class="btn-group selectlist" data-resize="aut_" data-initialize="selectlist" id="lbox-SelectFolderList">
 	<button class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" type="button" title="Folder">
 	<span class="selected-label"></span>
+	<span class="selected-value"></span>
 	<span class="caret"></span>
 	<span class="sr-only">Toggle Dropdown</span>
 	</button>
 	<?=HTML::getSelectULList('folderGroupped');?>
-	<input class="hidden hidden-field" name="link_Folder" readonly="readonly" aria-hidden="true" type="text"/>
+	<input class="hidden hidden-field" name="link_Folder" readonly="readonly" aria-hidden="true" type="text" value='-1'/>
 	</div></span>
 	<span><input type="text" name="link_to_save" id="link_to_save" class="form-control input-sm" placeholder="Link to save"></span>
 </div>
@@ -58,6 +59,9 @@ $('#myPillbox1').pillbox({acceptKeyCodes: [13,188,190]});
 	<a class="close" href="#" onclick="$('#lbx_formErrors').prop('hidden', true);">x</a>
 	<p></p>
 	</div>
+	<input type="hidden" name="id" value="-2">
+	<input type="hidden" name="action" value="create">
+	<input type="hidden" name="createType" value="linkMP">
 	</form>
 	<!--
 		<ul class="dropdown-menu" role="menu">

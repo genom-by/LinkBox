@@ -73,6 +73,52 @@ function dispatchPageUpdate($table, $id=null){
 	}
 	return $res;
 }
+
+/* create entities
+*/
+function dispatchCreate($post){
+	$err = ''; //\LinkBox\Logger::log("table: {$table} id: {$id}") ;
+
+	$des = serialize($post);	//	\LinkBox\Logger::log(serialize($post));die();
+	//$dataArr = json_decode($des['payload'], true);	
+	\LinkBox\Logger::log("create::post: {$des}") ;
+	//\LinkBox\Logger::log("create::deserialize: {$dataArr}") ;
+	switch($post['createType']){
+		case 'linkMP':
+				if( empty($post['link_to_save']) OR empty($post['link_description']) ){
+				$err = 'Empty url/description provided';			
+				\LinkBox\Logger::log("create:linkMP error: ".$err);
+				$res = false;
+				break;
+			}
+			if( empty($post['link_Folder']) ){
+				$err = 'No folder provided';			
+				\LinkBox\Logger::log("create:linkMP error: ".$err);
+				$res = false;
+				break;
+			}
+			if(!empty($post['link_to_save'])){
+				$link = new Link($post['link_to_save'], $post['link_description'], $post['link_Folder'], $post['lbx_tagsSelected'] );
+				$res = $link->save();
+				if(!$res){
+					$err = 'Could not save link: '.$link->errormsg;			
+					\LinkBox\Logger::log("create:linkMP error: ".$err);
+					$res = false;
+				}
+			}	
+		break;
+		
+		default:
+		$res = false;
+		$err = 'No object to create was provided';
+	}
+	if($res === false){
+	$err = 'DispatchCreate error: '.$err.'. '.DBObject::$errormsg;
+	returnPOSTError($err);
+	}
+	return $res;
+}
+
 /* update entities into DB
 */
 function dispatchObjectUpdate($table, $id, $data){
@@ -80,7 +126,7 @@ function dispatchObjectUpdate($table, $id, $data){
 	$err = ''; //\LinkBox\Logger::log("table: {$table} id: {$id}") ;
 	$dataArr = json_decode($data, true);
 	$des = serialize($dataArr);
-	\LinkBox\Logger::log("json_decode: {$des}") ;
+	// \LinkBox\Logger::log("json_decode: {$des}") ;
 	switch($table){
 		
 		case 'folder':
@@ -220,6 +266,10 @@ if(! is_numeric($_POST['id'])){
 		
 		case 'inquire':
 			$res = dispatchInquire($_POST['table'], $_POST['id'], $_POST['question']);
+		break;
+		
+		case 'create':
+			$res = dispatchCreate($_POST);
 		break;
 		
 		case 'test':

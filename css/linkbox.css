@@ -225,6 +225,9 @@ img.simpleFav{
 .lbxForm_thirdLine{
 	margin-top:-8px;
 }
+.formresult{
+	display:none;
+}
 /* ... loading ...
 .loading{
  margin: 10% auto;

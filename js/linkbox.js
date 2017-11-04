@@ -16,8 +16,8 @@ function getTitle(externalUrl){
 //getTitle('ya.ru');
 
 function lbxAddLink_onSubmit(){
-console.log('here2');
-console.log( $('#myPillbox1').pillbox('items') );
+//console.log('here2');
+//console.log( $('#myPillbox1').pillbox('items') );
 event.preventDefault();
 //return false;
 }
@@ -198,16 +198,16 @@ function markEmptyControls(controls, add) {
 		add = typeof add !== 'undefined' ? add : true;
 		
 		controls.forEach( function(item, i, arr) {
-		console.log(item);
-		//item.parentNode.className += " emptyControl";}
+		//console.log(item);
+		//console.log(item.tagName);
 			if(add){
-				//$(item).addClass("bg-danger");
-				$(item.parentNode).addClass("emptyControl");
-				//$(item.parentNode).addClass("bg-danger");
+				//if(item.tagName.toLowerCase() == 'input'){
+					$(item).addClass("emptyControl");
+				//}
+				//console.log('item name: '+item.tagName.toLowerCase());				
 			}else{
-				$(item.parentNode).removeClass("emptyControl");
+				$(item).removeClass("emptyControl");
 				//$(item.parentNode).removeClass("bg-danger");
-				//$(item).removeClass("bg-danger");
 			}
 		});
 }
@@ -226,6 +226,7 @@ function checkFormBeforeAdding() {
 	var form = document.forms.lbx_form_addlink;
 	var link = form.elements.link_to_save;
 	var linkName = form.elements.link_description;
+	var folderIdInput = $("input[name='link_Folder']");
 	
 	var folderObject = $('#lbox-SelectFolderList').selectlist('selectedItem');
 	//console.log("link: %s ; name: %s ; folder # %d: %s",link, linkName, folderObject.value, folderObject.text);
@@ -235,7 +236,9 @@ function checkFormBeforeAdding() {
 	
 	if(link.value.trim()===""){emptyControls.push(link)}
 	if(linkName.value.trim()===""){emptyControls.push(linkName)}
-	if(folderObject.value==0){emptyControls.push( $('#lbox-SelectFolderList')[0] )}
+	//if(folderObject.value==0){emptyControls.push( $('#lbox-SelectFolderList')[0] )}
+	//console.log('v:'+$(folderIdInput).val().trim() );
+	if($(folderIdInput).val().trim()=="-1"){emptyControls.push( $('#lbox-SelectFolderList') )}
 	
 	//clean controls
 	markEmptyControls(mandatoryControls, false);
@@ -247,6 +250,7 @@ function checkFormBeforeAdding() {
 		return false
 	}else{
 		$('#lbx_formErrors p').html( 'No errors.');
+		markEmptyControls(emptyControls, false);		
 		return true;
 	}
 }
@@ -266,7 +270,7 @@ function fillTagsSelected(){
 		tagsStr.push(item["text"]);
 	});
 
-	tagsJoinedString = tagsStr.join("||");
+	tagsJoinedString = tagsStr.join(",");
 	//console.warn(tagsJoinedString);
 	tagsSelected.value = tagsJoinedString;
 	
@@ -275,7 +279,7 @@ function fillTagsSelected(){
 //
 //
 function menuFolderSelected(folderType, folderID){
-	console.log('folderType:'+folderType + ' folderID:'+folderID);
+	//console.log('folderType:'+folderType + ' folderID:'+folderID);
 	
 	id_ = folderID;
 	table_ = 'link_folder';
@@ -326,7 +330,7 @@ function inquirePageTitle(pageurl){
 $(function () {
 	
 	$(".FLDmenuItem").click(function(e){
-		console.log(e.target);
+		//console.log(e.target);
 		//var a = $(this).find('a');
 		//a.css( "color", "red" );
 		//a.click();
@@ -349,8 +353,7 @@ $(function () {
 		if(submitting) {
 			alert('The form is being submitted, please wait a moment...');
 			$('#btn_addLink').prop( "disabled", true );
-			//$('#btn_addLink').css('outline', '3px solid blue');
-			//
+			
 			//event.preventDefault();
 			return false;
 		}
@@ -364,14 +367,41 @@ $(function () {
 			$('#lbx_formErrors').prop( "hidden", true );
 			
 			toggleAddButton(true);
-
+/*
 			//prepare data and send by ajax
 			var serializedForm = $( "#lbx_form_addlink" ).serialize();
 			console.info("serialized data: { %s }", serializedForm);
-			sample_post( serializedForm );
+			//sample_post( serializedForm );
+			// ----------------
+	var link = form.elements.link_to_save;
+	var linkName = form.elements.link_description;
+	var folderIdInput = $("input[name='link_Folder']");
+	var tagsSelected = form.elements.lbx_tagsSelected;
+	var arr_val = [];
+			$.post(
+				"cgi/post.routines.php",
+				{action:'create', createType:'linkMP', id:-2,
+				payload:serializedForm},
+				function(data){
+				console.log("post returned: "+data.result);
+				//alert(data.result);
+				if (data.result == 'ok' ){
+					var domID = '#'+table_+'_id_'+id_entry;
+					$(domID).toggle( "highlight" );
+				}else{
+					console.log('error message: ',data.message);
+					alert(data.message);
+				}
+				}
+				,"json"
+			);
+			// ----------------
 			event.preventDefault();			
-			
-			//toggleAddButton(false);
+*/			
+			setTimeout(function(){
+				toggleAddButton(false);
+			},5000);
+			//
 			
 			return true;
 		}else{
@@ -393,7 +423,14 @@ $(function () {
 	}
 	});
 
-			
+	//folder button menu - set selected value to hidden input
+	$('#lbox-SelectFolderList li[data-value]').click(function(eventObject){
+		//console.log('clicked at '+eventObject.tagName);
+		var fldid = $(this).attr('data-value');
+		//console.log('id: ' + fldid);		
+		$("input[name='link_Folder']").val(fldid);
+
+	});
 });
 //#btn_addLink
 //$('#myPillbox1').pillbox('items')

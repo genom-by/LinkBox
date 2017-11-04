@@ -75,7 +75,9 @@ class LinkHandler{
 		$dom = new \DOMDocument();
 		
 		@$pageContent = file_get_contents($url);
-		if($pageContent == false ){return false;}
+		if($pageContent == false ){
+			//Logger::log('SiteTitle::Could not fetch webpage'); //not worked on free plan
+			return false;}
 		if($dom->loadHTML($pageContent)) {
 			$list = $dom->getElementsByTagName("title");
 			if ($list->length > 0) {
@@ -83,6 +85,7 @@ class LinkHandler{
 			}
 		}
 		if( ! empty($title) ){
+			//Logger::log('SiteTitle::title is: '.$title);			
 			return $title;
 		}else{
 			self::$errormsg = 'error getting page title';

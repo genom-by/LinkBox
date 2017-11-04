@@ -106,7 +106,7 @@ $(document).ready(function () {
 <? include 'tmplt/ui.footer.inc.php';?>
 <!--/ -------------------------------------------------------------- FOOTER menu end  ----------------------------------------------------------------->	
 </div><!--/.container-->
-
+	<div class='formresult'><iframe name='formresult' width='0' height='0'></iframe></div>
 <div class="container">
 <div class="row">
 <div class="col-sm-12">
