@@ -6,8 +6,10 @@ include_once 'cgi/auth.inc.php';
 include_once 'cgi/utils.inc.php';
 include_once 'cgi/dbObjects.class.php';
 include_once 'cgi/HTMLroutines.class.php';
+
+include_once 'cgi/indexpage.routines.php';
 ?>
-<form class="well form-inline lbox-thinform" method="post" action="cgi/post.routines.php" name="lbx_form_addlink" id="lbx_form_addlink" target='formresult'>
+<form class="well form-inline lbox-thinform" method="post" name="lbx_form_addlink" id="lbx_form_addlink">
 <!--select folder list FuelUX-->
 <div class='lbxForm_firstLine'>
 	<span class='btn_folder_span'><div class="btn-group selectlist" data-resize="aut_" data-initialize="selectlist" id="lbox-SelectFolderList">
@@ -20,7 +22,7 @@ include_once 'cgi/HTMLroutines.class.php';
 	<?=HTML::getSelectULList('folderGroupped');?>
 	<input class="hidden hidden-field" name="link_Folder" readonly="readonly" aria-hidden="true" type="text" value='-1'/>
 	</div></span>
-	<span><input type="text" name="link_to_save" id="link_to_save" class="form-control input-sm" placeholder="Link to save"></span>
+	<span><input type="text" name="link_to_save" id="link_to_save" class="form-control input-sm" placeholder="Link to save" autocomplete="off" autocorrect="off" autofocus></span>
 </div>
 <div class='lbxForm_secondLine'>	
 <!-- / select folder list FuelUX-->
@@ -51,7 +53,7 @@ $('#myPillbox1').pillbox({acceptKeyCodes: [13,188,190]});
 </div> <!-- / tag-->
 </div><!--second line-->
 <div class='lbxForm_thirdLine'>
-	<span class='span_inp_desc'><input type="text" name="link_description" id="link_description" class="form-control input-sm" placeholder="Name / Description"></span>
+	<span class='span_inp_desc'><input type="text" name="link_description" id="link_description" class="form-control input-sm" placeholder="Name / Description" autocomplete="off" autocorrect="off"></span>
 	<span class='span_btn_add'><button type="submit" id="btn_addLink" class="btn btn-info"><span class="glyphicon glyphicon-star"></span><span id="btn_addLinkCaption"> Add link </span></button></span>
 </div><!-- / third line-->
 	<div class="clearfix"></div>
@@ -60,7 +62,7 @@ $('#myPillbox1').pillbox({acceptKeyCodes: [13,188,190]});
 	<p></p>
 	</div>
 	<input type="hidden" name="id" value="-2">
-	<input type="hidden" name="action" value="create">
+	<input type="hidden" name="action" value="addLinkMP">
 	<input type="hidden" name="createType" value="linkMP">
 	</form>
 	<!--

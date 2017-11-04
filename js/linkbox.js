@@ -228,7 +228,7 @@ function checkFormBeforeAdding() {
 	var linkName = form.elements.link_description;
 	var folderIdInput = $("input[name='link_Folder']");
 	
-	var folderObject = $('#lbox-SelectFolderList').selectlist('selectedItem');
+	//var folderObject = $('#lbox-SelectFolderList').selectlist('selectedItem');
 	//console.log("link: %s ; name: %s ; folder # %d: %s",link, linkName, folderObject.value, folderObject.text);
 	mandatoryControls.push(link);
 	mandatoryControls.push(linkName);
@@ -238,7 +238,7 @@ function checkFormBeforeAdding() {
 	if(linkName.value.trim()===""){emptyControls.push(linkName)}
 	//if(folderObject.value==0){emptyControls.push( $('#lbox-SelectFolderList')[0] )}
 	//console.log('v:'+$(folderIdInput).val().trim() );
-	if($(folderIdInput).val().trim()=="-1"){emptyControls.push( $('#lbox-SelectFolderList') )}
+	if($(folderIdInput).val()=="-1"){emptyControls.push( $('#lbox-SelectFolderList')[0] )}
 	
 	//clean controls
 	markEmptyControls(mandatoryControls, false);
@@ -407,9 +407,10 @@ $(function () {
 		}else{
 			console.log('fill the form properly!');
 			$('#lbx_formErrors').prop( "hidden", false );
+			event.preventDefault();
 		}
 		
-		event.preventDefault();
+		//event.preventDefault();
 		
 	});
 	// END / adding link routine (submit event)

@@ -28,6 +28,7 @@ class DataBase{
 					if( ! file_exists(DBPATHSQLITE) ){
 						//$this->connection = new PDO(DSNSQLITE.DBPATHSQLITE);
 						//$this->createSQLITEtable($this->connection);
+						Logger::log('DBClass::Database file not found!');
 						throw new \Exception('Database not found');
 					}else{
 						$this->connection = new PDO(DSNSQLITE.DBPATHSQLITE);

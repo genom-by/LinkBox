@@ -7,6 +7,8 @@ include_once 'cgi/utils.inc.php';
 include_once 'cgi/dbObjects.class.php';
 include_once 'cgi/HTMLroutines.class.php';
 
+include_once 'cgi/indexpage.routines.php';
+
 \LinkBox\Logger::log('Start linkbox app');
 ?>
 <!DOCTYPE html>
@@ -85,12 +87,13 @@ $(document).ready(function () {
 <? include 'tmplt/ui.foldersmenu.inc.php';?>
 	</div><!--/.col-xs-6.col-lg-4-->
 	<div class="col-xs-10 lbx_main_col"><!--main table-->
-<!-- -------------------------------------------------------------- FORM ADD LINK  -------------------------------------------------------------------->		
+<!-- -------- FORM ADD LINK ----------------------------------------------------------------->		
 <? include 'tmplt/ui.form_addlink.inc.php';?>
-<!--/ -------------------------------------------------------------- FORM ADD LINK END ------------------------------------------------------------->
-<!-- -------------------------------------------------------------- LINKS TABLE begin  ---------------------------------------------------------------->		
+<? include 'tmplt/errorBlock.inc.php';?>
+<!--/ ------- FORM ADD LINK END ------------------------------------------------------------->
+<!-- -------- LINKS TABLE begin ------------------------------------------------------------->		
 <? include 'tmplt/ui.table_links.inc.php';?>
-<!--/ -------------------------------------------------------------- LINKS TABLE end  ----------------------------------------------------------------->	
+<!--/ ------- LINKS TABLE end --------------------------------------------------------------->	
 	</div><!--/.col-xs-6.col-lg-4-->
 	</div><!--/row-->
 	</div><!--/.col-xs-12.col-sm-9-->

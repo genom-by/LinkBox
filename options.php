@@ -66,7 +66,10 @@ if(!empty($_POST['action'])){
 				\LinkBox\Logger::log("{$_POST['action']} error: ".$message);
 				$actionStatus = 'error';
 			}
-		}			
+		}else{
+			$message = 'Fill in Link url';
+			$actionStatus = 'error';			
+		}
 	break;
 	case 'link2':
 				//print_r($_POST);
@@ -78,7 +81,10 @@ if(!empty($_POST['action'])){
 				\LinkBox\Logger::log("{$_POST['action']} error: ".$message);
 				$actionStatus = 'error';
 			}
-		}				
+		}else{
+			$message = 'Fill in Link url';
+			$actionStatus = 'error';			
+		}		
 	break;
 	case 'urlfavicon1':
 	

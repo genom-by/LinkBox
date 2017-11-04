@@ -1,6 +1,7 @@
 <?php
 namespace lbx;
 
+include_once 'auth.inc.php';
 include_once 'utils.inc.php';
 include_once 'dbObjects.class.php';
 include_once 'HTMLroutines.class.php';
@@ -16,6 +17,12 @@ function returnPOSTError($err_msg="unpredicted error"){
 }
 
 function dispatchDelete($table, $id){
+
+if( Auth::notLogged() ){
+	$res=false;
+	$err = "user not logged";
+	returnPOSTError($err);	
+}	
 
 	$err = ''; //\LinkBox\Logger::log("table: {$table} id: {$id}") ;
 	$res = false;
@@ -46,6 +53,12 @@ function dispatchDelete($table, $id){
 function dispatchPageUpdate($table, $id=null){
 
 	$err = ''; //\LinkBox\Logger::log("table: {$table} id: {$id}") ;
+	
+if( Auth::notLogged() ){
+	$res=false;
+	$err = "user not logged";
+	returnPOSTError($err);	
+}	
 
 	switch($table){
 		case 'link_folder':
@@ -78,6 +91,12 @@ function dispatchPageUpdate($table, $id=null){
 */
 function dispatchCreate($post){
 	$err = ''; //\LinkBox\Logger::log("table: {$table} id: {$id}") ;
+
+if( Auth::notLogged() ){
+	$res=false;
+	$err = "user not logged";
+	returnPOSTError($err);	
+}	
 
 	$des = serialize($post);	//	\LinkBox\Logger::log(serialize($post));die();
 	//$dataArr = json_decode($des['payload'], true);	
@@ -122,6 +141,12 @@ function dispatchCreate($post){
 /* update entities into DB
 */
 function dispatchObjectUpdate($table, $id, $data){
+
+if( Auth::notLogged() ){
+	$res=false;
+	$err = "user not logged";
+	returnPOSTError($err);	
+}	
 
 	$err = ''; //\LinkBox\Logger::log("table: {$table} id: {$id}") ;
 	$dataArr = json_decode($data, true);
@@ -238,6 +263,7 @@ function dispatchInquire($table, $id, $question){
 ob_start();
 //\LinkBox\Logger::log('POST Routines file running');
 //\LinkBox\Logger::log('POST : '.serialize($_POST) );
+
 
 if(!empty($_POST['id'])){
 	$res = false;

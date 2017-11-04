@@ -666,7 +666,7 @@ class Link extends DBObject{
 		$conn = $db::getPDO(); //get raw connection
 		
 		if($conn === false){
-			$this->errormsg = 'error while saving pitstops into DB: '.LinkBox\DataBase::$errormsg;
+			$this->errormsg = 'error while saving link into DB: '.LinkBox\DataBase::$errormsg;
 			LiLogger::log( $this->errormsg );
 			return false;
 		}
@@ -683,13 +683,18 @@ class Link extends DBObject{
 			LiLogger::log( $this->errormsg );				
 			return false;
 		}
-			
+		$tagsTrimmed = trim($this->linktagsCSV);
+		if( empty( $tagsTrimmed ) ){
+			return true;	//no tags to save - exiting
+		}
+		
 		try {
 			$conn->beginTransaction();
 			
 		$stmt = $conn->prepare("INSERT INTO tags( id_user, tagName) VALUES(:uid, :tagname)");
 		$tagsarray = array();
-		$tagsarray = explode(',',$this->linktagsCSV);
+		$tagsarray = array_map('trim',explode(",",$this->linktagsCSV));
+		//$tagsarray = explode(',',$this->linktagsCSV);
 		
 		foreach( $tagsarray as $tag) {				//LiLogger::log( "tag string ={$tag} uid ={$this->uid} " );
 		
