@@ -62,12 +62,18 @@ if( Auth::notLogged() ){
 
 	switch($table){
 		case 'link_folder':
+		case 'link_folder_parOnly':
 			//$seqstats = sequencesStations::getSeqStatNamesBySequenceID($_POST['id']);
 			//$links = HTML::getTableItems($_POST['id']);
 			if($id=='all'){
 				$links = HTML::getTableItems('linkMainPage');
 			}else{
-				$links = HTML::getTableItems('linkMainPage', $id);
+				if($table == 'link_folder_parOnly'){
+					$links = HTML::getTableItems('linkMainPage', $id, true);			
+				}else{
+					$links = HTML::getTableItems('linkMainPage', $id);			
+				}
+
 			}
 			if(false === $links){returnPOSTError('could not obtain links');die();}
 			else{

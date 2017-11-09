@@ -9,25 +9,6 @@ include_once 'cgi/HTMLroutines.class.php';
 
 //$folders = Folder::getParentFoldersNames();
 $folders = Folder::getFoldersArray();
-/*
-$standardFolders = array("<span class='glyphicon glyphicon-camera'></span> Pictures",
-						"<span class='glyphicon glyphicon-file'></span> Documents",
-						"<span class='glyphicon glyphicon-music'></span>",
-						"<span class='glyphicon glyphicon-film'></span> Videos");
-$HTMLfoldersNode = '';
-if(false !== $folders AND count($folders) > 0){
-
-	foreach($folders as $folder){
-		$folderName = $folder['folderName'];
-		$folderCount = $folder['folderCount'];
-		$entry = "<span class='glyphicon'></span> {$folderName}";
-		$entryCount = "<span class='glyphicon'></span> {$folderName} <span class='badge'>{$folderCount}</span>";
-		$HTMLfoldersNode = $HTMLfoldersNode."<a href='#' class='list-group-item'>{$entry}</a>";
-	}
-}else{
-$HTMLfoldersNode = "<label class='btn btn-info'> No folders yet</label>";
-}
-*/
 // ---
 $HTMLfoldersAccord = '';
 $entryContent = '';
@@ -62,7 +43,7 @@ $panelID = 1;
 			$panelBodyClass='panel-body';
 		}
 		
-		$entryHead = "<a data-toggle='collapse' data-parent='#accordion' href='#{$HTMLentryID}' onClick='menuFolderSelected(\"parent\",{$fldIDParent});' class='aHeaderMenu'> {$fldNameParent} <span class='badge'>{$fldCountParent}</span></a>";
+		$entryHead = "<a data-toggle='collapse' data-parent='#accordion' href='#{$HTMLentryID}' onClick='menuFolderSelected(\"parent\",{$fldIDParent}); ' ondblclick='menuFolderSelected(\"parentOnly\",{$fldIDParent}); ' class='aHeaderMenu'> {$fldNameParent} <span class='badge'>{$fldCountParent}</span></a>";
 				
 		//$eHTMLheading = "<div class='panel-heading'><h4 class='panel-title'>{$entryHead}</h4></div>";
 		$eHTMLheading = "<div class='panel-heading fldHeading'><h4 class='panel-title'><div class='FLDmenuItem'>{$entryHead}</div></h4></div>";
@@ -83,6 +64,25 @@ $HTMLfoldersAccord = "<div class='panel panel-default'> No folders yet</div>";
 		$HTMLfoldersAccord = $eHTMLallContent.$HTMLfoldersAccord;
 //		<a href="#" class="list-group-item active">
 	//		<span class="glyphicon glyphicon-camera"></span> Pictures</a>
+	/*
+$standardFolders = array("<span class='glyphicon glyphicon-camera'></span> Pictures",
+						"<span class='glyphicon glyphicon-file'></span> Documents",
+						"<span class='glyphicon glyphicon-music'></span>",
+						"<span class='glyphicon glyphicon-film'></span> Videos");
+$HTMLfoldersNode = '';
+if(false !== $folders AND count($folders) > 0){
+
+	foreach($folders as $folder){
+		$folderName = $folder['folderName'];
+		$folderCount = $folder['folderCount'];
+		$entry = "<span class='glyphicon'></span> {$folderName}";
+		$entryCount = "<span class='glyphicon'></span> {$folderName} <span class='badge'>{$folderCount}</span>";
+		$HTMLfoldersNode = $HTMLfoldersNode."<a href='#' class='list-group-item'>{$entry}</a>";
+	}
+}else{
+$HTMLfoldersNode = "<label class='btn btn-info'> No folders yet</label>";
+}
+*/
 ?>
 <style>
 .panel-body-menu{

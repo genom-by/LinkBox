@@ -5,6 +5,7 @@ include_once 'cgi/auth.inc.php';
 
 include_once 'cgi/utils.inc.php';
 include_once 'cgi/dbObjects.class.php';
+include_once 'cgi/settings.class.php';
 include_once 'cgi/HTMLroutines.class.php';
 
 include_once 'cgi/indexpage.routines.php';
@@ -31,6 +32,8 @@ include_once 'cgi/indexpage.routines.php';
 -->
 <div id="toggleTagsPanel" class="collapse in" aria-expanded="true" style="">
 <!-- pillBox tags items-->
+<!-- //TODO Settings::TagsStyle() == 'simple' / 'pillbox' -->
+<?if (Settings::HTMLStyle('tagsInputStyle')=='pillbox'){?>
 <div class="fuelux">
 <div id="myPillbox1" data-initialize="pillbox" class="pillbox pills-editable">
 <ul class="clearfix pill-group">
@@ -50,6 +53,10 @@ include_once 'cgi/indexpage.routines.php';
 $('#myPillbox1').pillbox({acceptKeyCodes: [13,188,190]});
 </script>
 </div> <!--fuelux wrapper-->
+<?}elseif(Settings::HTMLStyle('tagsInputStyle')=='simple'){?>
+<label for="tagsSimple">Tags (comma-separated)</label>		
+<input name="lbx_tagsSelected" id="lbx_tagsSelected" type="text" autocomplete="off" placeholder="add tag(s) with comma" class="form-control"/>
+<?}?>
 </div> <!-- / tag-->
 </div><!--second line-->
 <div class='lbxForm_thirdLine'>

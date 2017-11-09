@@ -42,7 +42,7 @@ div.brand_active a{
     <a data-toggle="dropdown" class="dropdown-toggle" href="#">Logged as <? echo $_SESSION['user_name'];?> <b class="caret"></b></a>
 			<ul role="menu" class="dropdown-menu">
 				<li><a href="#">Inbox</a></li>
-				<li><a href="#">Drafts</a></li>
+				<li><a href="<?=App::link('customize'); ?>">Simple links</a></li>
 				<li><a href="#">Sent Items</a></li>
 				<li class="divider"></li>
 				<li><a href="<?= App::link('logout');?>">Logout</a></li>

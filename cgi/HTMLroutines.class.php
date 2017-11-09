@@ -221,7 +221,7 @@ class HTML{
 /* ==============================
 *								getTableItems
 * ============================== */	
-	public static function getTableItems($table, $id=null){
+	public static function getTableItems($table, $id=null, $parentOnly=false){
 		
 	$htmlTable = '';	
 	
@@ -265,15 +265,18 @@ $htmlItem = "<tr id='link_id_{$id_link}'><td>{$favicon}</td><td><a class='simple
 			if($id==null){
 				$list = Link::getAll() ; //'SELECT id_link, id_folder, url, id_user, created, lastVisited, isShared, title from link'
 			}else{
-				//$list = Link::getAllWhere("WHERE id_folder={$id}") ;	//TODO - to include subfolders in parent set too
-				$subfolders = Folder::getSubFoldersNames($id);
-				if(count($subfolders) > 0){
-					$subfoldersIDs = array_keys($subfolders);
-					$subids = implode(",", $subfoldersIDs);
-					$list = Link::getAllWhere("WHERE id_folder IN ( {$id}, {$subids} )") ;
-				}else{
+				if($parentOnly){	// get links only for parent folder, not subfolders too
 					$list = Link::getAllWhere("WHERE id_folder={$id}") ;
-				}
+				}else{
+					$subfolders = Folder::getSubFoldersNames($id);
+					if(count($subfolders) > 0){
+						$subfoldersIDs = array_keys($subfolders);
+						$subids = implode(",", $subfoldersIDs);
+						$list = Link::getAllWhere("WHERE id_folder IN ( {$id}, {$subids} )") ;
+					}else{
+						$list = Link::getAllWhere("WHERE id_folder={$id}") ;
+					}				
+				}	
 			}
 						
 			$folders = Folder::getFoldersNames() ; //'SELECT id_folder, folderName, id_user from folder'

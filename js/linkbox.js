@@ -279,10 +279,16 @@ function fillTagsSelected(){
 //
 //
 function menuFolderSelected(folderType, folderID){
-	//console.log('folderType:'+folderType + ' folderID:'+folderID);
-	
+	console.log('folderType:'+folderType + ' folderID:'+folderID);
+	if(folderType=='parent'){
+		table_ = 'link_folder';
+	}else if(folderType=='parentOnly'){
+		table_ = 'link_folder_parOnly';
+	}else{
+		table_ = 'link_folder';	
+	}
 	id_ = folderID;
-	table_ = 'link_folder';
+
 	divID='#lbx_LinksTable';
 	$.post(
 		"cgi/post.routines.php",
@@ -335,12 +341,18 @@ $(function () {
 		//a.css( "color", "red" );
 		//a.click();
 		//console.log('a is:'+a);
-		$(".FLDmenuItem").removeClass('FLDmenuActive');
+		$(".FLDmenuItem").removeClass('FLDmenuActive').removeClass('FLDmenuActivePO');
+		$(".fldHeading").removeClass('FLDmenuActivePO');
 		$(this).addClass('FLDmenuActive');
 		//$(e.target).addClass('FLDmenuActive');
 		//$(e.target).css('background-color','#ff0000');
 		//$(this).parent().find('.childDiv').css('background-color','#ffffff');
 		//$(this).css('background-color','#ff0000');
+	});
+	$(".fldHeading").dblclick(function(e){
+		$(".FLDmenuItem").removeClass('FLDmenuActive').removeClass('FLDmenuActivePO');
+		$(".fldHeading").removeClass('FLDmenuActivePO');
+		$(this).addClass('FLDmenuActivePO');
 	});
 	
 	resetForm( );

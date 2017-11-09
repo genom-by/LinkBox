@@ -161,6 +161,14 @@ img.simpleFav{
 	padding-left:8px;
 	border-left:8px solid #800000;
 }
+.fldHeading.FLDmenuActivePO{
+	font-size:15px;
+	font-weight:bold;
+	font-style:italic;
+	padding-left:12px;
+	border-left:12px solid #800080;
+	border-radius:5px;
+}
 .fldHeading{
 	padding:0;
 }

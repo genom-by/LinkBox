@@ -4,3 +4,11 @@ background-color:#C6E5F9 !important;
 .rowheader th, .rowsel{
 text-align:center;
 }
+.inp_wrapper{
+	width:100%;
+	padding-top:10px;
+}
+.inp_wrapper input{
+	box-sizing: border-box;
+		width:100%;
+}

@@ -103,12 +103,6 @@ class Auth{
 		if( empty($pwdHash) ){
 			return false;
 		}else{
-		//TODO implement tokenizing
-		/*
-		$user_id = Auth::getUserIDbyToken($_SESSION['token']);
-		if($user_id === false){return false; }
-		$user = User->load($user_id);
-		*/
 			$user = User::getUserbyNameOrEmail($userName, '');
 			if($user !== false){
 				if($user->pwdHash == $pwdHash){
@@ -130,7 +124,7 @@ class Auth{
 		if( empty($userToken) ){
 			return false;			
 		}else{
-		//TODO implement tokenizing
+		
 Logger::log('try to restore user from token'.$userToken);		
 		$user_id = Auth::getUserIDbyToken($userToken);
 		if($user_id === false){return false; }
@@ -159,12 +153,6 @@ Logger::log('user restored from token'.$user->name);
 	//TODO clearance
 	public static function rememberMe( $user, $re ){
 		
-		//TODO implement tokenizing
-		/*
-		$token = Auth::saveUserToken($user);
-		setcookie($token);
-		*/
-		
 		if( $re ) {
 			setcookie ("member_login",$user->name,time()+ (30 * 24 * 60 * 60));
 			setcookie ("member_password",$user->pwdHash,time()+ (30 * 24 * 60 * 60));
@@ -181,11 +169,6 @@ Logger::log('user restored from token'.$user->name);
 	*/
 	public static function rememberMeToken( $user, $re ){
 		
-		//TODO implement tokenizing
-		/*
-		$token = Auth::saveUserToken($user);
-		setcookie($token);
-		*/
 		if(empty($user)){
 			return false;
 		}	
@@ -215,8 +198,6 @@ Logger::log('user restored from token'.$user->name);
 		}
 		return true;
 	}
-		
-		//TODO implement tokenizing
 	/*
 	*/
 	public static function saveUserToken($user){

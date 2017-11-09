@@ -25,6 +25,7 @@ class App{
 	'register'	=> 'registerpage.php',
 	'linkbox' 	=> 'index.php',
 	'customize' => 'customize.php',
+	'noscript' 	=> 'noscript.php',
 	'options' 	=> 'options.php',
 	'profile' 	=> 'cgi/profile.php',
 	'settings' 	=> 'cgi/settings.php',
@@ -33,8 +34,8 @@ class App{
 	
 	//top menu pages (except Index):: pageName => menuCaption
 	protected static $topMenuPages = array(
-	'customize'	=>'Customize',
-	'options'	=>'Options',
+	'options'	=>'Customize',
+	'noscript'	=>'NoScript',
 	'profile'	=>'Profile',
 	'howto'		=>'How to use'
 	);

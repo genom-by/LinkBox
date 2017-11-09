@@ -1,0 +1,27 @@
+body{
+margin-top:36px;
+}
+
+.table-condensed button {
+    padding: 2px 5px;
+    font-size: 10px;
+	font-weight:bold;
+    line-height: 1.1;
+    border-radius: 3px;
+	margin:-2px 0;
+}
+
+.clearfix{
+content:"";
+display:block;
+clear:both;
+}
+
+.inp_wrapper{
+	width:100%;
+	padding-top:10px;
+}
+.inp_wrapper input{
+	box-sizing: border-box;
+		width:100%;
+}

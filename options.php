@@ -5,6 +5,7 @@ include_once 'cgi/auth.inc.php';
 
 include_once 'cgi/utils.inc.php';
 include_once 'cgi/dbObjects.class.php';
+include_once 'cgi/settings.class.php';
 include_once 'cgi/HTMLroutines.class.php';
 include_once 'cgi/linkHandler.class.php';
 
@@ -15,7 +16,6 @@ if(!empty($_POST['action'])){
 	}	
 	switch ($_POST['action']){
 		case 'folder':
-		case 'subfolder':
 			//var_dump($_POST);
 			if(!empty($_POST['folderName']) OR !empty($_POST['subfolderName']) ){
 				if( $_POST['action'] == 'folder'){
@@ -44,69 +44,24 @@ if(!empty($_POST['action'])){
 				$actionStatus = 'error';
 			}
 			break;
-	case 'tag':
+	case 'tagsInputStyle':
 		//echo 'tag';
-		if(!empty($_POST['tagName'])){
-			$tag = new Tag($_POST['tagName']);
-			$retval = $tag->save();
+		if(!empty($_POST['tagsInputStyleRad'])){
+			$retval = Settings::Set('tagsInputStyle',$_POST['tagsInputStyleRad']);
+			//$retval = $tag->save();
 			if(!$retval){
-				$message = $tag->errormsg;			
-				\LinkBox\Logger::log("{$_POST['action']} error: ".$message);
-				$actionStatus = 'error';
-			}
-		}		
-	break;
-	case 'link':
-		//print_r($_POST);
-		if(!empty($_POST['linkLink'])){
-			$link = new Link($_POST['linkLink'], $_POST['linkName'], $_POST['linkFolder'], $_POST['tagsSimple'] );
-			$retval = $link->save();
-			if(!$retval){
-				$message = $link->errormsg;			
+				$message = Settings::$errormsg;			
 				\LinkBox\Logger::log("{$_POST['action']} error: ".$message);
 				$actionStatus = 'error';
 			}
 		}else{
-			$message = 'Fill in Link url';
-			$actionStatus = 'error';			
+			$message = 'Select tags type';
+			$actionStatus = 'error';
 		}
+		
 	break;
-	case 'link2':
-				//print_r($_POST);
-		if(!empty($_POST['linkLink2'])){
-			$link = new Link($_POST['linkLink2'], $_POST['linkName2'], $_POST['linkFolder2'], $_POST['tagsCSV'] );
-			$retval = $link->save();
-			if(!$retval){
-				$message = $link->errormsg;			
-				\LinkBox\Logger::log("{$_POST['action']} error: ".$message);
-				$actionStatus = 'error';
-			}
-		}else{
-			$message = 'Fill in Link url';
-			$actionStatus = 'error';			
-		}		
-	break;
-	case 'urlfavicon1':
-	
-			$fff = LinkHandler::getFaviconHref($_POST['urlfavicon']);
-			if(false===$fff){
-				$message = LinkHandler::$errormsg;			
-				\LinkBox\Logger::log("{$_POST['action']} error: ".$message);
-				$actionStatus = 'error';
-			}
-			$ttt = LinkHandler::getSiteTitle($_POST['urlfavicon']);
-	break;
-	case 'sequencesStationsEdit':
-				//print_r($_POST);
-	break;
-	case 'destination':
-				//print_r($_POST);
-	break;
-	case 'sequence':
-				//print_r($_POST);
-	break;
-	case 'sequencesStations':
-	break;
+
+
 	}
 }
 //echo( 'action:'.$_POST['action'] );
@@ -182,6 +137,8 @@ position:relative;
 			<span class="glyphicon glyphicons-tags"></span> Tags</a></li>
         <li><a data-toggle="tab" href="#sectionC">
 			<span class="glyphicon glyphicons-link"></span> Links</a></li>
+        <li><a data-toggle="tab" href="#sectionD">
+			<span class="glyphicon glyphicons-link"></span> Settings</a></li>
     </ul>		
 		</div>
 		<div class="col-sm-9">
@@ -274,17 +231,24 @@ position:relative;
 				<p>
 				</p>
 				<form name="formLinks" method="post">
+				<div class='inp_wrapper'>
 				<label for="linkLink">Link Url</label>
-				<input type="text" name="linkLink" id="linkLink" autocomplete="off"/><br/>
+				<input type="text" name="linkLink" id="linkLink" autocomplete="off"/></div>
+				<div class='inp_wrapper'>
 				<label for="linkName">Link Name</label>
 				<input type="text" name="linkName" id="linkName" autocomplete="off"/>
-				<br/><p></p>
+				</div>
+				<div class='inp_wrapper'>				
 				<label for="linkFolder">Select Folder</label>
 				<select name="linkFolder" id="linkFolder">
 				<?php echo HTML::getSelectItems('folderGroupped');?>
 				</select>
-				<label for="tagsSimple">Tags comma-separated</label>		
-				<input name="tagsSimple" id="tagsSimple" type="text" autocomplete="off" /><br/>
+				</div>				
+				<div class='inp_wrapper'>
+				<label for="tagsSimple">Tags (comma-separated)</label>		
+				<input name="tagsSimple" id="tagsSimple" type="text" autocomplete="off" />
+				</div>
+				<br/>
 				<input type="hidden" name="action" value="link">
 				<input id="link_submit" type="submit" value="Send"/>
 
@@ -303,6 +267,33 @@ position:relative;
 
 					</div>
 			</div>
+        </div>
+		<div id="sectionD" class="tab-pane fade">
+            <p>
+			<table class="table table-striped table-hover table-condensed small">
+			</table>
+			<?php $tagStyle = Settings::Val('tagsInputStyle');
+				$pill = ''; $simpl = '';
+				if($tagStyle=='pillbox'){$pill='checked';}elseif($tagStyle=='simple'){$simpl='checked';}
+			?>
+				<form name="formSettings" method="post">					
+				<div class="form-group">
+				<label class="control-label col-xs-3">tagsInputStyle:</label>
+				<div class="col-xs-2">
+				<label class="radio-inline">
+				<input type="radio" name="tagsInputStyleRad" value="pillbox" <?=$pill?>> Pillbox
+				</label>
+				</div>
+				<div class="col-xs-2">
+				<label class="radio-inline">
+				<input type="radio" name="tagsInputStyleRad" value="simple" <?=$simpl?>> Simple<br/>(for old browsers)
+				</label>
+				</div>
+				</div>
+				<input type="submit" value="Send"/>
+				<input type="hidden" name="action" value="tagsInputStyle">
+				</form>
+			</p>
         </div>
     </div> 		
 		</div>
