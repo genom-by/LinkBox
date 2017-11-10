@@ -279,18 +279,57 @@ function fillTagsSelected(){
 //
 //
 function menuFolderSelected(folderType, folderID){
-	console.log('folderType:'+folderType + ' folderID:'+folderID);
-	if(folderType=='parent'){
-		table_ = 'link_folder';
-	}else if(folderType=='parentOnly'){
-		table_ = 'link_folder_parOnly';
-	}else{
-		table_ = 'link_folder';	
-	}
-	id_ = folderID;
 
 	divID='#lbx_LinksTable';
-	$.post(
+	id_ = folderID;	
+	dblSent = false;
+console.log('folderType:'+folderType + ' folderID:'+folderID);
+	var tid1;
+	if(folderType=='parent'){
+		tid1 = setTimeout(function(){
+			// onClick event call;
+			table_ = 'link_folder';	
+			if( ! dblSent){
+			_post({action: 'pageUpdate', id:id_, table:table_});
+			}
+		},500);	
+
+	}else if(folderType=='parentOnly'){
+		table_ = 'link_folder_parOnly';
+
+		clearTimeout(tid1);	//always undefined
+
+		_post({action: 'pageUpdate', id:id_, table:table_});		
+		dblSent = true;
+	}else{
+		table_ = 'link_folder';
+		
+		_post({action: 'pageUpdate', id:id_, table:table_});		
+	}
+	
+		function _post(data_){
+			//console.info('data to send:');
+			//console.table(data_);
+			
+			$.post(
+			"cgi/post.routines.php",
+			data_,
+			function(data){
+				console.log("post returned: "+data.result);
+			if (data.result == 'ok' ){
+				//console.log(data.payload);
+				$(divID).html(data.payload);
+			}else{
+				console.log('error message: ',data.message);
+				$(divID).html(data.message);			
+			}
+			}
+			,"json"
+			);
+		
+		}
+		/*
+			$.post(
 		"cgi/post.routines.php",
 		{action: 'pageUpdate', id:id_, table:table_},
 		function(data){
@@ -304,7 +343,8 @@ function menuFolderSelected(folderType, folderID){
 		}
 		}
 		,"json"
-	);
+	);	
+		*/
 }
 /* inquire page title for url
 */
@@ -336,18 +376,11 @@ function inquirePageTitle(pageurl){
 $(function () {
 	
 	$(".FLDmenuItem").click(function(e){
-		//console.log(e.target);
-		//var a = $(this).find('a');
-		//a.css( "color", "red" );
-		//a.click();
-		//console.log('a is:'+a);
+		//console.log(e.target);		//var a = $(this).find('a');		//a.css( "color", "red" );		//a.click();		//console.log('a is:'+a);
 		$(".FLDmenuItem").removeClass('FLDmenuActive').removeClass('FLDmenuActivePO');
 		$(".fldHeading").removeClass('FLDmenuActivePO');
 		$(this).addClass('FLDmenuActive');
-		//$(e.target).addClass('FLDmenuActive');
-		//$(e.target).css('background-color','#ff0000');
-		//$(this).parent().find('.childDiv').css('background-color','#ffffff');
-		//$(this).css('background-color','#ff0000');
+		//$(e.target).addClass('FLDmenuActive');		
 	});
 	$(".fldHeading").dblclick(function(e){
 		$(".FLDmenuItem").removeClass('FLDmenuActive').removeClass('FLDmenuActivePO');

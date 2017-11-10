@@ -18,7 +18,7 @@ if(false !== $tags){
 		$tagName = $tag['tagName'];
 		$tagCount = $tag['tagCount'];
 		$entry = "<input type='checkbox' name='options'> {$tagName} <span class='badge'>{$tagCount}</span>";
-		$HTMLtagsNode = $HTMLtagsNode."<label class='btn btn-info'>{$entry}</label>";
+		$HTMLtagsNode = $HTMLtagsNode."<label class='btn btn-xs btn-info'>{$entry}</label>";
 	}
 }else{
 $HTMLtagsNode = "<label class='btn btn-info'> No tags yet</label>";

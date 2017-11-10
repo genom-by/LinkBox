@@ -77,7 +77,7 @@ $(document).ready(function () {
 
   <div class="row row-offcanvas row-offcanvas-right">
 
-	<div class="col-sm-9">
+	<div class="col-sm-10">
 	  <p class="pull-right visible-xs">
 		<button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
 	  </p>
@@ -97,7 +97,7 @@ $(document).ready(function () {
 	</div><!--/.col-xs-6.col-lg-4-->
 	</div><!--/row-->
 	</div><!--/.col-xs-12.col-sm-9-->
-	<div class="col-sm-3 sidebar-offcanvas" id="sidebar">
+	<div class="col-sm-2 sidebar-offcanvas" id="sidebar">
 <!-- -------------------------------------------------------------- TAGS menu begin  ---------------------------------------------------------------->	
 <? include 'tmplt/ui.tagsmenu.inc.php';?>
 <!--/ -------------------------------------------------------------- TAGS menu end  ----------------------------------------------------------------->	

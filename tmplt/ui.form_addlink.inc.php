@@ -13,7 +13,8 @@ include_once 'cgi/indexpage.routines.php';
 <form class="well form-inline lbox-thinform" method="post" name="lbx_form_addlink" id="lbx_form_addlink">
 <!--select folder list FuelUX-->
 <div class='lbxForm_firstLine'>
-	<span class='btn_folder_span'><div class="btn-group selectlist" data-resize="aut_" data-initialize="selectlist" id="lbox-SelectFolderList">
+<div class='clearfix twoColumns fldr_n_input'>
+	<span class='btn_folder_span'><div class="btn-group selectlist" data-resize="auto" data-initialize="selectlist" id="lbox-SelectFolderList">
 	<button class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" type="button" title="Folder">
 	<span class="selected-label"></span>
 	<span class="selected-value"></span>
@@ -23,7 +24,8 @@ include_once 'cgi/indexpage.routines.php';
 	<?=HTML::getSelectULList('folderGroupped');?>
 	<input class="hidden hidden-field" name="link_Folder" readonly="readonly" aria-hidden="true" type="text" value='-1'/>
 	</div></span>
-	<span><input type="text" name="link_to_save" id="link_to_save" class="form-control input-sm" placeholder="Link to save" autocomplete="off" autocorrect="off" autofocus></span>
+	<input type="text" name="link_to_save" id="link_to_save" class="form-control input-sm" placeholder="Link to save" autocomplete="off" autocorrect="off" autofocus/>
+</div>
 </div>
 <div class='lbxForm_secondLine'>	
 <!-- / select folder list FuelUX-->
@@ -54,14 +56,19 @@ $('#myPillbox1').pillbox({acceptKeyCodes: [13,188,190]});
 </script>
 </div> <!--fuelux wrapper-->
 <?}elseif(Settings::HTMLStyle('tagsInputStyle')=='simple'){?>
-<label for="tagsSimple">Tags (comma-separated)</label>		
-<input name="lbx_tagsSelected" id="lbx_tagsSelected" type="text" autocomplete="off" placeholder="add tag(s) with comma" class="form-control"/>
+
+<div class='clearfix twoColumns'>
+<label for="tagsSimple">Tags </label>		
+<input name="lbx_tagsSelected" id="lbx_tagsSelected" type="text" autocomplete="off" placeholder="add tag(s) with comma" class="form-control tags-simple input-sm"/>
+</div>
 <?}?>
 </div> <!-- / tag-->
 </div><!--second line-->
 <div class='lbxForm_thirdLine'>
-	<span class='span_inp_desc'><input type="text" name="link_description" id="link_description" class="form-control input-sm" placeholder="Name / Description" autocomplete="off" autocorrect="off"></span>
-	<span class='span_btn_add'><button type="submit" id="btn_addLink" class="btn btn-info"><span class="glyphicon glyphicon-star"></span><span id="btn_addLinkCaption"> Add link </span></button></span>
+<div class='clearfix twoColumns btn_n_input'>
+	<input type="text" name="link_description" id="link_description" class="form-control input-sm" placeholder="Name / Description" autocomplete="off" autocorrect="off">
+	<button type="submit" id="btn_addLink" class="btn btn-info"><span class="glyphicon glyphicon-star"></span><span id="btn_addLinkCaption"> Add link </span></button>
+	</div>
 </div><!-- / third line-->
 	<div class="clearfix"></div>
 	<div id="lbx_formErrors" class="alert alert-danger" hidden="true">

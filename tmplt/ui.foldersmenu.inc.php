@@ -35,6 +35,7 @@ $panelID = 1;
 		$entryContentA = "<a href='#{$HTMLfldID}' class='list-group-item' onClick='menuFolderSelected(\"subfolder\",{$folderID});'>{$folderName} {$entryCount}</a>";
 		$entryContentB = "<div class='FLDmenuItem'>{$entryContentA}</div>";
 		$entryContent = $entryContent.$entryContentB;
+		$entryContent = $entryContent.PHP_EOL;
 		//$entryContent = $entryContent."<a>{$folderName} <span class='badge'>{$folderCount}</span></a>";				
 			}
 			$panelBodyClass='panel-body-menu';
@@ -50,16 +51,18 @@ $panelID = 1;
 		//$eHTMLheading = "<div class='FLDmenuItem'>{$eHTMLheadingA}</div>";
 		$eHTMLContent = "<div id='{$HTMLentryID}' class='panel-collapse collapse'><div class='{$panelBodyClass}'>{$entryContent}</div></div>";
 		$HTMLfoldersAccord = $HTMLfoldersAccord."<div class='panel panel-default'>{$eHTMLheading}{$eHTMLContent}</div>";
-			
+		$HTMLfoldersAccord = $HTMLfoldersAccord.PHP_EOL;
+		
 		$panelID++;
 	}
 }else{
 $HTMLfoldersAccord = "<div class='panel panel-default'> No folders yet</div>";
 }
 	$totalCount = Folder::$totalLinksCount;
-		$eAllentryHead = "<a data-toggle='collapse' data-parent='#accordion' href='#' onClick='menuFolderSelected(\"parent\",\"all\");'>Show all <span class='badge'>{$totalCount}</span></a>";
+		$eAllentryHead = "<a class='aHeaderMenu' data-toggle='collapse' data-parent='#accordion' href='#' onClick='menuFolderSelected(\"parent\",\"all\");'>Show all <span class='badge'>{$totalCount}</span></a>";
 		$eShowAllmenuItem = "<div class='panel-heading fldHeading'><h4 class='panel-title'><div class='FLDmenuItem'>{$eAllentryHead}</div></h4></div>";
 		$eHTMLallContent = "<div class='panel panel-default'>{$eShowAllmenuItem}</div>";
+		$eHTMLallContent = $eHTMLallContent.PHP_EOL;
 		
 		$HTMLfoldersAccord = $eHTMLallContent.$HTMLfoldersAccord;
 //		<a href="#" class="list-group-item active">
@@ -84,16 +87,6 @@ $HTMLfoldersNode = "<label class='btn btn-info'> No folders yet</label>";
 }
 */
 ?>
-<style>
-.panel-body-menu{
-	padding:0;
-}
-</style>
-<div id="folders_list">
-	<div class="list-group lbox-folders">
-<?=$HTMLfoldersNode1;?>
-	</div>
-</div>
 <div id="folders_listA">
     <div id="accordion" class="panel-group">
  <?=$HTMLfoldersAccord;?>
