@@ -14,7 +14,7 @@ include_once 'cgi/indexpage.routines.php';
 <!--select folder list FuelUX-->
 <div class='lbxForm_firstLine'>
 <div class='clearfix twoColumns fldr_n_input'>
-	<span class='btn_folder_span'><div class="btn-group selectlist" data-resize="auto" data-initialize="selectlist" id="lbox-SelectFolderList">
+	<span class='btn_folder_span'><div class="btn-group selectlist"  data-initialize="selectlist" id="lbox-SelectFolderList">
 	<button class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" type="button" title="Folder">
 	<span class="selected-label"></span>
 	<span class="selected-value"></span>

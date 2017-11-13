@@ -43,6 +43,7 @@ class DBObject{
 	protected $uid;	// database id of user to whom odject belongs (if applicable)
 	
 	private $db;	// database connection
+	protected $PDO;	// database connection PDO object
 	private $sqlPDOSave;
 	## ORM ## //protected static $orm = array('table'=>'obus', 'table_id'=>'id_obus'); 
 	
@@ -54,6 +55,12 @@ class DBObject{
 @sql
 %array or %fale+%errormsg
 */
+	public function __construct(){
+		$db = LinkBox\DataBase::connect(); //get raw connection
+		$this->PDO = $db::getPDO(); //get PDO
+		
+	}
+	
 public static function getEntriesArrayBySQL($sql, $ref=-1){
 	if (empty($sql)) {
 		self::$errormsg="DBObject[getEntriesBySQL]: No SQL provided";
@@ -128,6 +135,27 @@ public static function getEntriesArrayBySQL($sql, $ref=-1){
 			return false;
 		}
 		else return true;
+	}
+	/* REFACTORED - save prepared PDO statements instead of pure sql string
+	*/
+	public function savePDOStatement($pdoSTMT){
+		
+		if( empty($pdoSTMT) ){			self::$errormsg = 'DB[savePDOStatement]: no statement to save.';
+			LiLogger::log( self::$errormsg );
+			return false;
+		}
+		try{		
+		if(false === $pdoSTMT->execute() ){
+			$this->errormsg = 'error while saving into DB: '.implode(' ', $statement->errorInfo() );
+			LiLogger::log( 'DBObject[savePDOStatement]:: '.$this->errormsg );			
+			return false;
+		}else return true;
+		}catch(PDOException $e){
+			$this->errormsg = 'error executing pdo statement: '.$e->getMessage();//LinkBox\DataBase::$errormsg;
+			LiLogger::log( 'DBObject[savePDOStatement]:: '.$this->errormsg );
+			return false;
+		}
+		
 	}
 	## NEW ##
 	/*input @array(field=>value)
@@ -355,28 +383,44 @@ class Folder extends DBObject{
 	public static $totalLinksCount;
 	
 	public function __construct($name_, $parent_ = null){
+		parent::__construct();
 		$this->name = Utils::cleanInput($name_);
 		$this->parentfolder = Utils::cleanInput($parent_);
 		$this->parentfolder = intval($this->parentfolder);
 		$this->uid = Auth::whoLoggedID();
+		
 		if(is_int($this->parentfolder) AND ($this->parentfolder > 0) ){
-			$this->sqlPDOSave = "INSERT INTO folder(folderName, id_user, id_parentfolder) VALUES(':1:', :2:, :3:)";
+			$this->sqlPDOSave = "INSERT INTO folder(folderName, id_user, id_parentFolder) VALUES(':1:', :2:, :3:)";
+			$this->pdoPDOSave = "INSERT INTO folder(folderName, id_user, id_parentFolder) VALUES(:name, :uid, :parent_id)";
+			$this->isSubfolder = true;
 		}else{
 			$this->sqlPDOSave = "INSERT INTO folder(folderName, id_user) VALUES(':1:', :2:)";
+			$this->pdoPDOSave = "INSERT INTO folder(folderName, id_user) VALUES(:name, :uid)";
+			$this->isSubfolder = false;
 		}
 	}
 	public function save(){
 		if( empty($this->name) ){
 			$this->errormsg = 'Empty folder name is not allowed.';
-			LiLogger::log( 'Folder::save failed: '.self::$errormsg );
+			LiLogger::log( 'Folder::save failed: '.$this->errormsg );
 			return false;			
 		}
+		
+		$stmt = $this->PDO->prepare($this->pdoPDOSave);
+		$stmt->bindValue(':name',$this->name,PDO::PARAM_STR);
+		$stmt->bindValue(':uid',$this->uid,PDO::PARAM_INT);
+		if( $this->isSubfolder){
+		$stmt->bindValue(':parent_id',$this->parentfolder,PDO::PARAM_INT);
+		}
+		/*
 		$pdosql = str_replace(':1:', $this->name, $this->sqlPDOSave);
 		$pdosql = str_replace(':2:', $this->uid, $pdosql);
 		if(is_int($this->parentfolder) AND ($this->parentfolder > 0) ){
 			$pdosql = str_replace(':3:', $this->parentfolder, $pdosql);
 		}		
 		return $this->saveObject($pdosql);
+		*/
+		return $this->savePDOStatement($stmt);
 	}
 	public static function load($id){
 		$load = self::getFromDB($id);
@@ -578,9 +622,11 @@ class Tag extends DBObject{
 	protected static $sqlGetAllOrdered = 'SELECT id_tag, tagName, id_user from tags ORDER BY tagName';
 		
 	public function __construct($name_){
+		parent::__construct();
 		$this->name = Utils::cleanInput($name_);
 		$this->uid = Auth::whoLoggedID();
 		$this->sqlPDOSave = "INSERT INTO tags(tagName, id_user) VALUES(':1:', :2:)";
+		$this->pdoPDOSave = "INSERT INTO tags(tagName, id_user) VALUES(:name, :uid)";
 	}
 	public function save(){
 		if( empty($this->name) ){
@@ -588,9 +634,14 @@ class Tag extends DBObject{
 			LiLogger::log( 'Tag::save failed: '.self::$errormsg );
 			return false;			
 		}
+		$stmt = $this->PDO->prepare($this->pdoPDOSave);
+		$stmt->bindValue(':name',$this->name,PDO::PARAM_STR);
+		$stmt->bindValue(':uid',$this->uid,PDO::PARAM_INT);
+		return $this->savePDOStatement($stmt);
+/*		
 		$pdosql = str_replace(':1:', $this->name, $this->sqlPDOSave);
 		$pdosql = str_replace(':2:', $this->uid, $pdosql);
-		return $this->saveObject($pdosql);
+		return $this->saveObject($pdosql);*/
 	}
 	public static function load($id){
 		$load = self::getFromDB($id);
@@ -630,9 +681,10 @@ class Link extends DBObject{
 		
 	private $shortname="-";
 	
-	public function __construct($url_, $title_='No title', $folderid = 0, $linktags=0){
-	
-	$datestamp = date_timestamp_get(date_create());
+	public function __construct($url_, $title_='No title', $folderid, $linktags=0){
+		parent::__construct();
+		
+		$datestamp = date_timestamp_get(date_create());
 		$this->name = Utils::cleanInput($title_);
 		$this->url = Utils::cleanInput($url_);
 		$this->folderid = Utils::cleanInput($folderid);
@@ -641,27 +693,47 @@ class Link extends DBObject{
 		$this->lastVisited = $datestamp;//Date();		
 		$this->linktagsCSV = Utils::cleanInput($linktags);	// comma separated string
 		$this->sqlPDOSave = "INSERT INTO link( url, id_user, id_folder, created, lastVisited, isShared, title) VALUES(':url:', :uid:, :folderid:, :created:, :lastVis:, :shared:, ':title:')";
+		$this->pdoPDOSave = "INSERT INTO link( url, id_user, id_folder, created, lastVisited, isShared, title) VALUES(:url, :uid, :folderid, :created, :lastVis, :shared, :title)";
 	}
 	public function save(){
 		if( empty($this->name) ){
 			$this->errormsg = 'Empty link name is not allowed.';
-			LiLogger::log( 'Link::save failed: '.self::$errormsg );
+			LiLogger::log( 'Link::save failed: '.$this->errormsg );
 			return false;			
 		}
 		if( empty($this->url) ){
 			$this->errormsg = 'Empty link url is not allowed.';
-			LiLogger::log( 'Link::save failed: '.self::$errormsg );
+			LiLogger::log( 'Link::save failed: '.$this->errormsg);
 			return false;			
 		}
+		if( empty($this->folderid) OR $this->folderid < 1){
+			$this->errormsg = 'Every link should belong to some folder.';
+			LiLogger::log( 'Link::save failed: '.$this->errormsg );
+			return false;			
+		}
+/*		
 	$datestamp = date_timestamp_get(date_create());
-		$pdosql = str_replace(':title:', $this->name, $this->sqlPDOSave);
-		$pdosql = str_replace(':url:', $this->url, $pdosql);
+		$pdosql = str_replace(':title:', $this->PDO->quote($this->name), $this->sqlPDOSave);
+		$pdosql = str_replace(':url:', $this->PDO->quote($this->url), $pdosql);
 		$pdosql = str_replace(':uid:', $this->uid, $pdosql);
 		$pdosql = str_replace(':created:', $this->created, $pdosql);
 		$pdosql = str_replace(':folderid:', $this->folderid, $pdosql);
 		$pdosql = str_replace(':lastVis:', $datestamp, $pdosql);
 		$pdosql = str_replace(':shared:', '0', $pdosql);
-	
+LiLogger::log('sql to execute::'.$pdosql);
+*/
+/* REFACTORED WITH BINDVALUE */
+		$stmt = $this->PDO->prepare($this->pdoPDOSave);
+		$stmt->bindValue(':title', $this->name, PDO::PARAM_STR);
+		$stmt->bindValue(':url', $this->url, PDO::PARAM_STR);
+		$stmt->bindValue(':uid', $this->uid, PDO::PARAM_INT);
+		$stmt->bindValue(':created', $this->created, PDO::PARAM_INT);
+		$stmt->bindValue(':folderid', $this->folderid, PDO::PARAM_INT);
+		$stmt->bindValue(':lastVis', $datestamp, PDO::PARAM_INT);
+		$stmt->bindValue(':shared', 0, PDO::PARAM_INT);		
+		
+/* REFACTORED WITH BINDVALUE END */	
+/*	
 		$db = LinkBox\DataBase::connect(); //get raw connection
 		$conn = $db::getPDO(); //get raw connection
 		
@@ -676,6 +748,13 @@ class Link extends DBObject{
 			LiLogger::log( $this->errormsg );				
 			return false;
 		}
+*/
+		$conn = $this->PDO;
+		if( false === $this->savePDOStatement($stmt) ){
+			$this->errormsg = 'Could not save link itself: '.$this->errormsg;//LinkBox\DataBase::$errormsg;
+			LiLogger::log( $this->errormsg );				
+			return false;
+		}		
 		$link_id = $conn->lastInsertId();			//LiLogger::log( "inserted link id == {$link_id}" );
 			
 		if( $link_id <= 0 ){

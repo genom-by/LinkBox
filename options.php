@@ -13,10 +13,12 @@ include_once 'cgi/linkHandler.class.php';
 if(!empty($_POST['action'])){
 	if( Auth::notLogged() ){
 		break;
-	}	
+	}
+//var_dump($_POST);	
 	switch ($_POST['action']){
 		case 'folder':
-			//var_dump($_POST);
+		case 'subfolder':
+
 			if(!empty($_POST['folderName']) OR !empty($_POST['subfolderName']) ){
 				if( $_POST['action'] == 'folder'){
 					if( !empty($_POST['folderName']) ){
@@ -27,7 +29,7 @@ if(!empty($_POST['action'])){
 						$folder = new Folder($_POST['subfolderName'],$_POST['folderParentName'] );					
 					}else{
 						$message = 'Parent folder not selected!';			
-						\LinkBox\Logger::log("{$_POST['action']} error: ".$message);
+						//\LinkBox\Logger::log("{$_POST['action']} error: ".$message);
 						$actionStatus = 'error';
 						break;
 					}
@@ -38,6 +40,10 @@ if(!empty($_POST['action'])){
 					$message = $folder->errormsg;			
 					\LinkBox\Logger::log("{$_POST['action']} error: ".$message);
 					$actionStatus = 'error';
+				}else{
+					$err = 'Folder was saved successfully!';
+					$message = $err;
+					$actionStatus = 'success';
 				}
 			}else{
 				$message = 'Fill in Folder Name';
@@ -53,6 +59,10 @@ if(!empty($_POST['action'])){
 				$message = Settings::$errormsg;			
 				\LinkBox\Logger::log("{$_POST['action']} error: ".$message);
 				$actionStatus = 'error';
+			}else{
+				$err = 'Setting was saved successfully!';
+				$message = $err;
+				$actionStatus = 'success';			
 			}
 		}else{
 			$message = 'Select tags type';
@@ -60,8 +70,43 @@ if(!empty($_POST['action'])){
 		}
 		
 	break;
+		
+	case 'linkOPT':
+	
+		if( empty($_POST['linkLink']) OR empty($_POST['linkName']) ){
+			$err = 'Empty url/description provided';			
+			//\LinkBox\Logger::log("create:linkMP error: ".$err);
+			$message = $err;
+			$actionStatus = 'error';
+			break;
+		}
+		if( empty($_POST['linkFolder']) ){
+			$err = 'No folder provided';			
+			$message = $err;
+			$actionStatus = 'error';
+			break;
+		}
+		if(!empty($_POST['linkLink'])){
+			$link = new Link($_POST['linkLink'], $_POST['linkName'], $_POST['linkFolder'], $_POST['tagsSimple'] );
+			$res = $link->save();
+			if(!$res){
+				$err = 'Could not save link: '.$link->errormsg;			
+				\LinkBox\Logger::log("create:linkMP error: ".$err);
+				$message = $err;
+				$actionStatus = 'error';
+			}else{
+				$res = true;
+				$err = 'Link was saved successfully!';
+				$message = $err;
+				$actionStatus = 'success';
+			}
+		}
 
-
+	break;
+	
+	default:
+			$message = 'Action not provided.';
+			$actionStatus = 'error';	
 	}
 }
 //echo( 'action:'.$_POST['action'] );
@@ -249,7 +294,7 @@ position:relative;
 				<input name="tagsSimple" id="tagsSimple" type="text" autocomplete="off" />
 				</div>
 				<br/>
-				<input type="hidden" name="action" value="link">
+				<input type="hidden" name="action" value="linkOPT">
 				<input id="link_submit" type="submit" value="Send"/>
 
 				</form>	
@@ -272,24 +317,44 @@ position:relative;
             <p>
 			<table class="table table-striped table-hover table-condensed small">
 			</table>
-			<?php $tagStyle = Settings::Val('tagsInputStyle');
+			<?php $tagStyleSet = Settings::Val('tagsInputStyle');
 				$pill = ''; $simpl = '';
-				if($tagStyle=='pillbox'){$pill='checked';}elseif($tagStyle=='simple'){$simpl='checked';}
+				if($tagStyleSet=='pillbox'){$pill='checked';}elseif($tagStyleSet=='simple'){$simpl='checked';}
+				$favShowSet = Settings::Val('faviconShowMain');
+				$favShow = ''; $favNotShow = '';
+				if($favShowSet=='favShow'){$favShow='checked';}elseif($favShowSet=='favNotShow'){$favNotShow='checked';}
 			?>
 				<form name="formSettings" method="post">					
 				<div class="form-group">
-				<label class="control-label col-xs-3">tagsInputStyle:</label>
-				<div class="col-xs-2">
-				<label class="radio-inline">
-				<input type="radio" name="tagsInputStyleRad" value="pillbox" <?=$pill?>> Pillbox
-				</label>
+				<fieldset class='optsimple'>				
+			<label class="control-label col-xs-3">Tags input style:</label>
+			<div class="col-xs-6">
+			<label class="radio-inline">
+			<input type="radio" name="tagsInputStyleRad" value="pillbox" <?=$pill?>> Pillbox
+			</label>
+			</div>
+			<div class="col-xs-6">
+			<label class="radio-inline">
+			<input type="radio" name="tagsInputStyleRad" value="simple" <?=$simpl?>> Simple (for old browsers)
+			</label>
+			</div>
+				</fieldset>				
+				<fieldset class='optsimple'>				
+			<label class="control-label col-xs-3">Show favicons for links:</label>
+			<div class="col-xs-6">
+			<label class="radio-inline">
+			<input type="radio" name="favShow" value="favShowIcon" <?=$favShow?>> Show favicons
+			</label>
+			</div>
+			<div class="col-xs-6">
+			<label class="radio-inline">
+			<input type="radio" name="favShow" value="favShowIconNot" <?=$favNotShow?>> Do not show favicons
+			</label>
+			</div>
+				</fieldset>
 				</div>
-				<div class="col-xs-2">
-				<label class="radio-inline">
-				<input type="radio" name="tagsInputStyleRad" value="simple" <?=$simpl?>> Simple<br/>(for old browsers)
-				</label>
-				</div>
-				</div>
+
+				
 				<input type="submit" value="Send"/>
 				<input type="hidden" name="action" value="tagsInputStyle">
 				</form>

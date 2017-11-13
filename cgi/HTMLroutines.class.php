@@ -294,9 +294,9 @@ $htmlItem = "<tr id='link_id_{$id_link}'><td>{$favicon}</td><td><a class='simple
 					$created = date("j/M/y", $item['created'] );
 					$lastVisited = date("M j, Y", $item['lastVisited'] );
 					$isShared = $item['isShared'];
-					
+	//"<a class='icon_delete' href='javascript:manageLink(`{$k}`, `delete`);' alt='x' title='Delete'></a>"
 					$btnBlock = "<span class='row-buttons'>".
-		"<a class='icon_delete' href='javascript:manageLink(`{$k}`, `delete`);' alt='x' title='Delete'></a>".
+		"<a class='icon_delete' href='javascript:mainLinkDelete(\"link\", {$id_link});' alt='x' title='Delete'></a>".
 		"<a class='icon_edit' href='javascript:manageLink(`{$k}`, `edit`);' alt='e' title='Edit'></a>".
 		"<a class='icon_sharelbx' href='javascript:manageLink(`{$k}`, `share`);' alt='s' title='Share'></a>".
 		"</span>";

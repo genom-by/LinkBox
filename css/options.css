@@ -12,3 +12,9 @@ text-align:center;
 	box-sizing: border-box;
 		width:100%;
 }
+fieldset.optsimple{
+	padding: 2px;
+	margin: 4px 2px;
+	border: 1px solid silver;
+	border-radius:4px;
+}

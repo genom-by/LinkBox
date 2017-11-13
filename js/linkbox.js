@@ -283,16 +283,17 @@ function menuFolderSelected(folderType, folderID){
 	divID='#lbx_LinksTable';
 	id_ = folderID;	
 	dblSent = false;
-console.log('folderType:'+folderType + ' folderID:'+folderID);
+	subSent = false;
+//console.log('folderType:'+folderType + ' folderID:'+folderID);
 	var tid1;
 	if(folderType=='parent'){
 		tid1 = setTimeout(function(){
 			// onClick event call;
 			table_ = 'link_folder';	
-			if( ! dblSent){
+			if( ( ! dblSent) && ( ! subSent ) ){
 			_post({action: 'pageUpdate', id:id_, table:table_});
 			}
-		},500);	
+		},700);	
 
 	}else if(folderType=='parentOnly'){
 		table_ = 'link_folder_parOnly';
@@ -301,6 +302,13 @@ console.log('folderType:'+folderType + ' folderID:'+folderID);
 
 		_post({action: 'pageUpdate', id:id_, table:table_});		
 		dblSent = true;
+	}else if(folderType=='subfolder'){
+		table_ = 'link_folder';
+
+		clearTimeout(tid1);	//always undefined
+
+		_post({action: 'pageUpdate', id:id_, table:table_});		
+		subSent = true;
 	}else{
 		table_ = 'link_folder';
 		
@@ -310,7 +318,7 @@ console.log('folderType:'+folderType + ' folderID:'+folderID);
 		function _post(data_){
 			//console.info('data to send:');
 			//console.table(data_);
-			
+console.log('folderType:'+folderType + ' folderID:'+folderID);		
 			$.post(
 			"cgi/post.routines.php",
 			data_,
@@ -328,24 +336,34 @@ console.log('folderType:'+folderType + ' folderID:'+folderID);
 			);
 		
 		}
-		/*
-			$.post(
+}
+/*	=======  delete link from main table
+*/
+function mainLinkDelete(table_, id_entry){
+	//console.info("delete from table: "+table_+" entry id:"+id_entry);
+	action_ = 'delete';
+	console.info('data to send:', {action:action_ , id:id_entry, table:table_});
+	
+	if (! confirm('Are you sure to delete this link?') ) {return;}
+		
+	$.post(
 		"cgi/post.routines.php",
-		{action: 'pageUpdate', id:id_, table:table_},
+		{action:action_ ,id:id_entry, table:table_},
 		function(data){
-			console.log("post returned: "+data.result);
+		console.log("post returned: "+data.result);
+		//alert(data.result);
 		if (data.result == 'ok' ){
-			//console.log(data.payload);
-			$(divID).html(data.payload);
+			var domID = '#'+table_+'_id_'+id_entry;
+			$(domID).toggle( "highlight" );
 		}else{
 			console.log('error message: ',data.message);
-			$(divID).html(data.message);			
+			alert(data.message);
 		}
 		}
 		,"json"
 	);	
-		*/
 }
+
 /* inquire page title for url
 */
 function inquirePageTitle(pageurl){

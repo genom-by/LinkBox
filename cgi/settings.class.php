@@ -58,6 +58,22 @@ class Settings{
 					return $default;
 				}				
 			break;
+			case 'faviconShowMain':
+				$default = 'favShow';	//alternate - favNotShow
+				if( ! empty($_COOKIE["faviconShowMain"]) ){
+					if( $_COOKIE["faviconShowMain"] == 'favShow' ){
+						return 'favShow';
+					}elseif( $_COOKIE["faviconShowMain"] == 'favNotShow'){
+						return 'favNotShow';
+					}else{
+						return $default;					
+					}
+				}else{
+					return $default;
+				}				
+			break;
+			
+			
 			default:
 				return false;
 		}
