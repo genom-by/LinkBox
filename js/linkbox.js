@@ -284,7 +284,7 @@ function menuFolderSelected(folderType, folderID){
 	id_ = folderID;	
 	dblSent = false;
 	subSent = false;
-//console.log('folderType:'+folderType + ' folderID:'+folderID);
+console.log('folderType:'+folderType + ' folderID:'+folderID);
 	var tid1;
 	if(folderType=='parent'){
 		tid1 = setTimeout(function(){
@@ -293,7 +293,7 @@ function menuFolderSelected(folderType, folderID){
 			if( ( ! dblSent) && ( ! subSent ) ){
 			_post({action: 'pageUpdate', id:id_, table:table_});
 			}
-		},700);	
+		},1700);	
 
 	}else if(folderType=='parentOnly'){
 		table_ = 'link_folder_parOnly';
@@ -318,6 +318,9 @@ function menuFolderSelected(folderType, folderID){
 		function _post(data_){
 			//console.info('data to send:');
 			//console.table(data_);
+			$('#currentFolderID').val(folderID);	//global
+			$('#currentFolderType').val(folderType);	//global
+			
 console.log('folderType:'+folderType + ' folderID:'+folderID);		
 			$.post(
 			"cgi/post.routines.php",
@@ -363,7 +366,110 @@ function mainLinkDelete(table_, id_entry){
 		,"json"
 	);	
 }
+/*	=======  edit link from main table
+*/
+function mainLinkEdit(table_, id_entry){
 
+if( $('#editMPformOpeningStatus').val() != 'closed' ){
+	console.info('editing form is opened now');
+	return;
+}
+
+	var rowID = '#'+table_+'_id_'+id_entry;		
+
+	var tA = $(rowID).find('a');
+	var s_url = $(tA).attr('href');
+	var s_title = $(tA).attr('title');
+	var s_name = $(tA).html();
+	var s_fldname = $(tA).attr('data-attr-fld-name');
+	var s_fldID = $(tA).attr('data-attr-fldid');
+	var s_tags = $(tA).attr('data-attr-tags');
+	
+	var form = $('#form_to_clone').clone();
+	$(form).removeClass('hidden');
+
+	var rowrow = "<tr id='editLinkFormRow'><td colspan='4'>"+$(form).html()+"</td></tr>"
+	$(rowrow).insertAfter(rowID);
+	
+	$('#link_to_edit').val(s_url);
+	$('#link_description_edit').val(s_name);
+	$('#lbx_tagsSelected_edit').val(s_tags);
+	$('#link_id_edit').val(id_entry);
+	$('#fld_id_edit').val(s_fldID);
+	$('.currentFLD').html(s_fldname);
+
+	$('#editMPformOpeningStatus').val('opened');
+}
+/* cancel link EDIT*/
+function callCancelEditLink(){
+	$('#editMPformOpeningStatus').val('closed');
+	$('#editLinkFormRow').remove();
+}
+/* call POST for editing link
+*/
+function callPostEditLink(){
+	var action_ = 'objectUpdate';
+	var id_ = $('#link_id_edit').val();
+	var table_ = 'link';
+		var s_url = $('#link_to_edit').val();
+		//var s_title = $(tA).attr('title');
+		var s_name = $('#link_description_edit').val();
+		var s_fldID = $('#fld_id_edit').val();
+		var s_tags = $('#lbx_tagsSelected_edit').val();
+		var isShared = 0;
+		
+console.info('data to send:', 
+	{"action":action_ , "id":id_, "table":table_, "name2":s_name, "url2":s_url, "id_folder2":s_fldID, "tags2":s_tags, "isShared2":isShared}
+	);
+	var dataArray = {"name2":s_name, "url2":s_url, "id_folder2":s_fldID, "tags2":s_tags, "isShared2":isShared};
+			//$('#link_id_30').addClass('editedOKeffect');			
+		$.post(
+		"cgi/post.routines.php",
+		{"action":action_ , "id":id_, "table":table_, "data":dataArray},
+		function(data){
+		console.log("post returned: "+data.result);
+		//alert(data.result);
+		
+		var domID = '#'+table_+'_id_'+id_;	
+		if (data.result == 'ok' ){
+			lbxDomNodeBlink('ok',domID);
+			callCancelEditLink();
+			//reload table
+			var folderID = $('#currentFolderID').val();	//global
+			var folderType = $('#currentFolderType').val();	//global
+			setTimeout(function(){
+				menuFolderSelected(folderType, folderID);
+			},2500);
+		}else{
+			console.log('error message: ',data.message);
+			lbxDomNodeBlink('error',domID);		
+			$('#lbx_formErrors_edit').show();
+			$('#lbx_formErrors_edit p').html(data.message);
+		}
+		}
+		,"json"
+	);
+	
+}
+function lbxDomNodeBlink(type, domID){
+	if(type=='ok'){
+		$('#lbx_formErrors_edit').hide();
+		$(domID).removeClass("editedERReffect");
+		$(domID).addClass("editedOKeffect");			
+		setTimeout(function(){
+			$(domID).removeClass("editedOKeffect");
+		},4000);
+		//$(domID).effect("pulsate"); jq UI
+			for(i=0;i<2;i++) {	$(domID).fadeTo('slow', 0.5).fadeTo('slow', 1.0);	}
+	}else if(type=='error'){
+		$(domID).removeClass("editedOKeffect");			
+		$(domID).addClass("editedERReffect");
+		setTimeout(function(){
+			$(domID).removeClass("editedERReffect");
+		},4000);
+			for(i=0;i<2;i++) {	$(domID).fadeTo('slow', 0.5).fadeTo('slow', 1.0);	}	
+	}
+}
 /* inquire page title for url
 */
 function inquirePageTitle(pageurl){

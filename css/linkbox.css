@@ -265,6 +265,41 @@ img.simpleFav{
 .aHeaderMenu .badge{
 	float:right;
 }
+.currentFLD{
+	padding:2px 8px;
+	outline:1px solid gray;
+}
+#btn_addLink_edit{
+	float:right;
+	height: 28px;
+	padding: 2px 4px;
+	font-size: 13px;
+	width:14%;
+}
+#btn_editLink_cancel{
+	float:right;
+	height: 22px;
+	padding: 2px 4px;
+	font-size: 12px;
+	width:11%;
+	margin:0 4px;
+}
+
+span.glyphicon-edit{
+	color:blue;
+}
+#lbx_form_editlink input{
+	height:24px;
+	padding:1px 4px;
+}
+.editedOKeffect{
+	background-color:#06C41A !important;
+	outline:1px solid #006000;
+}
+.editedERReffect{
+	background-color:orange !important;
+	outline:1px solid red;	
+}
 /* ... loading ...
 .loading{
  margin: 10% auto;

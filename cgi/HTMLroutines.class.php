@@ -286,8 +286,9 @@ $htmlItem = "<tr id='link_id_{$id_link}'><td>{$favicon}</td><td><a class='simple
 			
 			$btnDel = self::createDELTablebutton('link', $item['id_link']);		
 					$id_link = $item['id_link'];
-					//$id_folder = $item['id_folder'];						//$sel_folder = self::getSelectItems('folder',$item['id_folder']);
-						//$html_folder = "<select>{$sel_folder}</select>";						//$folderName = $folders[$id_folder];	//test
+				$id_folder = $item['id_folder'];					//$sel_folder = self::getSelectItems('folder',$item['id_folder']);
+						//$html_folder = "<select>{$sel_folder}</select>";						
+				$folderName = $folders[$id_folder];	//test
 					$url = LinkHandler::wrapUrl($item['url']);
 					$title = $item['title'];
 					$id_user = $item['id_user'];
@@ -295,14 +296,18 @@ $htmlItem = "<tr id='link_id_{$id_link}'><td>{$favicon}</td><td><a class='simple
 					$lastVisited = date("M j, Y", $item['lastVisited'] );
 					$isShared = $item['isShared'];
 	//"<a class='icon_delete' href='javascript:manageLink(`{$k}`, `delete`);' alt='x' title='Delete'></a>"
+	
+			$tags = Tag::getLinkTags($id_link,'csv');
 					$btnBlock = "<span class='row-buttons'>".
 		"<a class='icon_delete' href='javascript:mainLinkDelete(\"link\", {$id_link});' alt='x' title='Delete'></a>".
-		"<a class='icon_edit' href='javascript:manageLink(`{$k}`, `edit`);' alt='e' title='Edit'></a>".
+		"<a class='icon_edit' href='javascript:mainLinkEdit(\"link\", {$id_link});' alt='e' title='Edit'></a>".
 		"<a class='icon_sharelbx' href='javascript:manageLink(`{$k}`, `share`);' alt='s' title='Share'></a>".
 		"</span>";
 					$fvsrc = LinkHandler::getFaviconHref($url);
 					$favicon = "<img src='{$fvsrc}' class='simpleFav'></img>";
-$htmlItem = "<tr id='link_id_{$id_link}' class='lbox-linkrow'><td class='favtd'>{$favicon}</td><td><a class='simpleUrl' href='{$url}' target='_blank' title='{$url}'>{$title}</a></td>"."<td class='datetime' title='last visited: {$lastVisited}'>{$created}</td><td class='btns'>{$btnBlock}</td></tr>";
+					$datablock = "data-attr-fldID='{$id_folder}' data-attr-fld-name='{$folderName}' data-attr-tags='{$tags}'";
+					
+$htmlItem = "<tr id='link_id_{$id_link}' class='lbox-linkrow'><td class='favtd'>{$favicon}</td><td><a class='simpleUrl' href='{$url}' target='_blank' title='{$url}' {$datablock}>{$title}</a></td>"."<td class='datetime' title='last visited: {$lastVisited}'>{$created}</td><td class='btns'>{$btnBlock}</td></tr>";
 
 					$htmlTable = $htmlTable.$htmlItem.PHP_EOL;
 				}

@@ -161,13 +161,21 @@ public static function getEntriesArrayBySQL($sql, $ref=-1){
 	/*input @array(field=>value)
 	*/
 	public function update($fields_values=null){
-		if( empty($this->id) ){			self::$errormsg = 'DB[updateObject]: no id for update.';
-			LiLogger::log( self::$errormsg );
+		if( empty($this->id) ){			$this->errormsg = 'DB[updateObject]: no id for update.';
+			LiLogger::log( $this->errormsg );
 			return false;
 		}
-		$values = self::buildUpdateValues($fields_values);
-		if( empty($values) ){			self::$errormsg = 'DB[updateObject]: values are empty.';
-			LiLogger::log( self::$errormsg );
+		if( ! $this->validateParams($fields_values) ){
+				$this->errormsg = 'Updating values are empty:'.static::$errormsg;
+			LiLogger::log( 'DB[updateObject]: '.$this->errormsg );
+			return false;
+		}
+		//$values = self::buildUpdateValues($fields_values);
+		$keyValuesArray = array();
+		$valuesPDO = self::buildUpdateValuesPDO($fields_values, $keyValuesArray);	//id_folder = :id_folder,url = :url,isShared = :isShared,title = :title
+		
+		if( empty($valuesPDO) ){			$this->errormsg = 'DB[updateObject]: values are empty.';
+			LiLogger::log( $this->errormsg );
 			return false;
 		}
 		
@@ -175,15 +183,34 @@ public static function getEntriesArrayBySQL($sql, $ref=-1){
 		$tableId = static::$orm['table_id'];
 		
 		$whereClause = " WHERE {$tableId} = {$this->id}";
-		$sql = "UPDATE {$tableName} SET {$values} {$whereClause}";
-
-		$res = LinkBox\DataBase::executeUpdate($sql);
-		if($res === false){
-			self::$errormsg = 'DBO[update]: Error while updating into DB: '.LinkBox\DataBase::$errormsg;
-			LiLogger::log( self::$errormsg );
+		//$sql = "UPDATE {$tableName} SET {$values} {$whereClause}";
+		$sqlPDO = "UPDATE {$tableName} SET {$valuesPDO} {$whereClause}"; //UPDATE link SET id_folder = :id_folder,url = :url,isShared = :isShared,title = :title  WHERE id_link = 40
+		try{
+			$stmt = $this->PDO->prepare($sqlPDO);
+			$resPDO = $stmt->execute($keyValuesArray);
+		}catch(PDOException $e){
+			$this->errormsg = 'Could not run pdo query into DB.';
+			$logError = 'DBO[update]: Error while running PDO query into DB:'.$e->getMessage();//LinkBox\DataBase::$errormsg;
+			LiLogger::log( $logError );
+			LiLogger::log( 'compiled sql: '.$sqlPDO);
+			return false;
+		}
+		if($resPDO === false){
+			$this->errormsg = 'Could not update pdo query into DB.';
+			$logError = 'DBO[update]: Error while updating into DB: '.LinkBox\DataBase::$errormsg;
+			LiLogger::log( $logError );
 			return false;
 		}
 		else return true;
+		/*
+		$res = LinkBox\DataBase::executeUpdate($sql);
+		if($res === false){
+			$this->errormsg = 'Could not run query into DB.';
+			$logError = 'DBO[update]: Error while updating into DB: '.LinkBox\DataBase::$errormsg;
+			LiLogger::log( $logError );
+			return false;
+		}
+		else return true;*/
 	}
 	private static function buildUpdateValues($fields_values){
 		if( empty($fields_values) ){	self::$errormsg = 'DB[buildUpdateValues]: no values.';
@@ -194,6 +221,21 @@ public static function getEntriesArrayBySQL($sql, $ref=-1){
 		foreach($fields_values as $key=>$value){
 			if(gettype($value)=='string'){$valstr="'{$value}'";}else{$valstr=$value;}
 			$str = $str."{$key} = {$valstr},";
+		}
+		$str = rtrim($str,',');
+		return $str;
+	}
+	private static function buildUpdateValuesPDO($fields_values, & $keyValuesArray){
+		if( empty($fields_values) ){	self::$errormsg = 'DB[buildUpdateValuesPDO]: no values.';
+			LiLogger::log( self::$errormsg );
+			return false;
+		}
+		$str = "";
+		foreach($fields_values as $key=>$value){
+			if(gettype($value)=='string'){$valstr="'{$value}'";}else{$valstr=$value;}
+			$keyTag = ":{$key}";
+			$keyValuesArray[$keyTag] = $value;
+			$str = $str."{$key} = :{$key},";
 		}
 		$str = rtrim($str,',');
 		return $str;
@@ -400,9 +442,9 @@ class Folder extends DBObject{
 		}
 	}
 	public function save(){
-		if( empty($this->name) ){
-			$this->errormsg = 'Empty folder name is not allowed.';
-			LiLogger::log( 'Folder::save failed: '.$this->errormsg );
+	
+		if( ! $this->validate() ){
+			LiLogger::log( 'Folder::save failed. Validation error: '.$this->errormsg );		
 			return false;			
 		}
 		
@@ -432,6 +474,24 @@ class Folder extends DBObject{
 			$this->parentfolder = $load['id_parentfolder'];
 		}
 		return $me;}
+	}
+	public function validate(){
+		if( empty($this->name) ){
+			$this->errormsg = 'Empty folder name is not allowed.';
+			LiLogger::log( 'Folder::validation: '.$this->errormsg );
+			return false;			
+		}
+		return true;
+	}
+	
+	public static function validateParams($params){
+		$name_ = Utils::cleanInput($params['folderName']);
+		if( empty( $name_ ) ){
+			self::$errormsg = 'Empty folder name is not allowed.';
+			return false;			
+		}
+		
+		return true;
 	}
 	
 	public static function getFoldersNames(){
@@ -629,9 +689,9 @@ class Tag extends DBObject{
 		$this->pdoPDOSave = "INSERT INTO tags(tagName, id_user) VALUES(:name, :uid)";
 	}
 	public function save(){
-		if( empty($this->name) ){
-			$this->errormsg = 'Empty tag name is not allowed.';
-			LiLogger::log( 'Tag::save failed: '.self::$errormsg );
+		
+		if( ! $this->validate() ){
+			LiLogger::log( 'Tag::save failed. Validation error: '.$this->errormsg );		
 			return false;			
 		}
 		$stmt = $this->PDO->prepare($this->pdoPDOSave);
@@ -664,13 +724,78 @@ class Tag extends DBObject{
 
 		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		}catch(PDOException $e){
-			$this->errormsg = 'error fetching tags count: '.$e->getMessage();//LinkBox\DataBase::$errormsg;
-			LiLogger::log( $this->errormsg );
+			self::$errormsg = 'error fetching tags count: '.$e->getMessage();//LinkBox\DataBase::$errormsg;
+			LiLogger::log( self::$errormsg );
 			return false;			
 		}
 		return $rows;
 	}
-}
+	/*get tags for selected link*/
+	public static function getLinkTags($linkID, $retType='array'){
+		if( empty($linkID) OR ( $linkID < 1) ){
+			self::$errormsg = 'Link id not provided.';
+			LiLogger::log( 'Tag::getLinkTags error: '.self::$errormsg );
+			return false;			
+		}
+		$sql = "SELECT tagName, tags.id_tag FROM tags LEFT JOIN tags_link ON tags.id_tag = tags_link.id_tag WHERE tags_link.id_link = :linkID ORDER BY tagName";
+		try{
+		$db = LinkBox\DataBase::connect();
+		$stmt = $db->connection->prepare($sql);
+		//$stmt = $this->PDO->prepare($sql);
+		$stmt->bindValue(':linkID', $linkID, PDO::PARAM_INT);
+		
+		if(false === $stmt->execute() ){
+			self::$errormsg = "Could not get tags for link";
+			$logError = "Tag[getLinkTags] error executing statement::".implode(' ', $stmt->errorInfo() );
+			LiLogger::log($logError);	
+			return false;			
+		}
+		$stmt->setFetchMode(PDO::FETCH_ASSOC);
+		$entries = $stmt->fetchAll();
+		
+		if($entries === false ){
+			self::$errormsg = "Could not get tags for link";			
+			$logError = "Tag[getLinkTags] error: No entries returned: ".implode(' ', $stmt->errorInfo() );
+			LiLogger::log($logError);				
+			return false;
+		}else{
+			if($retType == 'array'){
+				return $entries;			
+			}elseif($retType == 'csv'){
+				$tagtags = array();
+				foreach($entries as $en){
+					$tagtags[] = $en['tagName'];
+				}
+				return implode(',',$tagtags);
+			}
+		}
+		}catch(PDOException $e){
+			self::$errormsg = "Could not get tags for link";
+			$logError = "Tag[getLinkTags] exception executing statement::".$e->getMessage();
+			LiLogger::log($logError);
+			return false;	
+		}		
+		
+	}
+	public function validate(){
+		$name_ = Utils::cleanInput($this->name);
+		if( empty( $name_ ) ){
+			$this->errormsg = 'Empty tag name is not allowed.';
+			return false;			
+		}
+		
+		return true;
+	}
+	public static function validateParams($params){
+		$name_ = Utils::cleanInput($params['tagName']);
+		if( empty( $name_ ) ){
+			self::$errormsg = 'Empty tag name is not allowed.';
+			return false;			
+		}
+		
+		return true;
+	}
+} // Tags end
 /* ================================================== LINK =================================================================
 */
 class Link extends DBObject{
@@ -696,33 +821,12 @@ class Link extends DBObject{
 		$this->pdoPDOSave = "INSERT INTO link( url, id_user, id_folder, created, lastVisited, isShared, title) VALUES(:url, :uid, :folderid, :created, :lastVis, :shared, :title)";
 	}
 	public function save(){
-		if( empty($this->name) ){
-			$this->errormsg = 'Empty link name is not allowed.';
-			LiLogger::log( 'Link::save failed: '.$this->errormsg );
+
+		if( ! $this->validate() ){
+			LiLogger::log( 'Link::save failed. Validation error: '.$this->errormsg );		
 			return false;			
 		}
-		if( empty($this->url) ){
-			$this->errormsg = 'Empty link url is not allowed.';
-			LiLogger::log( 'Link::save failed: '.$this->errormsg);
-			return false;			
-		}
-		if( empty($this->folderid) OR $this->folderid < 1){
-			$this->errormsg = 'Every link should belong to some folder.';
-			LiLogger::log( 'Link::save failed: '.$this->errormsg );
-			return false;			
-		}
-/*		
-	$datestamp = date_timestamp_get(date_create());
-		$pdosql = str_replace(':title:', $this->PDO->quote($this->name), $this->sqlPDOSave);
-		$pdosql = str_replace(':url:', $this->PDO->quote($this->url), $pdosql);
-		$pdosql = str_replace(':uid:', $this->uid, $pdosql);
-		$pdosql = str_replace(':created:', $this->created, $pdosql);
-		$pdosql = str_replace(':folderid:', $this->folderid, $pdosql);
-		$pdosql = str_replace(':lastVis:', $datestamp, $pdosql);
-		$pdosql = str_replace(':shared:', '0', $pdosql);
-LiLogger::log('sql to execute::'.$pdosql);
-*/
-/* REFACTORED WITH BINDVALUE */
+
 		$stmt = $this->PDO->prepare($this->pdoPDOSave);
 		$stmt->bindValue(':title', $this->name, PDO::PARAM_STR);
 		$stmt->bindValue(':url', $this->url, PDO::PARAM_STR);
@@ -732,23 +836,6 @@ LiLogger::log('sql to execute::'.$pdosql);
 		$stmt->bindValue(':lastVis', $datestamp, PDO::PARAM_INT);
 		$stmt->bindValue(':shared', 0, PDO::PARAM_INT);		
 		
-/* REFACTORED WITH BINDVALUE END */	
-/*	
-		$db = LinkBox\DataBase::connect(); //get raw connection
-		$conn = $db::getPDO(); //get raw connection
-		
-		if($conn === false){
-			$this->errormsg = 'error while saving link into DB: '.LinkBox\DataBase::$errormsg;
-			LiLogger::log( $this->errormsg );
-			return false;
-		}
-			
-		if( false === $this->saveObject($pdosql) ){
-			$this->errormsg = 'Could not save link itself: '.$this->errormsg;//LinkBox\DataBase::$errormsg;
-			LiLogger::log( $this->errormsg );				
-			return false;
-		}
-*/
 		$conn = $this->PDO;
 		if( false === $this->savePDOStatement($stmt) ){
 			$this->errormsg = 'Could not save link itself: '.$this->errormsg;//LinkBox\DataBase::$errormsg;
@@ -824,45 +911,75 @@ LiLogger::log('sql to execute::'.$pdosql);
 	//TODO make long one query?
 		$load = self::getFromDB($id);
 		if(empty($load)){return false;}else{
-		$me = new Link($load['url'], $load['title'] );
+		$me = new Link($load['url'], $load['title'], $load['id_folder'] );
 		$me->id = $load['id_link'];
-		$this->uid = $load['id_link'];		
-		$this->created = $load['created'];
+		$me->uid = $load['id_user'];		
+		$me->created = $load['created'];
 		$me->lastVisited = $load['lastVisited'];
 		return $me;}
-	}	
-}
+	}
+	/* validate before save */
+	public function validate(){
+
+		if( empty($this->name) ){
+			$this->errormsg = 'Empty link name is not allowed.';
+			return false;			
+		}
+		if( empty($this->url) ){
+			$this->errormsg = 'Empty link url is not allowed.';
+			return false;			
+		}
+		if( empty($this->folderid) OR $this->folderid < 1){
+			$this->errormsg = 'Every link should belong to some folder.';
+			return false;			
+		}
+		return true;
+	}
+	/* validate before update */
+	public static function validateParams($params){
+		if( empty($params) ){
+			self::$errormsg = 'Empty link params.';
+			return false;			
+		}
+		$tt_ = Utils::cleanInput($params['title']);
+		$url_ = Utils::cleanInput($params['url']);
+		$fldi_ = Utils::cleanInput($params['id_folder']);
+		if( empty($tt_) ){
+			self::$errormsg = 'Empty link name is not allowed.';
+			return false;			
+		}
+		if( empty($url_) ){
+			self::$errormsg = 'Empty link url is not allowed.';
+			return false;			
+		}
+		if( empty($fldi_) OR $fldi_ < 1){
+			self::$errormsg = 'Every link should belong to some folder.';
+			return false;			
+		}
+		return true;
+	}
+} //Link end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* dd==========================================================================================================================================
 */
-class Destination extends DBObject{
-	
-	protected static $orm = array('table'=>'destination', 'table_id'=>'id_dest', 'is_uid'=>true);
-	protected static $sqlGetAll = 'SELECT id_dest, name, dest_seq, uid from destination';
-	protected static $sqlGetAllOrdered = 'SELECT id_dest, name, dest_seq, uid from destination ORDER BY name';
-	
-	private $sequence="-";
-	
-	public function __construct($name_, $seq_){
-		$this->name = Utils::cleanInput($name_);
-		$this->sequence = Utils::cleanInput($seq_);
-		$this->uid = Auth::whoLoggedID();
-		$this->sqlPDOSave = "INSERT INTO destination(name, dest_seq, uid) VALUES(':1:', ':2:', :3:)";
-	}
-	public function save(){
-		$pdosql = str_replace(':1:', $this->name, $this->sqlPDOSave);
-		$pdosql = str_replace(':2:', $this->shortname, $pdosql);
-		$pdosql = str_replace(':3:', $this->uid, $pdosql);		
-		return $this->saveObject($pdosql);
-	}
-	public static function load($id){
-		$load = self::getFromDB($id);
-		if(empty($load)){return false;}else{
-		$me = new Destination($load['name'], $load['dest_seq'] );
-		$me->id = $load['id_dest'];
-		return $me;}
-	}	
-}
-
 class Way extends DBObject{
 	
 	protected static $orm = array('table'=>'pitstop', 'table_id'=>'id_pitstop', 'is_uid'=>false);

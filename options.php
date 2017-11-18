@@ -175,15 +175,15 @@ position:relative;
 	<div class="row">
 		<div class="col-sm-12">
 		<div class="col-sm-3">
-    <ul class="nav nav-pills nav-stacked">
+    <ul class="nav nav-pills nav-stacked optionsList">
         <li class="active"><a data-toggle="tab" href="#sectionA">
-			<span class="glyphicon glyphicons-folder-open"></span> Folders</a></li>
+			<span class="glyphicon glyphicon-folder-open"></span>  Folders</a></li>
         <li><a data-toggle="tab" href="#sectionB">
-			<span class="glyphicon glyphicons-tags"></span> Tags</a></li>
+			<span class="glyphicon glyphicon-tags"></span> Tags</a></li>
         <li><a data-toggle="tab" href="#sectionC">
-			<span class="glyphicon glyphicons-link"></span> Links</a></li>
+			<span class="glyphicon glyphicon-link"></span>Links</a></li>
         <li><a data-toggle="tab" href="#sectionD">
-			<span class="glyphicon glyphicons-link"></span> Settings</a></li>
+			<span class="glyphicon glyphicon-cog"></span>Settings</a></li>
     </ul>		
 		</div>
 		<div class="col-sm-9">
@@ -192,7 +192,8 @@ position:relative;
             <div id='foldersPanel'>
 				<ul class="nav nav-tabs">
 				<li class="active"><a data-toggle="tab" href="#secPitNew">New Folder</a></li>
-				<li><a data-toggle="tab" href="#secPitView">View & Edit Folders</a></li>
+				<li><a data-toggle="tab" href="#secPitView">View & Edit Subolders</a></li>
+				<li><a data-toggle="tab" href="#fldEdParent">Edit Parent folders</a></li>
 				</ul>
 					<div class="tab-content">
 				<!-- ---------------- New Folder ------------------------ -->
@@ -248,6 +249,15 @@ position:relative;
 				<form name="formPitView" method="post">
 <table class="table table-striped table-hover table-condensed small">
 <?php echo HTML::getTableItems('folderGroupEdit');?>
+</table>
+				</form>
+				</fieldset>	
+						</div>
+						<div id="fldEdParent" class="tab-pane fade">
+				<fieldset>
+				<form name="formEdParentFld" method="post">
+<table class="table table-striped table-hover table-condensed small">
+<?php echo HTML::getTableItems('folder');?>
 </table>
 				</form>
 				</fieldset>	

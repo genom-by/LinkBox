@@ -72,7 +72,7 @@ $('#myPillbox1').pillbox({acceptKeyCodes: [13,188,190]});
 </div><!-- / third line-->
 	<div class="clearfix"></div>
 	<div id="lbx_formErrors" class="alert alert-danger" hidden="true">
-	<a class="close" href="#" onclick="$('#lbx_formErrors').prop('hidden', true);">x</a>
+	<a class="close" href="#" onclick="$('#lbx_formErrors').hide();">x</a>
 	<p></p>
 	</div>
 	<input type="hidden" name="id" value="-2">

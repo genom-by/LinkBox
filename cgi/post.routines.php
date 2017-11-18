@@ -156,27 +156,58 @@ if( Auth::notLogged() ){
 
 	$err = ''; //\LinkBox\Logger::log("table: {$table} id: {$id}") ;
 	$dataArr = json_decode($data, true);
-	$des = serialize($dataArr);
-	// \LinkBox\Logger::log("json_decode: {$des}") ;
+	$des = serialize($data);
+	//\LinkBox\Logger::log("json_decode: {$des}") ;
+	//\LinkBox\Logger::log("raw data: {$data}") ;
 	switch($table){
 		
 		case 'folder':
 			$folder = Folder::load( $id); //\LinkBox\Logger::log(serialize($obus) );
-			$res = $folder->update(array('folderName'=>$dataArr['folderName2'], 'id_parentFolder'=>$dataArr['id_parentFolder2']));		
+			if( empty( $folder->parentfolder ) ){
+				$res = $folder->update(array('folderName'=>$dataArr['folderName2'] ));	
+			}else{
+				$res = $folder->update(array('folderName'=>$dataArr['folderName2'], 'id_parentFolder'=>$dataArr['id_parentFolder2']));
+			}
+			if( $res == false ){
+				$err = 'Folder could not be updated: '.$folder->errormsg;
+			}			
+		break;
+		case 'folderParent':
+			$folder = Folder::load( $id); //\LinkBox\Logger::log(serialize($obus) );
+			$res = $folder->update(array('folderName'=>$dataArr['folderName2'] ));
+			if( $res == false ){
+				$err = 'Folder could not be updated: '.$folder->errormsg;
+			}			
 		break;
 		case 'tag':
 			$tag = Tag::load( $id); //\LinkBox\Logger::log(serialize($obus) );
-			$res = $tag->update(array('tagName'=>$dataArr['tagName2']));		
+			$res = $tag->update(array('tagName'=>$dataArr['tagName2']));
+			if( $res == false ){
+				$err = 'Tag could not be updated: '.$tag->errormsg;
+			}			
 		break;
-		case 'seq_SeqEdit_table':
-			//$seqstats = sequencesStations::getSeqStatNamesBySequenceID($_POST['id']);
-			$seqstats = HTML::getSeqEditRows($_POST['id']);
-			if(false === $seqstats){returnPOSTError('could not obtain sequences');die();}
-			else{
-				//$seqstats = HTML::getPitStopsEditRows($seqstats);
-				echo json_encode(array('result'=>'ok', 'payload'=>$seqstats) );
-				die();
-				}
+		case 'link':
+			$link = Link::load( $id); //\LinkBox\Logger::log(serialize($obus) );
+			$params = array();
+			$params['id_folder']=$data['id_folder2'];
+			$params['url']=$data['url2'];
+			$params['isShared']=$data['isShared2'];
+			$params['title']=$data['name2'];
+			//$params['tags']=$data['tags2'];
+			$res = $link->update($params);
+			if( $res == false ){
+				$err = 'Link could not be updated: '.$link->errormsg;
+			}	
+/*			
+			if( Link::validateParams($params) ){
+				$res = $link->update($params);
+				if( $res == false ){
+					$err = 'Link could not be updated: '.$link->errormsg;
+				}					
+			}else{
+				$res = false;
+				$err = 'Link cannot be updated: '.Link::$errormsg;;
+			}*/
 		break;
 		case 'seq_SeqView_table':
 			//$seqstats = sequencesStations::getSeqStatNamesBySequenceID($_POST['id']);
@@ -202,7 +233,8 @@ if( Auth::notLogged() ){
 		$err = 'No table provided';
 	}
 	if($res === false){
-	$err = 'DispatchObjectUpdate error: '.$err.'. '.DBObject::$errormsg;
+		$errLog = 'DispatchObjectUpdate error: '.$err.'. '.DBObject::$errormsg;
+		\LinkBox\Logger::log("postRoutine error: {$errLog}") ;
 	returnPOSTError($err);
 	}
 	return $res;
@@ -269,7 +301,6 @@ function dispatchInquire($table, $id, $question){
 ob_start();
 //\LinkBox\Logger::log('POST Routines file running');
 //\LinkBox\Logger::log('POST : '.serialize($_POST) );
-
 
 if(!empty($_POST['id'])){
 	$res = false;

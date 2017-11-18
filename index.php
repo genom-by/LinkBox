@@ -103,13 +103,17 @@ $(document).ready(function () {
 <!--/ -------------------------------------------------------------- TAGS menu end  ----------------------------------------------------------------->	
 	</div><!--/.sidebar-offcanvas-->
   </div><!--/row-->
-
+<? include 'tmplt/ui.form_editlink.inc.php';?>
   <hr>
 <!-- -------------------------------------------------------------- FOOTER menu begin  ---------------------------------------------------------------->	
 <? include 'tmplt/ui.footer.inc.php';?>
 <!--/ -------------------------------------------------------------- FOOTER menu end  ----------------------------------------------------------------->	
 </div><!--/.container-->
-	<div class='formresult'><iframe name='formresult' width='0' height='0'></iframe></div>
+<div class='hidden' id='globalVariables'>
+	<input type="hidden" id="currentFolderID" value="all">
+	<input type="hidden" id="currentFolderType" value="link_folder">
+	<input type="hidden" id="lastAction" value="-2">
+</div>
 <div class="container">
 <div class="row">
 <div class="col-sm-12">

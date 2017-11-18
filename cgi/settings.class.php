@@ -151,38 +151,41 @@ settings orm class
 */
 class SettingsORM extends DBObject{
 
-	protected static $orm = array('table'=>'settings', 'table_id'=>'id_token', 'where_uid'=>'id_user', 'is_uid'=>true);
-	protected static $sqlGetAll = 'SELECT id_token, user_id, token, expDate from authtokens';
-	
-	public $token;
-	public $uid;
-	public $expDate;
-	
-	public function __construct($id='',$expDate=''){
-		$this->token = Utils::generateToken(Auth::whoLoggedID());
-		$this->expDate = time()+ (30 * 24 * 60 * 60);
+	protected static $orm = array('table'=>'settings', 'table_id'=>'id_set', 'where_uid'=>'id_user', 'is_uid'=>true);
+	protected static $sqlGetAll = 'SELECT id_set, id_user, name, svalue, defvalue, variants, storeCookies from settings';
+		
+	public function __construct($setitem){
+	parent::__construct();
+		$this->name = $setitem['name'];
+		$this->svalue = $setitem['svalue'];
+		$this->defvalue = $setitem['defvalue'];
+		$this->variants = $setitem['variants'];
+		$this->storeCookies = $setitem['storeCookies'];
 		$this->uid = Auth::whoLoggedID();
-		$this->sqlPDOSave = "INSERT INTO authtokens(user_id, token, expDate) VALUES(:uid:, ':tt:', :expdt:)";
+		$this->sqlPDOSave = "INSERT INTO settings(id_user, name, svalue, defvalue, variants, storeCookies) VALUES(:id_user:, ':name:', ':svalue:', ':defvalue:', ':variants:', :storeCookies:)";
+		$this->pdoPDOSave = "INSERT INTO settings(id_user, name, svalue, defvalue, variants, storeCookies) VALUES(:id_user, :name, :svalue, :defvalue, :variants, :storeCookies)";
 	}
 	public function save(){
-		$pdosql = str_replace(':tt:', $this->token, $this->sqlPDOSave);
-		$pdosql = str_replace(':uid:', $this->uid, $pdosql);
-		$pdosql = str_replace(':expdt:', $this->expDate, $pdosql);
-		return $this->saveObject($pdosql);
-	}
-	public static function getAuthByToken($token){
-	
-		if( empty($token)){
-			return null;
+			
+		if( empty($this->name) OR empty($this->svalue) ){
+			$this->errormsg = 'Empty setting is not allowed.';
+			LiLogger::log( 'Settings::save failed: '.$this->errormsg );
+			return false;			
 		}
-		$token = Utils::cleanInput($token);
 		
-		$where = "WHERE token='{$token}'";	
+		$stmt = $this->PDO->prepare($this->pdoPDOSave);
+		$stmt->bindValue(':name',$this->name,PDO::PARAM_STR);
+		$stmt->bindValue(':uid',$this->uid,PDO::PARAM_INT);
+		$stmt->bindValue(':svalue',$this->svalue,PDO::PARAM_STR);
+		$stmt->bindValue(':defvalue',$this->defvalue,PDO::PARAM_STR);
+		$stmt->bindValue(':variants',$this->variants,PDO::PARAM_STR);
+		$stmt->bindValue(':storeCookies',$this->storeCookies,PDO::PARAM_INT);
 
-//echo $where;
-		$authtoken = self::getAllWhere($where);
-//var_dump($user[0]);die();
-		if($authtoken[0]['id_token'] > 0) {return $authtoken[0];} else {return false;}
+		return $this->savePDOStatement($stmt);
+		
+	}
+	public static function getSettingsForUser($uid){
+	
 		
 	}
 	
