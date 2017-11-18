@@ -238,7 +238,7 @@ function checkFormBeforeAdding() {
 	if(linkName.value.trim()===""){emptyControls.push(linkName)}
 	//if(folderObject.value==0){emptyControls.push( $('#lbox-SelectFolderList')[0] )}
 	//console.log('v:'+$(folderIdInput).val().trim() );
-	if($(folderIdInput).val()=="-1"){emptyControls.push( $('#lbox-SelectFolderList')[0] )}
+	if($(folderIdInput).val()=="-1"){emptyControls.push( $('#lbox-SelectFolderList') )}
 	
 	//clean controls
 	markEmptyControls(mandatoryControls, false);
@@ -247,7 +247,8 @@ function checkFormBeforeAdding() {
 	if(emptyControls.count() > 0){
 		markEmptyControls(emptyControls);
 		$('#lbx_formErrors p').html( '<strong>Error:</strong> fill the form properly!');
-		return false
+		$('#lbx_formErrors').show();
+		return false;
 	}else{
 		$('#lbx_formErrors p').html( 'No errors.');
 		markEmptyControls(emptyControls, false);		
@@ -414,9 +415,14 @@ function callPostEditLink(){
 		var s_url = $('#link_to_edit').val();
 		//var s_title = $(tA).attr('title');
 		var s_name = $('#link_description_edit').val();
-		var s_fldID = $('#fld_id_edit').val();
+		var s_fldIDinitial = $('#fld_id_edit').val();
+		var s_fldID = $('#linkFolder').val();
 		var s_tags = $('#lbx_tagsSelected_edit').val();
 		var isShared = 0;
+		
+		if(s_fldID == -1){
+			s_fldID = s_fldIDinitial;
+		}
 		
 console.info('data to send:', 
 	{"action":action_ , "id":id_, "table":table_, "name2":s_name, "url2":s_url, "id_folder2":s_fldID, "tags2":s_tags, "isShared2":isShared}

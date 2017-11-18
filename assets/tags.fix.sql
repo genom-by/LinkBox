@@ -1,0 +1,12 @@
+CREATE TABLE tags2 (
+  [id_user] INTEGER NOT NULL REFERENCES [user]([id_user]) ON DELETE CASCADE, 
+  [tagName] VARCHAR(200) NOT NULL, 
+  [id_tag] INTEGER PRIMARY KEY AUTOINCREMENT);
+  
+  INSERT INTO tags2 SELECT * FROM tags
+  
+  DROP TABLE tags
+  
+  ALTER TABLE tags2 RENAME TO tags
+  
+  CREATE UNIQUE INDEX [XPKtags] ON [tags] ([id_tag]);

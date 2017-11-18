@@ -189,7 +189,7 @@ if( Auth::notLogged() ){
 		case 'link':
 			$link = Link::load( $id); //\LinkBox\Logger::log(serialize($obus) );
 			$params = array();
-			$params['id_folder']=$data['id_folder2'];
+			$params['id_folder']=$data['id_folder2'];			
 			$params['url']=$data['url2'];
 			$params['isShared']=$data['isShared2'];
 			$params['title']=$data['name2'];

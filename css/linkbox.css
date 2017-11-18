@@ -113,7 +113,7 @@ padding-right:5px;
 }
 .emptyControl{
 /*display:inline-block;*/
-/*border:2px solid red;*/
+border:2px solid red;
 background-color:#EDD3D3;
 }
 .loginmenu li:not(:first-child){
@@ -257,7 +257,7 @@ img.simpleFav{
 	padding:0;
 }
 .favtd{
-	width:24px;
+	min-width:24px;
 }
 #folders_listA .FLDmenuItem a{
 	padding-left:4px

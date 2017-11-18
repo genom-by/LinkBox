@@ -115,7 +115,8 @@ class Settings{
 						return false;					
 					}
 				}else{
-					return false;
+					//return false;
+					return 'pillbox';	//default
 				}			
 			break;
 			default:
