@@ -242,7 +242,7 @@ function checkFormBeforeAdding() {
 	
 	//clean controls
 	markEmptyControls(mandatoryControls, false);
-	
+console.log('emptyControls.count:'+emptyControls.count());	
 	//are there empty fields?
 	if(emptyControls.count() > 0){
 		markEmptyControls(emptyControls);
@@ -259,7 +259,11 @@ function checkFormBeforeAdding() {
 //
 function fillTagsSelected(){
 
+	if( typeof( $('#myPillbox1').html() ) == 'undefined' ){
+		return;
+	}
 	var tagsObjects =  $('#myPillbox1').pillbox('items') ;
+
 	//console.info("selected tags: %d", tagsObjects.count());
 	
 	var form = document.forms.lbx_form_addlink;
