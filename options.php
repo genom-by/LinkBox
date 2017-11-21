@@ -257,7 +257,7 @@ position:relative;
 				<fieldset>
 				<form name="formEdParentFld" method="post">
 <table class="table table-striped table-hover table-condensed small">
-<?php echo HTML::getTableItems('folder');?>
+<?php echo HTML::getTableItems('parentfolder');?>
 </table>
 				</form>
 				</fieldset>	

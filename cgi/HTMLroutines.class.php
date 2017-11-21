@@ -335,8 +335,14 @@ $htmlItem = "<tr id='tag_id_{$item['id_tag']}'><td class='rowtxt' orm='tagName'>
 			}else{$htmlTable = "no data";}			
 		}
 		break;
-		case 'folder':{
-			$list = Folder::getAll() ;
+		case 'folder':
+		case 'parentfolder':
+		{
+			if($table=='folder'){
+				$list = Folder::getAll() ; //'SELECT id_folder, folderName, id_user from folder';
+			}elseif($table=='parentfolder'){
+				$list = Folder::getAllParents() ; //'SELECT id_folder, folderName, id_user from folder';
+			}
 			if(false !== $list){
 				$htmlItem = '';
 				foreach($list as $item){
