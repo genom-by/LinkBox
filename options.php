@@ -70,6 +70,22 @@ if(!empty($_POST['action'])){
 		}
 		
 	break;
+	case 'saveSettingsAll':
+		//echo 'tag';	//var_dump($_POST);
+
+			$retval = Settings::SaveSettings($_POST);
+			
+			if(!$retval){
+				$message = Settings::$errormsg;			
+				\LinkBox\Logger::log("{$_POST['action']} error: ".$message);
+				$actionStatus = 'error';
+			}else{
+				$err = 'Setting was saved successfully!';
+				$message = $err;
+				$actionStatus = 'success';			
+			}
+		
+	break;
 		
 	case 'linkOPT':
 	
@@ -257,7 +273,7 @@ position:relative;
 				<fieldset>
 				<form name="formEdParentFld" method="post">
 <table class="table table-striped table-hover table-condensed small">
-<?php echo HTML::getTableItems('parentfolder');?>
+<?php echo HTML::getTableItems('folder');?>
 </table>
 				</form>
 				</fieldset>	
@@ -361,12 +377,24 @@ position:relative;
 			<input type="radio" name="favShow" value="favShowIconNot" <?=$favNotShow?>> Do not show favicons
 			</label>
 			</div>
-				</fieldset>
+				</fieldset>			
+			<?php
+			if(Settings::HasUserSettings(Auth::whoLoggedID())){
+			?><p>User has settings</p><?
+			//echo 'language:'.Settings::Val('language');
+				foreach( Settings::getSettingsForUser( Auth::whoLoggedID() ) as $setsA){
+					echo Settings::buildHTMLsetting($setsA);
+				}
+			//var_dump(Settings::getSettingsForUser(Auth::whoLoggedID()));
+			}else{
+			Settings::InitUserSettings(Auth::whoLoggedID());
+			}
+			?>
 				</div>
 
 				
 				<input type="submit" value="Send"/>
-				<input type="hidden" name="action" value="tagsInputStyle">
+				<input type="hidden" name="action" value="saveSettingsAll">
 				</form>
 			</p>
         </div>
