@@ -361,6 +361,7 @@ position:relative;
 			<input type="radio" name="favShow" value="favShowIconNot" <?=$favNotShow?>> Do not show favicons
 			</label>
 			</div>
+			<div>here be options</div>
 				</fieldset>
 				</div>
 
