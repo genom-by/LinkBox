@@ -221,7 +221,7 @@ class HTML{
 /* ==============================
 *								getTableItems
 * ============================== */	
-	public static function getTableItems($table, $id=null, $parentOnly=false){
+	public static function getTableItems($table, $id=null, $parentOnly=false, $offset=0){
 		
 	$htmlTable = '';	
 	
@@ -237,12 +237,10 @@ class HTML{
 			$btnDel = self::createDELTablebutton('link', $item['id_link']);		
 					$id_link = $item['id_link'];
 					$id_folder = $item['id_folder'];
-						$sel_folder = self::getSelectItems('folder',$item['id_folder']);
-						$html_folder = "<select>{$sel_folder}</select>";
+						//$sel_folder = self::getSelectItems('folder',$item['id_folder']); 	//$html_folder = "<select>{$sel_folder}</select>";
 						$folderName = $folders[$id_folder];	//test
 					$url = LinkHandler::wrapUrl($item['url']);
-					$title = $item['title'];
-					$id_user = $item['id_user'];
+					$title = $item['title'];	//$id_user = $item['id_user'];
 					$created = date("M j, Y", $item['created'] );
 					$lastVisited = date("M j, Y", $item['lastVisited'] );
 					$isShared = $item['isShared'];
@@ -262,61 +260,85 @@ $htmlItem = "<tr id='link_id_{$id_link}'><td>{$favicon}</td><td><a class='simple
 		}
 		break;
 		case 'linkMainPage':{
-			if($id==null){
-				$list = Link::getAll() ; //'SELECT id_link, id_folder, url, id_user, created, lastVisited, isShared, title from link'
+		
+			if($id==null OR $id=='all'){
+				$list = Link::fetchLinks(0, $offset);
+				//$list = Link::getAll() ; //'SELECT id_link, id_folder, url, id_user, created, lastVisited, isShared, title from link'
 			}else{
 				if($parentOnly){	// get links only for parent folder, not subfolders too
-					$list = Link::getAllWhere("WHERE id_folder={$id}") ;
+					$list = Link::fetchLinks($id, $offset);
 				}else{
 					$subfolders = Folder::getSubFoldersNames($id);
 					if(count($subfolders) > 0){
 						$subfoldersIDs = array_keys($subfolders);
-						$subids = implode(",", $subfoldersIDs);
-						$list = Link::getAllWhere("WHERE id_folder IN ( {$id}, {$subids} )") ;
+						$subfoldersIDs[] = $id;
+						$list = Link::fetchLinks($subfoldersIDs, $offset);
 					}else{
-						$list = Link::getAllWhere("WHERE id_folder={$id}") ;
+						$list = Link::fetchLinks($id, $offset);
 					}				
 				}	
 			}
 						
-			$folders = Folder::getFoldersNames() ; //'SELECT id_folder, folderName, id_user from folder'
 			if(false !== $list){
 				$htmlItem = '';
-				foreach($list as $item){
-			
-			$btnDel = self::createDELTablebutton('link', $item['id_link']);		
-					$id_link = $item['id_link'];
-				$id_folder = $item['id_folder'];					//$sel_folder = self::getSelectItems('folder',$item['id_folder']);
-						//$html_folder = "<select>{$sel_folder}</select>";						
-				$folderName = $folders[$id_folder];	//test
-					$url = LinkHandler::wrapUrl($item['url']);
-					$title = $item['title'];
-					$id_user = $item['id_user'];
-					$created = date("j/M/y", $item['created'] );
-					$lastVisited = date("M j, Y", $item['lastVisited'] );
-					$isShared = $item['isShared'];
-	//"<a class='icon_delete' href='javascript:manageLink(`{$k}`, `delete`);' alt='x' title='Delete'></a>"
-	
-			$tags = Tag::getLinkTags($id_link,'csv');
-					$btnBlock = "<span class='row-buttons'>".
-		"<a class='icon_delete' href='javascript:mainLinkDelete(\"link\", {$id_link});' alt='x' title='Delete'></a>".
-		"<a class='icon_edit' href='javascript:mainLinkEdit(\"link\", {$id_link});' alt='e' title='Edit'></a>".
-		"<a class='icon_sharelbx' href='javascript:manageLink(`{$k}`, `share`);' alt='s' title='Share'></a>".
-		"</span>";
-					$fvsrc = LinkHandler::getFaviconHref($url);
-					$favicon = "<img src='{$fvsrc}' class='simpleFav'></img>";
-					$datablock = "data-attr-fldID='{$id_folder}' data-attr-fld-name='{$folderName}' data-attr-tags='{$tags}'";
-					
-$htmlItem = "<tr id='link_id_{$id_link}' class='lbox-linkrow'><td class='favtd'>{$favicon}</td><td><a class='simpleUrl' href='{$url}' target='_blank' title='{$url}' {$datablock}>{$title}</a></td>"."<td class='datetime' title='last visited: {$lastVisited}'>{$created}</td><td class='btns'>{$btnBlock}</td></tr>";
+				$rows = self::pileLinkRows($list);
 
-					$htmlTable = $htmlTable.$htmlItem.PHP_EOL;
-				}
-				//$selF1 = self::getSelectItems('folder');
-		//$filterSelect = "<select id='filter_link_folder' onChange='filter_link_folder_onChange(filter_link_folder,this.value);'>{$selF1}</select>";
-		$htmlheader = "<thead><tr><th>-</th><th>URL name</th><th>Created</th><th>del</th></tr></thead>";				
-			//return $htmlList;
+			$htmlTable = $htmlTable.$rows;
+		$htmlheader = "<thead><tr><th>-</th><th>URL name</th><th>Created</th><th>del</th></tr></thead>";
+		// pager
+		$pager = self::pagerBlock($table, $id, $parentOnly, $offset);
+		$pagerRow = "<tr><td colspan='4'>{$pager}</td></tr>";
 			$htmlTable = $htmlheader.$htmlTable;
-			}else{$htmlTable = "no data";}			
+			$htmlTable = $htmlTable.$pagerRow;
+			//$htmlTable = $htmlTable1.'test';var_dump($htmlTable);die();
+			}else{$htmlTable = "no data";}
+			
+		}
+		break;
+		case 'linkTagsFiltered':{
+		
+			$list = Link::fetchTaggedLinks($id, $offset);
+
+			if(false !== $list){
+				$htmlItem = '';
+				$rows = self::pileLinkRows($list);
+		if(false === $rows){
+			$htmlTable = "no data";
+			break;
+		}
+			$htmlTable = $htmlTable.$rows;
+		$htmlheader = "<thead><tr><th>-</th><th>URL name</th><th>Created</th><th>del</th></tr></thead>";
+		// pager
+		$pager = self::pagerBlock($table, $id, $parentOnly, $offset);
+		$pagerRow = "<tr><td colspan='4'>{$pager}</td></tr>";
+			$htmlTable = $htmlheader.$htmlTable;
+			$htmlTable = $htmlTable.$pagerRow;
+			//$htmlTable = $htmlTable1.'test';var_dump($htmlTable);die();
+			}else{$htmlTable = "no data";}
+			
+		}
+		break;
+		case 'linkSearchMain':{
+		
+			$list = Link::searchLinks($id, $offset);
+
+			if(false !== $list){
+				$htmlItem = '';
+				$rows = self::pileLinkRows($list);
+		if(false === $rows){
+			$htmlTable = "no data";
+			break;
+		}
+			$htmlTable = $htmlTable.$rows;
+		$htmlheader = "<thead><tr><th>-</th><th>URL name</th><th>Created</th><th>del</th></tr></thead>";
+		// pager
+		$pager = self::pagerBlock($table, $id, $parentOnly, $offset);
+		$pagerRow = "<tr><td colspan='4'>{$pager}</td></tr>";
+			$htmlTable = $htmlheader.$htmlTable;
+			$htmlTable = $htmlTable.$pagerRow;
+			//$htmlTable = $htmlTable1.'test';var_dump($htmlTable);die();
+			}else{$htmlTable = "no data";}
+			
 		}
 		break;
 		case 'tag':{
@@ -335,14 +357,8 @@ $htmlItem = "<tr id='tag_id_{$item['id_tag']}'><td class='rowtxt' orm='tagName'>
 			}else{$htmlTable = "no data";}			
 		}
 		break;
-		case 'folder':
-		case 'parentfolder':
-		{
-			if($table=='folder'){
-				$list = Folder::getAll() ; //'SELECT id_folder, folderName, id_user from folder';
-			}elseif($table=='parentfolder'){
-				$list = Folder::getAllParents() ; //'SELECT id_folder, folderName, id_user from folder';
-			}
+		case 'folder':{
+			$list = Folder::getAll() ;
 			if(false !== $list){
 				$htmlItem = '';
 				foreach($list as $item){
@@ -415,11 +431,95 @@ $htmlItem = "<tr id='folder_id_{$item['id_folder']}'><td class='rowtxt' orm='fol
 	return $htmlTable;
 	}
 	
+	/* create table rows for Links array
+	*/
+	public static function pileLinkRows($linksArray){
+		$rw = '';
+		
+		$folders = Folder::getFoldersNames() ; //'SELECT id_folder, folderName, id_user from folder'
+		$settShowFavicon = Settings::Val('showFawIcons');
+		if( $settShowFavicon == 'n' ){$showFvIc = false;}else{$showFvIc = true;}
+		
+		foreach($linksArray as $item){
+		
+		$btnDel = self::createDELTablebutton('link', $item['id_link']);		
+				$id_link = $item['id_link'];
+			$id_folder = $item['id_folder'];					//$sel_folder = self::getSelectItems('folder',$item['id_folder']);
+					//$html_folder = "<select>{$sel_folder}</select>";						
+			$folderName = $folders[$id_folder];	//test
+				$url = LinkHandler::wrapUrl($item['url']);
+				$title = $item['title'];
+				$id_user = $item['id_user'];
+				$created = date("j/M/y", $item['created'] );
+				$lastVisited = date("M j, Y", $item['lastVisited'] );
+				$isShared = $item['isShared'];
+//"<a class='icon_delete' href='javascript:manageLink(`{$k}`, `delete`);' alt='x' title='Delete'></a>"
+
+		$tags = Tag::getLinkTags($id_link,'csv');
+				$btnBlock = "<span class='row-buttons'>".
+	"<a class='icon_delete' href='javascript:mainLinkDelete(\"link\", {$id_link});' alt='x' title='Delete'></a>".
+	"<a class='icon_edit' href='javascript:mainLinkEdit(\"link\", {$id_link});' alt='e' title='Edit'></a>".
+	"<a class='icon_sharelbx' href='javascript:manageLink(`{$k}`, `share`);' alt='s' title='Share'></a>".
+	"</span>";
+
+				if($showFvIc){
+					$fvsrc = LinkHandler::getFaviconHref($url);					
+					$favicon = "<img src='{$fvsrc}' class='simpleFav'></img>";}else{
+					$fvsrc = LinkHandler::getNoFaviconHref();
+					$favicon = "<img src='{$fvsrc}' class='simpleFav'></img>";
+				}
+				$datablock = "data-attr-fldID='{$id_folder}' data-attr-fld-name='{$folderName}' data-attr-tags='{$tags}'";
+				
+$htmlItem = "<tr id='link_id_{$id_link}' class='lbox-linkrow'><td class='favtd'>{$favicon}</td><td><a class='simpleUrl' href='{$url}' target='_blank' title='{$url}' {$datablock}>{$title}</a></td>"."<td class='datetime' title='last visited: {$lastVisited}'>{$created}</td><td class='btns'>{$btnBlock}</td></tr>";
+
+				$rw = $rw.$htmlItem.PHP_EOL;
+			}
+		return $rw;
+	}
+	
 	/* create link node with favicon
 	*/
 	public static function favicon(){
 		$fv = "<link rel='shortcut icon' href='favicon.ico' type='image/x-icon' />";
 		return $fv;
+	}
+	/* create tag node block
+	*/
+	public static function tagBlock($tags, $showLinkBtn = true){
+		$HTMLtagsNode = '';
+		if( ! empty($tags) ){
+			foreach($tags as $tag){
+				$tagName = $tag['tagName'];
+				$tagID = $tag['tagID'];
+				$tagCount = $tag['tagCount'];
+			$entry = "<input type='checkbox' name='tagsFiltered'> {$tagName} <span class='badge'>{$tagCount}</span>";
+				$HTMLtagsNode = $HTMLtagsNode."<label class='btn btn-xs btn-info' data-tagID='{$tagID}'>{$entry}</label>";
+			}
+			if($showLinkBtn){
+				$divLinkFilter = "<div class='clearfix'></div><div><a id='ttTagAlert' href='#' data-toggle='tooltip' data-placement='left' title='Select some tags'></a><button class='btn_taglinkFilter' type='button' onClick='btn_taglinkFilterClick();' >Show links</button></div>";
+				//$divPopOver = "<button type='button' class='btn btn-warning'   title='Select some tags' ></button>";
+				$HTMLtagsNode = $HTMLtagsNode.$divLinkFilter;
+			}
+				
+			}else{
+				$HTMLtagsNode = "<label class='btn btn-info'> No tags yet</label>";
+			}
+		return $HTMLtagsNode;
+	}
+		
+	/* create pager block
+	*/
+	public static function pagerBlock($table, $id, $parentOnly, $offset){
+		
+		$linksPerPage = Settings::Val('pagerLimit');	//offset == $offset		//LiLogger::log("got val {$linksCount}");
+		if($linksPerPage === false){$linksPerPage = 0;}
+		
+		$nextOff = $offset + $linksPerPage;
+		$prevOf = $offset - $linksPerPage;
+		if( $prevOf < 0 ){ $prevOf = 0; }
+		
+		$block = "<ul class='pager' data-tblname='{$table}' data-fldid='{$id}' data-paronly='{$parentOnly}' onClick='pagerClicked(event)'><li><a href='#' data-value='l_prev' data-offset='{$prevOf}'>&lt;&nbsp; Previous</a></li><li><a href='#' data-value='l_all' data-offset='0'>All</a></li><li><a href='#' data-value='l_next' data-offset='{$nextOff}'>Next&nbsp;&gt;</a></li></ul>";
+		return $block;
 	}
 	
 	

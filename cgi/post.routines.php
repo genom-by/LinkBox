@@ -4,6 +4,7 @@ namespace lbx;
 include_once 'auth.inc.php';
 include_once 'utils.inc.php';
 include_once 'dbObjects.class.php';
+include_once 'settings.class.php';
 include_once 'HTMLroutines.class.php';
 
 function returnPOSTError($err_msg="unpredicted error"){
@@ -50,7 +51,7 @@ if( Auth::notLogged() ){
 }
 /* HTML / js requests processing
 */
-function dispatchPageUpdate($table, $id=null){
+function dispatchPageUpdate($table, $id=null, $offset=0){
 
 	$err = ''; //\LinkBox\Logger::log("table: {$table} id: {$id}") ;
 	
@@ -62,25 +63,48 @@ if( Auth::notLogged() ){
 
 	switch($table){
 		case 'link_folder':
+		case 'linkMainPage':
 		case 'link_folder_parOnly':
 			//$seqstats = sequencesStations::getSeqStatNamesBySequenceID($_POST['id']);
 			//$links = HTML::getTableItems($_POST['id']);
 			if($id=='all'){
-				$links = HTML::getTableItems('linkMainPage');
+				$links = HTML::getTableItems('linkMainPage',0,0,$offset);
 			}else{
 				if($table == 'link_folder_parOnly'){
-					$links = HTML::getTableItems('linkMainPage', $id, true);			
+					$links = HTML::getTableItems('linkMainPage', $id, true,$offset);			
 				}else{
-					$links = HTML::getTableItems('linkMainPage', $id);			
+					$links = HTML::getTableItems('linkMainPage', $id,0,$offset);			
 				}
 
 			}
 			if(false === $links){returnPOSTError('could not obtain links');die();}
 			else{
-				//$seqstats = HTML::getPitStopsEditRows($seqstats);
 				echo json_encode(array('result'=>'ok', 'payload'=>$links) );
 				die();
 				}
+		break;
+		
+		case 'linkTagsFiltered':
+			//$links = HTML::fetchTaggedLinks($id,$offset,'');	//id - tags string
+			$links = HTML::getTableItems('linkTagsFiltered', $id, false,$offset);
+			if(false === $links){returnPOSTError('could not obtain links');die();}
+			else{
+				echo json_encode(array('result'=>'ok', 'payload'=>$links) );
+				die();
+				}
+		break;
+		
+		case 'linkSearchMain':
+			//$links = HTML::fetchTaggedLinks($id,$offset,'');	//id - links string
+			$links = HTML::getTableItems('linkSearchMain', $id, false,$offset);
+			if(false === $links){returnPOSTError('could not obtain links');die();}
+			else{
+				echo json_encode(array('result'=>'ok', 'payload'=>$links) );
+				die();
+				}
+		break;
+		
+		case 'reserved':
 		break;
 	default:
 		$res = false;
@@ -277,15 +301,33 @@ function dispatchInquire($table, $id, $question){
 				die();
 				}
 		break;
-		case 'pageTitle':
-			//$seqstats = sequencesStations::getSeqStatNamesBySequenceID($_POST['id']);
-			$title = LinkHandler::getSiteTitle($table);
-			if(false === $title){returnPOSTError('no page title');die();}
+		case 'tagsearchlike':
+			$tags = Tag::searchTags($_POST['table']);
+			$tblock = HTML::tagBlock($tags);
+			if(false === $tblock){returnPOSTError('could not obtain tags searched');die();}
 			else{
 				//$seqstats = HTML::getPitStopsEditRows($seqstats);
-				echo json_encode(array('result'=>'ok', 'payload'=>$title) );
+				echo json_encode(array('result'=>'ok', 'payload'=>$tblock) );
 				die();
 				}
+		break;
+		case 'pageTitle':
+			$settGetTitle = Settings::Val('fetchSiteTitle');
+			if( $settGetTitle == 'n' ){
+				// settings is: don't obtain
+				//returnPOSTError('settings restrictions');die();
+				echo json_encode(array('result'=>'failed', 'payload'=>'settings restrictions') );
+				die();				
+			}else{
+				// setting is: obtain
+				$title = LinkHandler::getSiteTitle($table);
+				if(false === $title){returnPOSTError('no page title');die();}
+				else{
+					echo json_encode(array('result'=>'ok', 'payload'=>$title) );
+					die();
+					}				
+			}
+
 		break;
 	default:
 		$res = false;
@@ -307,7 +349,9 @@ if(!empty($_POST['id'])){
 	$err = "unpredicted error";
 	
 if(! is_numeric($_POST['id'])){
-	if($_POST['id'] != 'all'){
+	if( ($_POST['id'] != 'all') OR ($_POST['table'] != 'linkTagsFiltered') ){
+		;
+	}else{
 		$res = false;
 		$err = "id should be numeric";
 		returnPOSTError($err);
@@ -324,7 +368,7 @@ if(! is_numeric($_POST['id'])){
 		break;
 		
 		case 'pageUpdate':
-			$res = dispatchPageUpdate($_POST['table'], $_POST['id']);
+			$res = dispatchPageUpdate($_POST['table'], $_POST['id'], $_POST['offset']);
 		break;
 		
 		case 'inquire':

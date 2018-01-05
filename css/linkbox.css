@@ -300,6 +300,17 @@ span.glyphicon-edit{
 	background-color:orange !important;
 	outline:1px solid red;	
 }
+.btntagsearch{
+	width: 18%;
+	float: right;
+}
+#tagsearch{
+	width: 80%;
+	height: 26px;
+}
+.tagSearcgDiv{
+	padding-top:0;
+}
 /* ... loading ...
 .loading{
  margin: 10% auto;

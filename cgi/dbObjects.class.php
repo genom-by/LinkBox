@@ -244,7 +244,7 @@ public static function getEntriesArrayBySQL($sql, $ref=-1){
 	/* 
 	returns all records for inherited class based on static sql query
 	*/
-	public static function getAll(){
+	public static function getAll($limitSQL=''){
 	## REFACTOR - user
 		if(!empty(static::$sqlGetAllOrdered)){$sql = static::$sqlGetAllOrdered;
 		}else{$sql = static::$sqlGetAll;}
@@ -261,7 +261,7 @@ public static function getEntriesArrayBySQL($sql, $ref=-1){
 		$userWhere = static::buildUserWhereClause();
 		$orderby = static::buildORDERBYClause();
 		
-		$user_sql = static::$sqlGetAll.' '.$userWhere.' '.$orderby;
+		$user_sql = static::$sqlGetAll.' '.$userWhere.' '.$orderby.' '.$limitSQL;
 		/*$order_position = strpos($sql, 'ORDER BY');
 		if(false !== $order_position){
 			$order = substr($sql, $order_position);
@@ -276,7 +276,7 @@ public static function getEntriesArrayBySQL($sql, $ref=-1){
 	/*
 	returns filtered records for inherited class based on static sql query and provided filter
 	*/
-	public static function getAllWhere($whereSQL){
+	public static function getAllWhere($whereSQL, $limitSQL=''){
 		if(empty($whereSQL)){self::$errormsg = "DBObject[getAllWhere] no where clause"; return false;}
 		$where_position = strpos($whereSQL, 'WHERE');
 		if(false === $where_position){
@@ -306,7 +306,7 @@ public static function getEntriesArrayBySQL($sql, $ref=-1){
 			$user_sql = $sql;
 		}
 		//LiLogger::log('usersql where: '.$user_sql);
-		$user_sql = $user_sql.' '.$orderby;
+		$user_sql = $user_sql.' '.$orderby.' '.$limitSQL;
 		
 		return self::getEntriesArrayBySQL($user_sql);		
 	}
@@ -385,7 +385,7 @@ public static function getEntriesArrayBySQL($sql, $ref=-1){
 		$table_idcolumn_id = Utils::cleanInput($table_idcolumn_id);
 		$sql = "SELECT COUNT ({$table_col_id}) FROM {$table} {$user_sql_where}";
 
-LiLogger::log('count sql: '.$sql);		
+		//LiLogger::log('count sql: '.$sql);		
 		$db = LinkBox\DataBase::connect(); //get raw connection		
 		$conn = $db::getPDO(); //get raw connection
 		$count = $conn->query($sql)->fetchColumn();
@@ -559,6 +559,12 @@ instead fn getAllParents()
 */	
 	public static function getParentsFoldersAndCounts(){
 		
+		if( ! Auth::whoLoggedID() ){
+			self::$errormsg = 'User not logged';
+			//LiLogger::log( self::$errormsg );
+			return false;			
+		}
+		
 		try{
 		$db = LinkBox\DataBase::connect();
 
@@ -581,6 +587,12 @@ instead fn getAllParents()
 */	
 	public static function getFoldersArray(){
 		
+		if( ! Auth::whoLoggedID() ){
+			self::$errormsg = 'User not logged';
+			LiLogger::log( "[Folder]getFoldersArray::".self::$errormsg );
+			return false;			
+		}
+		
 		$rows = array();
 		$onerow = array();
 		$totalLinksCount = 0;
@@ -588,8 +600,8 @@ instead fn getAllParents()
 		//$parents = self::getAllParents();
 		$parents = self::getParentsFoldersAndCounts();
 		if(false === $parents OR count($parents) < 1){
-			self::$errormsg = 'error fetching parent folders: '.self::$errormsg;//LinkBox\DataBase::$errormsg;
-			LiLogger::log( self::$errormsg );
+			self::$errormsg = '[Folder]getFoldersArray::error fetching parent folders: '.self::$errormsg;//LinkBox\DataBase::$errormsg;
+			LiLogger::log( "[Folder]getFoldersArray::".self::$errormsg );
 			return false;		
 		}
 
@@ -598,7 +610,7 @@ instead fn getAllParents()
 		
 			if(false === $sub){
 				self::$errormsg = 'error fetching sub folders: '.self::$errormsg;//LinkBox\DataBase::$errormsg;
-				LiLogger::log( self::$errormsg );
+				LiLogger::log( "[Folder]getFoldersArray::".self::$errormsg );
 				return false;		
 			}		
 
@@ -716,10 +728,64 @@ class Tag extends DBObject{
 		try{
 		$db = LinkBox\DataBase::connect();
 	
-		$sql = "SELECT  tagName, COUNT(id_link) as tagCount FROM tags LEFT JOIN tags_link ON tags.id_tag = tags_link.id_tag WHERE tags.id_user=:uid GROUP BY tagName ";
+		$sql = "SELECT  tags.id_tag as tagID, tagName, COUNT(id_link) as tagCount FROM tags LEFT JOIN tags_link ON tags.id_tag = tags_link.id_tag WHERE tags.id_user=:uid GROUP BY tagName ";
 		
 		$stmt = $db->connection->prepare($sql);
 		$stmt->bindValue(':uid', Auth::whoLoggedID());
+		$stmt->execute();
+
+		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		}catch(PDOException $e){
+			self::$errormsg = 'error fetching tags count: '.$e->getMessage();//LinkBox\DataBase::$errormsg;
+			LiLogger::log( self::$errormsg );
+			return false;			
+		}
+		return $rows;
+	}
+/*	==	search tags	==	*/
+	public static function searchTags($needle){
+		if( empty($needle) ){return false;}
+		//get needless if there are some
+		if( false !== strpos($needle, ',') ){
+			$arrN = explode(',',$needle);
+			$tcount = count( $arrN );
+		}else{
+			$tcount = 1;
+		}
+		try{
+		$db = LinkBox\DataBase::connect();
+	
+		if($tcount == 1){
+			$sql = "SELECT tags.id_tag as tagID, tagName, COUNT(id_link) as tagCount FROM tags LEFT JOIN tags_link ON tags.id_tag = tags_link.id_tag WHERE tags.id_user=:uid AND tagName LIKE :needle GROUP BY tagName ";
+		}elseif($tcount == 2){
+			$sql = "SELECT tags.id_tag as tagID, tagName, COUNT(id_link) as tagCount FROM tags LEFT JOIN tags_link ON tags.id_tag = tags_link.id_tag WHERE tags.id_user=:uid AND tagName LIKE :needle1 OR tagName LIKE :needle2 GROUP BY tagName ";
+		}elseif($tcount == 3){
+			$sql = "SELECT tags.id_tag as tagID, tagName, COUNT(id_link) as tagCount FROM tags LEFT JOIN tags_link ON tags.id_tag = tags_link.id_tag WHERE tags.id_user=:uid AND tagName LIKE :needle1 OR tagName LIKE :needle2 OR tagName LIKE :needle3 GROUP BY tagName ";
+		}elseif($tcount >= 4){
+			$sql = "SELECT tags.id_tag as tagID, tagName, COUNT(id_link) as tagCount FROM tags LEFT JOIN tags_link ON tags.id_tag = tags_link.id_tag WHERE tags.id_user=:uid AND tagName LIKE :needle1 OR tagName LIKE :needle2 OR tagName LIKE :needle3 OR tagName LIKE :needle4 GROUP BY tagName ";
+		}
+		
+		$stmt = $db->connection->prepare($sql);
+		$stmt->bindValue(':uid', Auth::whoLoggedID());
+		if($tcount == 1){
+			$stmt->bindValue(':needle', "%{$needle}%", PDO::PARAM_STR);
+		}elseif($tcount == 2){
+			$n1 = $arrN[0];	$n2 = $arrN[1];
+			$stmt->bindValue(':needle1', "%{$n1}%", PDO::PARAM_STR);
+			$stmt->bindValue(':needle2', "%{$n2}%", PDO::PARAM_STR);
+		}elseif($tcount == 3){
+			$n1 = $arrN[0];	$n2 = $arrN[1]; $n3 = $arrN[2];
+			$stmt->bindValue(':needle1', "%{$n1}%", PDO::PARAM_STR);
+			$stmt->bindValue(':needle2', "%{$n2}%", PDO::PARAM_STR);
+			$stmt->bindValue(':needle3', "%{$n3}%", PDO::PARAM_STR);			
+		}elseif($tcount >= 4){
+			$n1 = $arrN[0];	$n2 = $arrN[1]; $n3 = $arrN[2];; $n4 = $arrN[3];
+			$stmt->bindValue(':needle1', "%{$n1}%", PDO::PARAM_STR);
+			$stmt->bindValue(':needle2', "%{$n2}%", PDO::PARAM_STR);
+			$stmt->bindValue(':needle3', "%{$n3}%", PDO::PARAM_STR);
+			$stmt->bindValue(':needle4', "%{$n4}%", PDO::PARAM_STR);
+		}
+		
 		$stmt->execute();
 
 		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -957,6 +1023,179 @@ class Link extends DBObject{
 			return false;			
 		}
 		return true;
+	}
+/* get links for desired folder(s), needed offset */
+	public static function fetchLinks($folderIds=0, $offset=0, $sorting=''){
+		
+		$linksCount = Settings::Val('pagerLimit');	//offset == $offset		//LiLogger::log("got val {$linksCount}");
+		if($linksCount === false){$linksCount = 0;}
+		if(empty($offset) ){$offset = 0;}
+		
+		if($linksCount == 0){$limitSQL = '';
+		}else{$limitSQL = "LIMIT {$linksCount} OFFSET {$offset}";}
+		if($offset == -2){$limitSQL = '';}	//no limit		//LiLogger::log("limitSQL {$limitSQL} folderIds {$folderIds}");
+		if( empty($folderIds) ){
+			$list = Link::getAll($limitSQL);
+		}else{
+			if( is_int($folderIds) OR is_string($folderIds) ){
+				$list = Link::getAllWhere("WHERE id_folder={$folderIds}", $limitSQL) ;
+			}elseif( is_array($folderIds) ){
+				$idsString = implode(",", $folderIds);
+				$list = Link::getAllWhere("WHERE id_folder IN ( {$idsString} )", $limitSQL) ;
+			}else{
+				self::$errormsg = 'Could not fetch links.';
+				return false;
+			}
+		}
+		return $list;
+		
+	}
+/* search links for given needle, needed offset 
+$needle is a stringified csv array */
+	public static function searchLinks($needle, $offset=0, $sorting=''){
+
+		if( empty($needle) ){return false;}
+		
+		$linksCount = Settings::Val('pagerLimit');	//offset == $offset		//LiLogger::log("got val {$linksCount}");
+		if($linksCount === false){$linksCount = 0;}
+		if(empty($offset) ){$offset = 0;}
+		
+		if($linksCount == 0){$limitSQL = '';
+		}else{$limitSQL = "LIMIT {$linksCount} OFFSET {$offset}";}
+		if($offset == -2){$limitSQL = '';}	//no limit		//LiLogger::log("limitSQL {$limitSQL} folderIds {$folderIds}");
+		
+		//get needless if there are some
+		if( false !== strpos($needle, ',') ){
+			$arrN = explode(',',$needle);
+			$tcount = count( $arrN );
+		}else{
+			$tcount = 1;
+		}
+		try{
+		$db = LinkBox\DataBase::connect();
+	
+		if($tcount == 1){
+			$sql = "SELECT DISTINCT(link.id_link), id_folder, url, id_user, created, lastVisited, isShared, title 
+from link LEFT JOIN tags_link ON link.id_link = tags_link.id_link WHERE link.id_user=:uid
+AND title LIKE :needle1 ORDER BY title COLLATE NOCASE".' '.$limitSQL;
+		}elseif($tcount == 2){
+			$sql = "SELECT DISTINCT(link.id_link), id_folder, url, id_user, created, lastVisited, isShared, title 
+from link LEFT JOIN tags_link ON link.id_link = tags_link.id_link WHERE link.id_user=:uid
+AND title LIKE :needle1 OR title LIKE :needle2 ORDER BY title COLLATE NOCASE".' '.$limitSQL;
+		}elseif($tcount == 3){
+			$sql = "SELECT DISTINCT(link.id_link), id_folder, url, id_user, created, lastVisited, isShared, title 
+from link LEFT JOIN tags_link ON link.id_link = tags_link.id_link WHERE link.id_user=:uid
+AND title LIKE :needle1 OR title LIKE :needle2 OR title LIKE :needle3 ORDER BY title COLLATE NOCASE".' '.$limitSQL;
+		}elseif($tcount >= 4){
+			$sql = "SELECT DISTINCT(link.id_link), id_folder, url, id_user, created, lastVisited, isShared, title 
+from link LEFT JOIN tags_link ON link.id_link = tags_link.id_link WHERE link.id_user=:uid
+AND title LIKE :needle1 OR title LIKE :needle2 OR title LIKE :needle3 OR title LIKE :needle4 ORDER BY title COLLATE NOCASE".' '.$limitSQL;
+		}
+		
+		$stmt = $db->connection->prepare($sql);
+		$stmt->bindValue(':uid', Auth::whoLoggedID());
+		if($tcount == 1){
+			$stmt->bindValue(':needle1', "%{$needle}%", PDO::PARAM_STR);
+		}elseif($tcount == 2){
+			$n1 = $arrN[0];	$n2 = $arrN[1];
+			$stmt->bindValue(':needle1', "%{$n1}%", PDO::PARAM_STR);
+			$stmt->bindValue(':needle2', "%{$n2}%", PDO::PARAM_STR);
+		}elseif($tcount == 3){
+			$n1 = $arrN[0];	$n2 = $arrN[1]; $n3 = $arrN[2];
+			$stmt->bindValue(':needle1', "%{$n1}%", PDO::PARAM_STR);
+			$stmt->bindValue(':needle2', "%{$n2}%", PDO::PARAM_STR);
+			$stmt->bindValue(':needle3', "%{$n3}%", PDO::PARAM_STR);			
+		}elseif($tcount >= 4){
+			$n1 = $arrN[0];	$n2 = $arrN[1]; $n3 = $arrN[2];; $n4 = $arrN[3];
+			$stmt->bindValue(':needle1', "%{$n1}%", PDO::PARAM_STR);
+			$stmt->bindValue(':needle2', "%{$n2}%", PDO::PARAM_STR);
+			$stmt->bindValue(':needle3', "%{$n3}%", PDO::PARAM_STR);
+			$stmt->bindValue(':needle4', "%{$n4}%", PDO::PARAM_STR);
+		}
+		
+		$stmt->execute();
+
+		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		}catch(PDOException $e){
+			self::$errormsg = 'error searching link: '.$e->getMessage();//LinkBox\DataBase::$errormsg;
+			LiLogger::log( self::$errormsg );
+			return false;			
+		}
+		return $rows;
+	
+	}
+	
+/* get links for desired folder(s), needed offset 
+$tags is a stringified csv array */
+	public static function fetchTaggedLinks($tags, $offset=0, $sorting=''){
+				if( empty($tags) ){return false;}
+		$tags = Utils::cleanInput($tags);	
+		$linksCount = Settings::Val('pagerLimit');	//offset == $offset		//LiLogger::log("got val {$linksCount}");
+		if($linksCount === false){$linksCount = 0;}
+		if(empty($offset) ){$offset = 0;}
+		
+		if($linksCount == 0){$limitSQL = '';
+		}else{$limitSQL = "LIMIT {$linksCount} OFFSET {$offset}";}
+		if($offset == -2){$limitSQL = '';}	//no limit		//LiLogger::log("limitSQL {$limitSQL} folderIds {$folderIds}");
+		
+		$arrP = array();
+		//get tags if there are some
+		if( false !== strpos($tags, ',') ){
+			$arrN = explode(',',$tags);
+			$tcount = count( $arrN );
+			foreach($arrN as $t){
+				$p = Utils::cleanInput($t);
+				$p = intval($p);
+				if( !empty( $p )){$arrP[] = $p;}
+			}
+			$tcount = count( $arrP );
+			$tags = implode(',',$arrP);
+		}else{
+			$tcount = 1;
+		}
+		try{
+		$db = LinkBox\DataBase::connect();
+
+		if($tcount == 1){
+			$sql = 'SELECT DISTINCT(link.id_link), id_folder, url, id_user, created, lastVisited, isShared, title 
+from link LEFT JOIN tags_link ON link.id_link = tags_link.id_link WHERE link.id_user=:uid
+AND id_tag = :tag ORDER BY title COLLATE NOCASE'.' '.$limitSQL;
+		}elseif($tcount >= 2){
+			$sql = "SELECT DISTINCT(link.id_link), id_folder, url, id_user, created, lastVisited, isShared, title 
+from link LEFT JOIN tags_link ON link.id_link = tags_link.id_link WHERE link.id_user=:uid
+AND id_tag IN( {$tags} ) ORDER BY title COLLATE NOCASE".' '.$limitSQL;
+		}
+
+$db->connection->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING );
+
+		$stmt = $db->connection->prepare($sql);
+		if (!$stmt) {
+		//echo "\PDO::errorInfo():\n";
+		//print_r($db->connection->errorInfo());
+			$err = $db->connection->errorInfo();
+			$err = $err.PDO::errorInfo();
+			self::$errormsg = 'error preparing statement: '.$err;//LinkBox\DataBase::$errormsg;
+			LiLogger::log( self::$errormsg );
+		}
+
+		$stmt->bindValue(':uid', Auth::whoLoggedID(), PDO::PARAM_INT);
+		if($tcount == 1){
+			$stmt->bindValue(':tag', $tags, PDO::PARAM_INT);
+		}		
+		$stmt->execute();
+
+		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		}catch(PDOException $e){
+			self::$errormsg = 'error fetching links: '.$e->getMessage();//LinkBox\DataBase::$errormsg;
+			LiLogger::log( self::$errormsg );
+			return false;			
+		}
+		
+		if(count($rows) < 1){
+			return false;
+		}else{
+			return $rows;
+		}
 	}
 } //Link end
 

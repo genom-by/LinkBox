@@ -71,7 +71,6 @@ if(!empty($_POST['action'])){
 		
 	break;
 	case 'saveSettingsAll':
-		//echo 'tag';	//var_dump($_POST);
 
 			$retval = Settings::SaveSettings($_POST);
 			
@@ -283,11 +282,31 @@ position:relative;
 			</div>
         </div>
         <div id="sectionB" class="tab-pane fade">
+		    <div id='tagsPanel'>
+			<ul class="nav nav-tabs">
+			<li class="active"><a data-toggle="tab" href="#tagsCloud">Tags' cloud</a></li>
+			<li><a data-toggle="tab" href="#tagsEdit">View & Edit Tags</a></li>
+			</ul>
+			<div class="tab-content">
+				<div id="tagsCloud" class="tab-pane fade in active">
+				<fieldset>
+			<?php $tags = Tag::getTagsAndCounts();
+			echo HTML::tagBlock($tags, false);?>
+				</fieldset>	
+				</div>
+				<div id="tagsEdit" class="tab-pane fade">
+				<fieldset>
             <p>
 			<table class="table table-striped table-hover table-condensed small">
-<?php echo HTML::getTableItems('tag');?>
-</table>
-			</p>
+			<?php echo HTML::getTableItems('tag');?>
+			</table>
+			</p>		
+				</fieldset>	
+				</div>
+			</div>
+			</div>
+			
+
         </div>
         <div id="sectionC" class="tab-pane fade">
             <div id='linksPanel'>
@@ -341,58 +360,14 @@ position:relative;
         </div>
 		<div id="sectionD" class="tab-pane fade">
             <p>
-			<table class="table table-striped table-hover table-condensed small">
-			</table>
-			<?php $tagStyleSet = Settings::Val('tagsInputStyle');
-				$pill = ''; $simpl = '';
-				if($tagStyleSet=='pillbox'){$pill='checked';}elseif($tagStyleSet=='simple'){$simpl='checked';}
-				$favShowSet = Settings::Val('faviconShowMain');
-				$favShow = ''; $favNotShow = '';
-				if($favShowSet=='favShow'){$favShow='checked';}elseif($favShowSet=='favNotShow'){$favNotShow='checked';}
-			?>
+			
 				<form name="formSettings" method="post">					
 				<div class="form-group">
-				<fieldset class='optsimple'>				
-			<label class="control-label col-xs-3">Tags input style:</label>
-			<div class="col-xs-6">
-			<label class="radio-inline">
-			<input type="radio" name="tagsInputStyleRad" value="pillbox" <?=$pill?>> Pillbox
-			</label>
-			</div>
-			<div class="col-xs-6">
-			<label class="radio-inline">
-			<input type="radio" name="tagsInputStyleRad" value="simple" <?=$simpl?>> Simple (for old browsers)
-			</label>
-			</div>
-				</fieldset>				
-				<fieldset class='optsimple'>				
-			<label class="control-label col-xs-3">Show favicons for links:</label>
-			<div class="col-xs-6">
-			<label class="radio-inline">
-			<input type="radio" name="favShow" value="favShowIcon" <?=$favShow?>> Show favicons
-			</label>
-			</div>
-			<div class="col-xs-6">
-			<label class="radio-inline">
-			<input type="radio" name="favShow" value="favShowIconNot" <?=$favNotShow?>> Do not show favicons
-			</label>
-			</div>
-				</fieldset>			
+		
 			<?php
-			if(Settings::HasUserSettings(Auth::whoLoggedID())){
-			?><p>User has settings</p><?
-			//echo 'language:'.Settings::Val('language');
-				foreach( Settings::getSettingsForUser( Auth::whoLoggedID() ) as $setsA){
-					echo Settings::buildHTMLsetting($setsA);
-				}
-			//var_dump(Settings::getSettingsForUser(Auth::whoLoggedID()));
-			}else{
-			Settings::InitUserSettings(Auth::whoLoggedID());
-			}
+				echo Settings::HTMLsettingsBlock(Auth::whoLoggedID());
 			?>
-				</div>
-
-				
+				</div>	
 				<input type="submit" value="Send"/>
 				<input type="hidden" name="action" value="saveSettingsAll">
 				</form>

@@ -27,7 +27,7 @@ class App{
 	'customize' => 'customize.php',
 	'noscript' 	=> 'noscript.php',
 	'options' 	=> 'options.php',
-	'profile' 	=> 'cgi/profile.php',
+	'profile' 	=> 'profile.php',
 	'settings' 	=> 'cgi/settings.php',
 	'howto' 	=> 'cgi/howto.php'
 	);	
@@ -36,8 +36,7 @@ class App{
 	protected static $topMenuPages = array(
 	'options'	=>'Customize',
 	'noscript'	=>'NoScript',
-	'profile'	=>'Profile',
-	'howto'		=>'How to use'
+	'profile'	=>'Profile'
 	);
 
 	public static function getTopMenuPagesArr(){

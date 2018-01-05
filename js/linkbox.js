@@ -377,6 +377,8 @@ function mainLinkEdit(table_, id_entry){
 
 if( $('#editMPformOpeningStatus').val() != 'closed' ){
 	console.info('editing form is opened now');
+	// UI change
+	callCancelEditLink();
 	return;
 }
 
@@ -504,6 +506,52 @@ function inquirePageTitle(pageurl){
 		,"json"
 	);
 }
+function pagerClicked(ev){
+	
+	//console.log(ev.target);
+	
+	var dest_ = $(ev.target).attr('data-value');	
+	var offset_ = $(ev.target).attr('data-offset');	
+	var id_ = $(ev.target).closest('ul').attr('data-fldid');	
+	var table_ = $(ev.target).closest('ul').attr('data-tblname');	
+	var parOnly = $(ev.target).closest('ul').attr('data-paronly');	
+	
+	console.log('offset '+offset_);
+	console.log('clicked at '+dest_);
+	console.log('folder id '+id_);
+	if( table_ == '' ){table_ = 'link_folder';}
+	if( dest_ == 'l_all' ){offset_ = '-2';}	// no limit
+	if( id_ == '0' ){id_ = 'all';}
+// ---
+		divID='#lbx_LinksTable';
+		_post({action: 'pageUpdate', id:id_, table:table_, offset:offset_});		
+		
+		function _post(data_){
+			//console.info('data to send:');
+			//console.table(data_);
+	//		$('#currentFolderID').val(folderID);	//global
+	//		$('#currentFolderType').val(folderType);	//global
+			
+//console.log('folderType:'+folderType + ' folderID:'+folderID);		
+			$.post(
+			"cgi/post.routines.php",
+			data_,
+			function(data){
+				console.log("post returned: "+data.result);
+			if (data.result == 'ok' ){
+				//console.log(data.payload);
+				$(divID).html(data.payload);
+			}else{
+				console.log('error message: ',data.message);
+				$(divID).html(data.message);			
+			}
+			}
+			,"json"
+			);
+		
+		}		
+	
+}
 
 	var submitting = false;
 	
@@ -546,37 +594,7 @@ $(function () {
 			$('#lbx_formErrors').prop( "hidden", true );
 			
 			toggleAddButton(true);
-/*
-			//prepare data and send by ajax
-			var serializedForm = $( "#lbx_form_addlink" ).serialize();
-			console.info("serialized data: { %s }", serializedForm);
-			//sample_post( serializedForm );
-			// ----------------
-	var link = form.elements.link_to_save;
-	var linkName = form.elements.link_description;
-	var folderIdInput = $("input[name='link_Folder']");
-	var tagsSelected = form.elements.lbx_tagsSelected;
-	var arr_val = [];
-			$.post(
-				"cgi/post.routines.php",
-				{action:'create', createType:'linkMP', id:-2,
-				payload:serializedForm},
-				function(data){
-				console.log("post returned: "+data.result);
-				//alert(data.result);
-				if (data.result == 'ok' ){
-					var domID = '#'+table_+'_id_'+id_entry;
-					$(domID).toggle( "highlight" );
-				}else{
-					console.log('error message: ',data.message);
-					alert(data.message);
-				}
-				}
-				,"json"
-			);
-			// ----------------
-			event.preventDefault();			
-*/			
+
 			setTimeout(function(){
 				toggleAddButton(false);
 			},5000);
@@ -611,6 +629,7 @@ $(function () {
 		$("input[name='link_Folder']").val(fldid);
 
 	});
+	
 });
 //#btn_addLink
 //$('#myPillbox1').pillbox('items')

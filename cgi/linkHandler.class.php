@@ -34,15 +34,28 @@ class LinkHandler{
 	public static function getFaviconHref($url){
 		if(empty($url)){return false;}
 		$url = Utils::cleanInput($url);
+		$path = self::makeResPath($url);
+		$favPath = $path."/favicon.ico";
+Logger::log("got url: {$url} and return: {$favPath}");
+		return $favPath;
+	}
+/* empty image */	
+	public static function getNoFaviconHref(){	
+		$favPath = "img/noImg2.jpg";
+		return $favPath;	
+	}
+/* make a standard path to resources */
+	public static function makeResPath($url){
 		$domain = self::getDomain($url);
 		$proto = self::getProto($url);
 		if( empty($domain) OR empty($proto) ){
 			self::$errormsg = 'empty proto/path';
 			Logger::log(self::$errormsg);
-			return false;}
-		$favPath = $proto."://".$domain."/favicon.ico";
-		return $favPath;
+			return false;}	
+		$aPath = $proto."://".$domain;
+		return $aPath;
 	}
+
 	public static function getDomain($url){
 		if(empty($url)){return false;}
 		$url = trim($url);

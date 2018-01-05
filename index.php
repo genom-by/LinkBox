@@ -9,7 +9,7 @@ include_once 'cgi/HTMLroutines.class.php';
 
 include_once 'cgi/indexpage.routines.php';
 
-\LinkBox\Logger::log('Start linkbox app');
+//\LinkBox\Logger::log('Start linkbox app');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,6 +25,8 @@ include_once 'cgi/indexpage.routines.php';
 	<title>LinkBox main page</title>
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css">
+	
+	<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css ">
 	
 	<link rel="stylesheet" type="text/css" href="css/FuelUX/fuelux.css">
 	<link rel="stylesheet" type="text/css" href="css/FuelUX/fuelux-docs.css">
