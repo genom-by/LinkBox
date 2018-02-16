@@ -243,7 +243,7 @@ img.simpleFav{
 	width:14%;
 	
 }
-.fldr_n_input span.btn_folder_span{
+.fldr_n_input span.btn_folder_span, .select_linkFolderAddnew{
 	float:left;
 	width:14%;
 	
@@ -310,6 +310,9 @@ span.glyphicon-edit{
 }
 .tagSearcgDiv{
 	padding-top:0;
+}
+a.noclick       {
+  pointer-events: none;
 }
 /* ... loading ...
 .loading{

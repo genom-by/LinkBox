@@ -247,7 +247,7 @@ class HTML{
 
 					$fvsrc = LinkHandler::getFaviconHref($url);
 					$favicon = "<img src='{$fvsrc}' class='simpleFav'></img>";
-$htmlItem = "<tr id='link_id_{$id_link}'><td>{$favicon}</td><td><a class='simpleUrl' href='{$url}' target='_blank' title='{$url}'>{$title}</a></td><td>{$title}</td>"."<td>{$folderName}</td><td>{$created}</td><td>{$lastVisited}</td><td>{$btnDel}</td></tr>";
+$htmlItem = "<tr id='link_id_{$id_link}'><td>{$favicon}</td><td><a class='simpleUrl' href='{$url}' target='_blank' rel='noopener noreferrer' title='{$url}'>{$title}</a></td><td>{$title}</td>"."<td>{$folderName}</td><td>{$created}</td><td>{$lastVisited}</td><td>{$btnDel}</td></tr>";
 
 					$htmlTable = $htmlTable.$htmlItem.PHP_EOL;
 				}
@@ -286,7 +286,7 @@ $htmlItem = "<tr id='link_id_{$id_link}'><td>{$favicon}</td><td><a class='simple
 			$htmlTable = $htmlTable.$rows;
 		$htmlheader = "<thead><tr><th>-</th><th>URL name</th><th>Created</th><th>del</th></tr></thead>";
 		// pager
-		$pager = self::pagerBlock($table, $id, $parentOnly, $offset);
+		$pager = self::pagerBlock($table, $id, $parentOnly, $offset, count($list));
 		$pagerRow = "<tr><td colspan='4'>{$pager}</td></tr>";
 			$htmlTable = $htmlheader.$htmlTable;
 			$htmlTable = $htmlTable.$pagerRow;
@@ -469,8 +469,13 @@ $htmlItem = "<tr id='folder_id_{$item['id_folder']}'><td class='rowtxt' orm='fol
 					$favicon = "<img src='{$fvsrc}' class='simpleFav'></img>";
 				}
 				$datablock = "data-attr-fldID='{$id_folder}' data-attr-fld-name='{$folderName}' data-attr-tags='{$tags}'";
-				
-$htmlItem = "<tr id='link_id_{$id_link}' class='lbox-linkrow'><td class='favtd'>{$favicon}</td><td><a class='simpleUrl' href='{$url}' target='_blank' title='{$url}' {$datablock}>{$title}</a></td>"."<td class='datetime' title='last visited: {$lastVisited}'>{$created}</td><td class='btns'>{$btnBlock}</td></tr>";
+	//htmlentities 
+	$title = htmlentities($title,ENT_QUOTES,'UTF-8');
+//LiLogger::log("title: {$title} -- {$title2}");
+	
+$htmlItem = "<tr id='link_id_{$id_link}' class='lbox-linkrow'><td class='favtd'>{$favicon}</td>".
+"<td><a class='simpleUrl' href='{$url}' target='_blank' rel='noopener noreferrer' title='{$url}' {$datablock}>{$title}</a></td>".
+"<td class='datetime' title='last visited: {$lastVisited}'>{$created}</td><td class='btns'>{$btnBlock}</td></tr>";
 
 				$rw = $rw.$htmlItem.PHP_EOL;
 			}
@@ -509,7 +514,7 @@ $htmlItem = "<tr id='link_id_{$id_link}' class='lbox-linkrow'><td class='favtd'>
 		
 	/* create pager block
 	*/
-	public static function pagerBlock($table, $id, $parentOnly, $offset){
+	public static function pagerBlock($table, $id, $parentOnly, $offset, $countRows = -1){
 		
 		$linksPerPage = Settings::Val('pagerLimit');	//offset == $offset		//LiLogger::log("got val {$linksCount}");
 		if($linksPerPage === false){$linksPerPage = 0;}
@@ -517,8 +522,28 @@ $htmlItem = "<tr id='link_id_{$id_link}' class='lbox-linkrow'><td class='favtd'>
 		$nextOff = $offset + $linksPerPage;
 		$prevOf = $offset - $linksPerPage;
 		if( $prevOf < 0 ){ $prevOf = 0; }
+		if( empty($offset) ){ 
+			//first page - no previous link
+			$litag_prev = "<li class='disabled'><a data-value='p_noclick' >X&nbsp; Previous</a></li>";
+		}else{
+			$litag_prev = "<li><a href='#' data-value='l_prev' data-offset='{$prevOf}'>&lt;&nbsp; Previous</a></li>";		
+		}
 		
-		$block = "<ul class='pager' data-tblname='{$table}' data-fldid='{$id}' data-paronly='{$parentOnly}' onClick='pagerClicked(event)'><li><a href='#' data-value='l_prev' data-offset='{$prevOf}'>&lt;&nbsp; Previous</a></li><li><a href='#' data-value='l_all' data-offset='0'>All</a></li><li><a href='#' data-value='l_next' data-offset='{$nextOff}'>Next&nbsp;&gt;</a></li></ul>";
+		$linksCount = Settings::Val('pagerLimit');	
+		if($linksCount === false){$linksCount = 1;}
+
+		if( $countRows < $linksCount  ){ 
+			//last page
+			$litag_next = "<li class='disabled'><a data-value='p_noclick' >Next&nbsp;X</a></li>";		
+		}else{
+			//not last page or not defined
+			$litag_next = "<li><a href='#' data-value='l_next' data-offset='{$nextOff}'>Next&nbsp;&gt;</a></li>";			
+		}
+		
+		$block = "<ul class='pager' data-tblname='{$table}' data-fldid='{$id}' data-paronly='{$parentOnly}' onClick='pagerClicked(event)'>".
+		"{$litag_prev}".
+		"<li><a href='#' data-value='l_all' data-offset='0'>All</a></li>".
+		"{$litag_next}";
 		return $block;
 	}
 	

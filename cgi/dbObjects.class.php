@@ -765,6 +765,8 @@ class Tag extends DBObject{
 			$sql = "SELECT tags.id_tag as tagID, tagName, COUNT(id_link) as tagCount FROM tags LEFT JOIN tags_link ON tags.id_tag = tags_link.id_tag WHERE tags.id_user=:uid AND tagName LIKE :needle1 OR tagName LIKE :needle2 OR tagName LIKE :needle3 OR tagName LIKE :needle4 GROUP BY tagName ";
 		}
 		
+		$db->connection->sqliteCreateFunction('like', 'lbx\lexa_ci_utf8_like2', 2);	// NOCASE
+		
 		$stmt = $db->connection->prepare($sql);
 		$stmt->bindValue(':uid', Auth::whoLoggedID());
 		if($tcount == 1){
@@ -1091,7 +1093,20 @@ AND title LIKE :needle1 OR title LIKE :needle2 OR title LIKE :needle3 ORDER BY t
 from link LEFT JOIN tags_link ON link.id_link = tags_link.id_link WHERE link.id_user=:uid
 AND title LIKE :needle1 OR title LIKE :needle2 OR title LIKE :needle3 OR title LIKE :needle4 ORDER BY title COLLATE NOCASE".' '.$limitSQL;
 		}
-		
+			// *****************	UTF-8 LIKE search
+			function lexa_ci_utf8_like($mask, $value) {
+				$mask = str_replace(
+					array("%", "_"),
+					array(".*?", "."),
+					preg_quote($mask, "/")
+				);
+				$mask = "/^$mask$/ui";
+				return preg_match($mask, $value);
+			}
+			//$db->connection->createFunction('like', 'lexa_ci_utf8_like', 2);			
+			$db->connection->sqliteCreateFunction('like', 'lbx\lexa_ci_utf8_like2', 2);			
+			// *****************
+
 		$stmt = $db->connection->prepare($sql);
 		$stmt->bindValue(':uid', Auth::whoLoggedID());
 		if($tcount == 1){
@@ -1199,9 +1214,17 @@ $db->connection->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING );
 	}
 } //Link end
 
+// CASE INSENSITIVE SEARCH from https://blog.amartynov.ru/php-sqlite-case-insensitive-like-utf8/
 
-
-
+	function lexa_ci_utf8_like2($mask, $value) {
+		$mask = str_replace(
+			array("%", "_"),
+			array(".*?", "."),
+			preg_quote($mask, "/")
+		);
+		$mask = "/^$mask$/ui";
+		return preg_match($mask, $value);
+	}
 
 
 

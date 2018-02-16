@@ -511,6 +511,9 @@ function pagerClicked(ev){
 	//console.log(ev.target);
 	
 	var dest_ = $(ev.target).attr('data-value');	
+	
+	if( dest_ == 'p_noclick' ){ return;}
+	
 	var offset_ = $(ev.target).attr('data-offset');	
 	var id_ = $(ev.target).closest('ul').attr('data-fldid');	
 	var table_ = $(ev.target).closest('ul').attr('data-tblname');	
@@ -627,6 +630,17 @@ $(function () {
 		var fldid = $(this).attr('data-value');
 		//console.log('id: ' + fldid);		
 		$("input[name='link_Folder']").val(fldid);
+
+	});
+	
+	//simple select list menu - set selected value to hidden input
+	$('#linkFolderAddnew').on("change", function() {
+		console.log('clicked at '+$(this).val());
+		$("input[name='link_Folder']").val( $(this).val() );
+		
+		//var fldid = $(this).attr('data-value');
+		//console.log('id: ' + fldid);		
+		//$("input[name='link_Folder']").val(fldid);
 
 	});
 	

@@ -14,7 +14,7 @@ include_once 'cgi/indexpage.routines.php';
 <!--select folder list FuelUX-->
 <div class='lbxForm_firstLine'>
 <div class='clearfix twoColumns fldr_n_input'>
-	<span class='btn_folder_span'><div class="btn-group selectlist"  data-initialize="selectlist" id="lbox-SelectFolderList">
+	<!--<span class='btn_folder_span'><div class="btn-group selectlist"  data-initialize="selectlist" id="lbox-SelectFolderList">
 	<button class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" type="button" title="Folder">
 	<span class="selected-label"></span>
 	<span class="selected-value"></span>
@@ -23,7 +23,11 @@ include_once 'cgi/indexpage.routines.php';
 	</button>
 	<?=HTML::getSelectULList('folderGroupped');?>
 	<input class="hidden hidden-field" name="link_Folder" readonly="readonly" aria-hidden="true" type="text" value='-1'/>
-	</div></span>
+	</div></span>-->
+	<select name="linkFolderAddnew" id="linkFolderAddnew" class="select_linkFolderAddnew">
+	<?php echo HTML::getSelectItems('folderGroupped');?>
+	</select>	
+	<input class="hidden hidden-field" name="link_Folder" readonly="readonly" aria-hidden="true" type="text" value='-1'/>
 	<input type="text" name="link_to_save" id="link_to_save" class="form-control input-sm" placeholder="Link to save" autocomplete="off" autocorrect="off" autofocus/>
 </div>
 </div>

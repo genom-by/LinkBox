@@ -59,7 +59,7 @@ function btn_linkSearchClick(){
 	var slinks = $('#inp-tblsearch').val();
 	//console.log(stag);
 	
-	if(slinks.length <= 2){
+	if(slinks.length < 2){
 		console.log('too short');
 		return false;
 	}

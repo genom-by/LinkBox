@@ -5,7 +5,7 @@ function btn_tagSearchClick(ev){
 	var stag = $('#tagsearch').val();
 	//console.log(stag);
 	
-	if(stag.length <= 2){
+	if(stag.length < 2){
 		console.log('too short');
 		return false;
 	}

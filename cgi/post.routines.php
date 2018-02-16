@@ -316,7 +316,7 @@ function dispatchInquire($table, $id, $question){
 			if( $settGetTitle == 'n' ){
 				// settings is: don't obtain
 				//returnPOSTError('settings restrictions');die();
-				echo json_encode(array('result'=>'failed', 'payload'=>'settings restrictions') );
+				echo json_encode(array('result'=>'failed', 'message'=>'settings restrictions') );
 				die();				
 			}else{
 				// setting is: obtain
